@@ -3,8 +3,8 @@ import random
 import dashscope
 from http import HTTPStatus
 from DrissionPage import ChromiumPage
-from database import DatabaseManager
-from config import config
+from tools.database import DatabaseManager
+from config.config import config
 
 # ================= 配置区域 =================
 SUMMARY_MODEL = "qwen-turbo"
@@ -142,7 +142,7 @@ def run_processor():
 
         for job in jobs:
             # 解包 tuple
-            job_id, title, company, salary, welfare, detail = job
+            job_id, title, company, salary, welfare, detail, city, district, experience, degree = job
 
             print(f"正在处理: {title[:10]}...", end="")
             start_t = time.time()
@@ -155,8 +155,14 @@ def run_processor():
             # --- 步骤 B: 生成向量 (Ollama) ---
             # 向量化的内容：标题 + 公司 + 薪资 + 智能摘要 (使用摘要而不是全文，向量质量更高)
             text_to_embed = (
-                f"职位: {title} | 公司: {company} | 薪资: {salary} | "
-                f"福利: {welfare} | 介绍: {summary}"
+                f"职位: {title} | "
+                f"地点: {city} {district} | "
+                f"公司: {company} | "
+                f"薪资: {salary} | "
+                f"经验要求: {experience} | "
+                f"学历要求: {degree} | "
+                f"福利: {welfare} | "
+                f"介绍: {summary}"
             )
 
             # 调用 database.py 里的模型

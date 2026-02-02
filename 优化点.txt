@@ -65,3 +65,39 @@
 4、记忆总结功能
 
 对话token太长需要总结，减少token消耗
+
+
+
+5、混合检索(可以考虑)
+
+现在的是vector+ SQL ILIKE匹配，可以改进为vector + BM25
+但是对于现在的任务来说，已经够用，如果数据库规模增大，BM25会更加好用
+
+
+
+6、流式输出
+
+stream_mode="messages"：
+这是 LangGraph 最新的特性。以前我们只能流式传输状态（State），现在可以直接流式传输消息块（Message Chunk）。
+当 LLM 生成一个字，LangGraph 就 yield 一个 (message_chunk, metadata) 元组。
+
+curr_node 过滤：
+在你的图中，summarize_node 也会调用 LLM（千问 Turbo）来写摘要。
+如果不加 if curr_node == "summarize_node": continue，用户会在屏幕上突然看到一段莫名其妙的“摘要文本”混在回答里。我们通过元数据把它过滤掉，让它在后台静默运行。
+
+yield full_response：
+Gradio 的流式要求函数是一个 Python Generator。
+每次 yield，聊天框的内容就会刷新一次，从而产生打字机的效果。
+
+
+7、重排序（bge-rerank-v2-m3）
+
+已实现
+
+
+
+
+8、日志
+
+
+

@@ -2,7 +2,7 @@ import os
 from typing import Annotated
 from typing_extensions import TypedDict
 
-from langgraph.graph import StateGraph, START, END
+from langgraph.graph import StateGraph, START
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode, tools_condition
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage, RemoveMessage
@@ -10,13 +10,14 @@ from langchain_core.messages import SystemMessage, HumanMessage, AIMessage, Remo
 from langchain_community.chat_models import ChatTongyi
 from langgraph.checkpoint.memory import MemorySaver
 
-from config import config
-from database import DatabaseManager
-from tools import search_jobs_tool, analyze_trend_tool, save_preference_tool
+from config.config import config
+from utils.database import DatabaseManager
+from utils.tools import search_jobs_tool, analyze_trend_tool, save_preference_tool
 
 os.environ["NO_PROXY"] = "localhost,127.0.0.1"
 
 db_manager = DatabaseManager()
+
 
 
 # ================= 1. 定义状态 (State) =================
@@ -114,7 +115,7 @@ def bot_node(state: AgentState):
     # 2. 构造 System Prompt
     # 【重点】这里必须把 summary 塞进去，因为旧的 messages 已经被 summarize_node 删了！
     system_prompt_content = f"""
-    你是由 LangGraph 驱动的高级职业顾问 Agent。
+    你是由一位高级职业顾问，帮助用户寻找职位，不会回答与求职无关的问题，如果用户提出与求职无关的问题，请直接拒绝。
 
     【记忆模块】
     1. **长期画像 (Database)**: 
@@ -123,12 +124,12 @@ def bot_node(state: AgentState):
 
     2. **对话摘要 (Summary)**: 
        {summary}
-       (这是之前的聊天背景，包含了被压缩的历史信息。如果用户问“我们刚才聊了什么”，请务必基于此内容回答)
+       (这是之前的聊天背景，包含了被压缩的历史信息)
 
     【决策机制】
     - **更新信息** -> 用户自报家门或修改需求 -> 调用 `save_preference_tool` (User ID: {user_id})。
     - **寻找职位** -> 用户找工作 -> 调用 `search_jobs_tool`。
-    - **闲聊/回顾** -> 问“我是谁”、“聊了什么” -> 基于【记忆模块】直接回答，**不要调工具**。
+    - **闲聊** -> 用户问其他问题 -> 基于【记忆模块】直接回答，**不要调工具**。
 
     【展示原则】
     - 推荐职位时，必须以 Markdown 卡片形式展示。
