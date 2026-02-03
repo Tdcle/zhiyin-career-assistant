@@ -12,7 +12,7 @@ from langgraph.checkpoint.memory import MemorySaver
 
 from config.config import config
 from utils.database import DatabaseManager
-from utils.tools import search_jobs_tool, analyze_trend_tool, save_preference_tool
+from utils.tools import *
 
 os.environ["NO_PROXY"] = "localhost,127.0.0.1"
 
@@ -28,7 +28,7 @@ class AgentState(TypedDict):
 
 
 # ================= 2. 初始化模型 =================
-tools = [search_jobs_tool, analyze_trend_tool, save_preference_tool]
+tools = [search_jobs_tool, analyze_trend_tool, save_preference_tool, get_user_resume_tool]
 
 llm = ChatTongyi(
     api_key=config.DASHSCOPE_API_KEY,

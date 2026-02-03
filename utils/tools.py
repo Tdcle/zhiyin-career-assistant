@@ -4,6 +4,7 @@ from langchain_core.tools import tool
 from pydantic import BaseModel, Field
 from utils.database import DatabaseManager
 from sentence_transformers import CrossEncoder
+from utils.file_parser import FileParser # 导入刚才写的文件
 
 # 获取日志记录器（注意：这里假设 app.py 已经初始化了配置名为 "JobAgent" 的 logger）
 # 这样可以确保工具的日志和主程序的日志写入同一个文件
@@ -21,6 +22,8 @@ try:
 except Exception as e:
     logger.warning(f"⚠️ [System] Reranker 加载失败，将降级为普通检索: {e}")
     reranker = None
+
+
 
 # ================= 2. 定义输入结构 =================
 class SearchInput(BaseModel):
@@ -43,6 +46,9 @@ class TrendInput(BaseModel):
 class PreferenceInput(BaseModel):
     user_id: str = Field(description="用户ID")
     preference: str = Field(description="需要保存的信息。")
+
+class GetResumeInput(BaseModel):
+    user_id: str = Field(description="用户ID")
 
 
 @tool("search_jobs_tool", args_schema=SearchInput)
@@ -116,6 +122,26 @@ def search_jobs_tool(query: str):
     logger.info(f"✅ [Tool:Search] 工具返回完成")
     return context_str
 
+
+@tool("get_user_resume_tool", args_schema=GetResumeInput)
+def get_user_resume_tool(user_id: str):
+    """
+    【简历获取工具】当用户询问与自身情况匹配的职位，或者需要基于简历进行推荐时调用。
+    该工具会从数据库中提取用户最新上传的简历文本内容。
+    """
+    print(f"🛠️ [Tool] 正在从数据库获取用户 [{user_id}] 的简历...")
+
+    resume_data = db.get_latest_resume(user_id)
+
+    if not resume_data:
+        return "数据库反馈：该用户暂未上传简历，请提示用户先在左侧面板上传简历。"
+
+    # 截断一下防止 Token 爆炸，但要保留足够信息
+    content = resume_data['content']
+    if len(content) > 4000:
+        content = content[:4000] + "\n...(后文截断)..."
+
+    return f"【用户简历内容 (文件名: {resume_data['filename']})】:\n{content}"
 
 @tool("analyze_trend_tool", args_schema=TrendInput)
 def analyze_trend_tool(keyword: str):

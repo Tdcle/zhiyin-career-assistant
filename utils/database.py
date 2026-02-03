@@ -74,6 +74,18 @@ class DatabaseManager:
             );
             """)
 
+            # 5. resumes 简历表
+            cur.execute(f"""
+                        CREATE TABLE IF NOT EXISTS resumes (
+                            id SERIAL PRIMARY KEY,
+                            user_id VARCHAR(50) NOT NULL REFERENCES users(user_id),
+                            filename VARCHAR(255),
+                            content TEXT,
+                            embedding vector({config.VECTOR_DIM}),
+                            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                        );
+                        """)
+
     def _seed_default_users(self):
         """初始化默认用户数据"""
         with self.conn.cursor() as cur:
@@ -92,7 +104,7 @@ class DatabaseManager:
         """
         # 1. 查找所有由纯数字组成的 user_id
         # Postgres 正则: '^\d+$' 匹配纯数字
-        cur.execute("SELECT user_id FROM users WHERE user_id ~ '^\d+$'")
+        cur.execute(r"SELECT user_id FROM users WHERE user_id ~ '^\d+$'")
         rows = cur.fetchall()
 
         if not rows:
@@ -176,6 +188,58 @@ class DatabaseManager:
         except Exception as e:
             print(f"❌ 更新用户画像失败: {e}")
             return False
+
+    # ================= 简历专用方法 (Write Path) =================
+    def save_resume(self, user_id, filename, content):
+        """
+        后台任务：保存简历文本并生成向量
+        """
+        try:
+            # 1. 生成向量 (调用 Ollama)
+            # print(f"🔄 正在为用户 {user_id} 的简历生成向量...")
+            vector = self.embed_model.embed_query(content)
+
+            if not vector:
+                return False, "向量生成失败"
+
+            # 2. 存入数据库
+            with self.conn.cursor() as cur:
+                # 策略：这里演示简单的“追加模式”，如果需要“覆盖模式”可以先 DELETE
+                # cur.execute("DELETE FROM resumes WHERE user_id = %s", (user_id,))
+
+                sql = """
+                INSERT INTO resumes (user_id, filename, content, embedding)
+                VALUES (%s, %s, %s, %s)
+                RETURNING id;
+                """
+                cur.execute(sql, (user_id, filename, content, vector))
+                resume_id = cur.fetchone()[0]
+                return True, f"简历已入库 (ID: {resume_id})"
+        except Exception as e:
+            print(f"❌ 简历保存失败: {e}")
+            return False, str(e)
+
+    # ================= 简历专用方法 (Read Path - Tool用) =================
+
+    def get_latest_resume(self, user_id):
+        """
+        获取用户最新上传的一份简历内容
+        """
+        try:
+            with self.conn.cursor(cursor_factory=RealDictCursor) as cur:
+                sql = """
+                SELECT content, filename, created_at 
+                FROM resumes 
+                WHERE user_id = %s 
+                ORDER BY created_at DESC 
+                LIMIT 1
+                """
+                cur.execute(sql, (user_id,))
+                result = cur.fetchone()
+                return result
+        except Exception as e:
+            print(f"❌ 获取简历失败: {e}")
+            return None
 
     # ================= 爬虫/向量化专用方法 (保持不变) =================
 
