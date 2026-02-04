@@ -18,10 +18,10 @@ class DatabaseManager:
             raise e
 
         # 初始化 Embedding 模型
-        # print(f"🔄 正在加载向量模型: {config.MODEL_NAME} ...")
+        # print(f"🔄 正在加载向量模型: {config.EMBEDDING_MODEL_NAME} ...")
         self.embed_model = OllamaEmbeddings(
             base_url=config.OLLAMA_URL,
-            model=config.MODEL_NAME
+            model=config.EMBEDDING_MODEL_NAME
         )
 
         self._init_tables()
@@ -291,6 +291,29 @@ class DatabaseManager:
             print(f"更新分析数据失败 (ID: {job_id}): {e}")
             return False
 
+    def get_job_details(self, job_id):
+        """
+        根据 job_id 获取职位的完整信息（包含完整的 detail 描述）
+        用于模拟面试时提取 JD 要求
+        """
+        try:
+            with self.conn.cursor(cursor_factory=RealDictCursor) as cur:
+                # 优先匹配 job_id (字符串唯一标识)
+                sql = "SELECT * FROM jobs WHERE job_id = %s"
+                cur.execute(sql, (str(job_id),))
+                result = cur.fetchone()
+
+                # 如果没找到，且传入的是数字，尝试匹配自增 id
+                if not result and str(job_id).isdigit():
+                    sql_id = "SELECT * FROM jobs WHERE id = %s"
+                    cur.execute(sql_id, (int(job_id),))
+                    result = cur.fetchone()
+
+                return result
+        except Exception as e:
+            print(f"❌ 获取职位详情失败 (ID: {job_id}): {e}")
+            return None
+
     def update_embedding(self, job_id, text):
         """仅更新向量"""
         try:
@@ -309,13 +332,19 @@ class DatabaseManager:
     # ================= 搜索与分析接口 (保持不变) =================
 
     def vector_search(self, query_text: str, top_k=5):
-        """混合检索"""
+        """
+        混合检索 (Hybrid Search)
+        【修改】SELECT 中增加了 'detail' 字段，一次性获取所有需要的数据。
+        """
         try:
+            # 1. 生成向量
             query_vector = self.embed_model.embed_query(query_text)
 
             with self.conn.cursor(cursor_factory=RealDictCursor) as cur:
+                # 注意：这里增加了 detail 字段
                 sql = f"""
-                SELECT title, company, industry, salary, city, district, welfare, summary, detail_url,
+                SELECT id, job_id, title, company, industry, salary, city, district, 
+                       experience, degree, welfare, summary, detail_url, 
                        (embedding <=> %s::vector) as vector_dist,
                        (CASE WHEN title ILIKE %s THEN 0.2 ELSE 0 END) as title_score,
                        (CASE WHEN summary ILIKE %s THEN 0.1 ELSE 0 END) as detail_score
@@ -324,13 +353,18 @@ class DatabaseManager:
                 ORDER BY (embedding <=> %s::vector) - (CASE WHEN title ILIKE %s THEN 0.2 ELSE 0 END) ASC
                 LIMIT {top_k};
                 """
+
+                # 参数准备
                 like_kw = f"%{query_text}%"
+
                 cur.execute(sql, (query_vector, like_kw, like_kw, query_vector, like_kw))
                 results = cur.fetchall()
                 return results
 
         except Exception as e:
             print(f"❌ 检索失败: {e}")
+            import traceback
+            traceback.print_exc()
             return []
 
     def get_market_analytics(self, keyword):

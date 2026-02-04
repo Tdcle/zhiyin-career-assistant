@@ -2,33 +2,166 @@
 
 /* 整体背景 */
 body {
-    background-color: #f3f4f6;
+    background-color: #f9fafb; /* 更柔和的灰白背景 */
 }
 
-/* 聊天框容器 */
+/* === 聊天框容器 === */
 .chatbot-container {
-    border-radius: 12px !important;
+    min-height: 600px !important;
+    border-radius: 16px !important;
     border: 1px solid #e5e7eb !important;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+    background: #ffffff !important;
 }
 
-/* 用户消息气泡 */
+/* 用户消息 */
 .chatbot-container .message-wrap .message.user {
-    background-color: #3b82f6 !important; /* 亮蓝色 */
+    background-color: #2563eb !important; /* 皇家蓝 */
     color: white !important;
     border-radius: 12px 12px 2px 12px !important;
+    font-size: 15px !important;
 }
 
-/* 机器人消息气泡 */
+/* 机器人消息 */
 .chatbot-container .message-wrap .message.bot {
-    background-color: #ffffff !important; /* 纯白 */
-    border: 1px solid #e5e7eb;
+    background-color: #f3f4f6 !important; /* 浅灰背景 */
+    color: #1f2937 !important;
+    border: none !important;
     border-radius: 12px 12px 12px 2px !important;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    font-size: 15px !important;
+    line-height: 1.6 !important;
 }
 
-/* 头像微调 */
+/* 头像 */
 .chatbot-container .avatar {
     border: 2px solid #fff;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+
+/* === 职位卡片按钮样式优化 === */
+.job-card-btn {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 110px !important;
+    padding: 16px 20px !important;
+    margin-bottom: 12px !important;
+    text-align: left !important; /* 保持左对齐，列表更易读 */
+
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 12px !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+    transition: all 0.2s ease !important;
+}
+
+.job-card-btn:hover {
+    border-color: #3b82f6 !important;
+    background: #f0f9ff !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15) !important;
+}
+
+
+/* === 职位卡片按钮样式 (最终优化版：居中+层级分明) === */
+.job-card-btn {
+    /* 1. 布局核心 */
+    display: block !important; /* 必须是 block 才能触发 ::first-line */
+    width: 100% !important;
+    height: auto !important;
+    min-height: 120px !important;
+
+    /* 2. 对齐与间距 (修改点) */
+    text-align: center !important; /* 【关键】整体居中 */
+    padding: 20px 10px !important; /* 上下宽一点，左右窄一点 */
+    margin-bottom: 12px !important;
+
+    /* 3. 文本处理 */
+    white-space: pre-wrap !important; /* 识别换行符 */
+    word-break: break-all !important; /* 防止长单词撑破 */
+
+    /* 4. 外观装饰 */
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 16px !important;   /* 更圆润 */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02) !important;
+    transition: all 0.2s ease !important;
+
+    /* 5. 默认字体 (针对第二、三行) */
+    font-size: 14px !important;
+    color: #64748b !important;       /* 次要信息用灰色 */
+    font-weight: 500 !important;
+    line-height: 1.8 !important;     /* 增加行间距，防止拥挤 */
+}
+
+/* 悬停效果 */
+.job-card-btn:hover {
+    border-color: #3b82f6 !important;
+    background: #f8fafc !important;
+    transform: translateY(-3px) !important;
+    box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.1) !important;
+}
+
+/* === 第一行特权样式 (公司名称) === */
+.job-card-btn::first-line {
+    font-size: 18px !important;    /* 字号最大 */
+    font-weight: 800 !important;   /* 极粗 */
+    color: #0f172a !important;     /* 纯黑 */
+    line-height: 2.5 !important;   /* 第一行高度拉大，与下面拉开距离 */
+}
+
+/* 消除 p 标签干扰 */
+.job-card-btn p {
+    margin: 0 !important;
+    display: inline !important;
+}
+
+
+/* === 岗位匹配分析卡片 (Markdown) === */
+.match-analysis-card {
+    /* 卡片容器样式 */
+    background-color: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 12px !important;
+    padding: 0 !important; /* 内边距交给内部元素 */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+    margin-top: 10px !important;
+}
+
+/* 关键修复：针对 Gradio Markdown 内部的 prose 容器设置滚动
+   这能有效防止“双重滚动条”的视觉 bug
+*/
+.match-analysis-card .prose {
+    max-height: 300px !important; /* 固定高度 */
+    overflow-y: auto !important;  /* 内容长了才滚动 */
+    padding: 20px !important;     /* 文字与边框的距离 */
+    font-size: 14px !important;
+    line-height: 1.7 !important;
+    color: #374151 !important;
+}
+
+/* 隐藏外层多余的滚动条 */
+.match-analysis-card ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+.match-analysis-card ::-webkit-scrollbar-track {
+    background: transparent;
+}
+.match-analysis-card ::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+.match-analysis-card ::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* 针对 Markdown 内容的标题微调 */
+.match-analysis-card h3 {
+    margin-top: 10px !important;
+    margin-bottom: 8px !important;
+    font-size: 16px !important;
+    color: #111827 !important;
+    font-weight: 700 !important;
 }

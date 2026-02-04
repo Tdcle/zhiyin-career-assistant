@@ -28,7 +28,8 @@ class Config:
 
     # 向量模型配置
     VECTOR_DIM = int(os.getenv("VECTOR_DIM", 768))
-    MODEL_NAME = os.getenv("MODEL_NAME", "nomic-embed-text-v2-moe")
+    EMBEDDING_MODEL_NAME = os.getenv("EMBEDDING_MODEL_NAME", "nomic-embed-text-v2-moe")
+    MARK_MODEL_NAME = os.getenv("MARK_MODEL_NAME", "qwen2.5:3b")
     OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434")
 
 # 实例化配置对象，方便其他文件 import config

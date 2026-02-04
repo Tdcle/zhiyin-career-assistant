@@ -1,3 +1,4 @@
+# utils/logger.py
 import logging
 import os
 from datetime import datetime
@@ -5,7 +6,6 @@ from datetime import datetime
 # 配置日志目录
 LOG_DIR = "logs"
 os.makedirs(LOG_DIR, exist_ok=True)
-
 
 def setup_logger(name="JobAgent"):
     """
@@ -31,3 +31,9 @@ def setup_logger(name="JobAgent"):
         logger.addHandler(stream_handler)
 
     return logger, log_filename
+
+# ==========================================
+# 【新增】这里直接初始化一个全局实例
+# 这样其他文件只需要: from utils.logger import sys_logger 即可使用
+# ==========================================
+sys_logger, current_log_path = setup_logger()

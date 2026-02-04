@@ -14,8 +14,6 @@ from config.config import config
 from utils.database import DatabaseManager
 from utils.tools import *
 
-os.environ["NO_PROXY"] = "localhost,127.0.0.1"
-
 db_manager = DatabaseManager()
 
 

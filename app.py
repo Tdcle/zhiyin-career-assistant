@@ -1,204 +1,166 @@
+# app.py
 import gradio as gr
-from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
-from models.graph import app_graph
-from utils.logger import setup_logger
+import os
+from utils.logger import sys_logger, current_log_path
 from utils.database import DatabaseManager
-from utils.file_parser import FileParser
 
-# --- 1. 初始化系统 ---
-sys_logger, current_log_path = setup_logger(name="JobAgent")
+# 导入业务逻辑
+from logic.chat_flow import process_uploaded_resume, respond
+from logic.interview_flow import start_interview_logic, handle_interview_chat
+
+# 初始化
 sys_logger.info("🚀 系统启动中...")
-
+os.makedirs("static", exist_ok=True)
 db = DatabaseManager()
 
-
-# --- 2. 业务逻辑 ---
-
-def process_uploaded_resume(file_path, user_info):
-    """
-    【后台核心逻辑】
-    1. 解析文件 (PDF/图片) -> 文本
-    2. 存入数据库 (自动向量化)
-    """
-    if not file_path:
-        return "无文件"
-
-    # 解析 User ID
-    try:
-        user_id = user_info.split(" (")[0].strip()
-    except:
-        return "⚠️ 请先选择有效的用户身份"
-
-    sys_logger.info(f"📄 [Resume] 用户[{user_id}] 上传文件: {file_path}")
-
-    # A. 调用解析器提取文本 (不经过模型，纯规则解析)
-    raw_content = FileParser.read_file(file_path)
-
-    if not raw_content or len(raw_content) < 10:
-        return "❌ 解析失败或内容过少，请检查文件"
-
-    # 获取文件名
-    import os
-    filename = os.path.basename(file_path)
-
-    # B. 存入数据库
-    success, msg = db.save_resume(user_id, filename, raw_content)
-
-    if success:
-        sys_logger.info(f"✅ [Resume] 简历已入库: {filename}")
-        return f"✅ 简历解析并入库成功！\n(文件名: {filename})\n现在的我已记住了你的经历，快问我推荐什么工作吧！"
-    else:
-        sys_logger.error(f"❌ [Resume] 入库失败: {msg}")
-        return f"❌ 处理失败: {msg}"
-
-
-def respond(message, chat_history, user_info):
-    """交互逻辑"""
-    if not message.strip():
-        yield chat_history, ""
-        return
-
-    try:
-        user_id = user_info.split(" (")[0].strip()
-    except:
-        user_id = "guest"
-
-    sys_logger.info(f"\n📨 [Chat] 用户[{user_id}]: {message}")
-
-    chat_history.append({"role": "user", "content": message})
-    yield chat_history, ""
-
-    # 【重要】在 Prompt 中注入 UserID，这样模型在调用 get_user_resume_tool 时才知道传什么 ID
-    # 或者我们可以直接在 SystemPrompt 里注入
-    input_message = HumanMessage(content=message)
-
-    # 构造 SystemMessage 告知模型当前服务的用户ID
-    system_prompt = SystemMessage(
-        content=f"当前服务的用户ID是: {user_id}。如果用户要求根据简历推荐工作，请调用 get_user_resume_tool 获取该用户的简历信息。")
-
-    inputs = {"messages": [system_prompt, input_message], "user_id": user_id}
-    config = {"configurable": {"thread_id": user_id}}
-
-    chat_history.append({"role": "assistant", "content": "🤔 正在思考..."})
-    full_response = ""
-
-    try:
-        event_stream = app_graph.stream(inputs, config=config, stream_mode="messages")
-
-        for msg, metadata in event_stream:
-            if metadata.get('langgraph_node') == "summarize_node": continue
-
-            if isinstance(msg, AIMessage):
-                if msg.tool_calls:
-                    # 如果调用了获取简历的工具
-                    if any(tool['name'] == 'get_user_resume_tool' for tool in msg.tool_calls):
-                        full_response += "\n> 📂 *正在从数据库调取您的简历档案...*\n\n"
-                    elif any(tool['name'] == 'search_jobs_tool' for tool in msg.tool_calls):
-                        full_response += "\n> 🔍 *正在根据条件检索职位...*\n\n"
-                    else:
-                        full_response += "\n> 🛠️ *正在调用工具...*\n\n"
-
-                    chat_history[-1]["content"] = full_response
-                    yield chat_history, ""
-
-                if msg.content:
-                    full_response += msg.content
-                    chat_history[-1]["content"] = full_response
-                    yield chat_history, ""
-
-        sys_logger.info(f"✅ [Chat] 回复完成")
-
-    except Exception as e:
-        sys_logger.error(str(e), exc_info=True)
-        chat_history[-1]["content"] += f"\n\n❌ 系统错误: {str(e)}"
-        yield chat_history, ""
-
-
-# ... (create_new_user, refresh_user_dropdown 等保持不变) ...
-
-# --- 3. 构建 UI ---
-
+# 读取 CSS
+css_path = "assets/style.css"
 try:
-    with open("assets/style.css", "r", encoding="utf-8") as f:
-        custom_css = f.read()
+    with open(css_path, "r", encoding="utf-8") as f:
+        full_css = f.read()
 except FileNotFoundError:
-    custom_css = ""
+    full_css = ""
 
+
+def create_new_user(new_name):
+    if not new_name.strip(): return "⚠️ 不能为空", gr.Dropdown()
+    success, msg = db.create_user(new_name)
+    all_users = db.get_all_users_list()
+    return (f"✅ {msg}", gr.Dropdown(choices=all_users, value=all_users[0] if success else None))
+
+
+def refresh_user_dropdown():
+    new_choices = db.get_all_users_list()
+    return gr.Dropdown(choices=new_choices, value=new_choices[0] if new_choices else None)
+
+
+def create_click_handler(index):
+    def handler(jobs_data, user_info):
+        if not jobs_data or index >= len(jobs_data):
+            yield (gr.update(),) * 7
+            return
+        yield from start_interview_logic(jobs_data[index], user_info)
+
+    return handler
+
+
+# --- UI 构建 ---
 with gr.Blocks(title="AI 智能招聘助手") as demo:
+    jobs_state = gr.State([])
+    interview_context_state = gr.State({})
+
     with gr.Row(variant="panel"):
-        gr.Markdown("## 🤖 AI 智能招聘助手")
+        gr.Markdown("## 🤖 AI 智能招聘助手 (Pro版)")
 
     with gr.Row():
-        # --- 左侧 ---
+        # === 左侧边栏 ===
         with gr.Column(scale=1):
             gr.Markdown("### 👤 用户切换")
             user_dropdown = gr.Dropdown(
                 choices=db.get_all_users_list(),
                 value=lambda: db.get_all_users_list()[0] if db.get_all_users_list() else None,
-                label="当前身份",
-                interactive=True
+                label="当前身份", interactive=True
             )
-            refresh_btn = gr.Button("🔄 刷新列表", size="sm")
+            refresh_btn = gr.Button("🔄 刷新", size="sm")
+
+            with gr.Accordion("➕ 新建用户", open=False):
+                new_name_input = gr.Textbox(label="昵称")
+                create_btn = gr.Button("创建")
+                create_status = gr.Markdown()
 
             gr.Markdown("---")
-            gr.Markdown("### ➕ 新建用户")
-            with gr.Group():
-                new_name_input = gr.Textbox(label="用户昵称")
-                create_btn = gr.Button("创建并切换", variant="secondary")
-                create_status = gr.Markdown(value="")
+            gr.Markdown("### 📄 简历管理")
+            resume_file = gr.File(label="上传简历", file_types=[".pdf", ".png", ".jpg"], height=100)
+            upload_status = gr.Textbox(label="状态", interactive=False)
 
-            gr.Markdown("---")
-            gr.Markdown("### 📄 简历入库")
+            gr.Markdown(f"\nLog: `{os.path.basename(current_log_path)}`")
 
-            # 【核心修改】上传即处理，不需要“开始分析”按钮了
-            resume_file = gr.File(
-                label="拖拽上传简历 (PDF/图片)",
-                file_types=[".pdf", ".png", ".jpg", ".jpeg"],
-                type="filepath",
-                height=120
-            )
-            # 状态反馈区
-            upload_status = gr.Textbox(label="系统处理状态", value="等待上传...", interactive=False)
-
-            gr.Markdown("---")
-            gr.Markdown(f"📡 **系统状态**\nLog: `{current_log_path}`")
-
-        # --- 右侧 ---
+        # === 右侧主区域 ===
         with gr.Column(scale=3):
-            chatbot = gr.Chatbot(
-                label="对话历史",
-                height=700,
-                elem_classes="chatbot-container",
-                avatar_images=("assets/user.png", "assets/bot.png")
-            )
+            # --- 模式 1: 求职大厅 ---
+            with gr.Group(visible=True) as main_group:
+                chatbot = gr.Chatbot(label="求职助手", height=500, elem_classes="chatbot-container",
+                                     avatar_images=("assets/user.png", "assets/bot.png"))
 
-            with gr.Row():
-                msg_input = gr.Textbox(
-                    show_label=False,
-                    placeholder="例如：根据我的简历推荐3个匹配的职位...",
-                    scale=5,
-                    container=False,
-                    autofocus=True
-                )
-                send_btn = gr.Button("发送 🚀", variant="primary", scale=1)
+                with gr.Row():
+                    msg_input = gr.Textbox(show_label=False, placeholder="例如：帮我找北京的Java工作...", scale=5,
+                                           autofocus=True)
+                    send_btn = gr.Button("发送", variant="primary", scale=1)
 
-    # --- 事件绑定 ---
+                gr.Markdown("### 🎯 推荐职位列表")
 
-    # 1. 基础事件
-    refresh_btn.click(lambda: gr.Dropdown(choices=db.get_all_users_list()), None, user_dropdown)
-    create_btn.click(lambda name: db.create_user(name) and (f"创建成功", gr.Dropdown(choices=db.get_all_users_list())),
-                     inputs=[new_name_input], outputs=[create_status, user_dropdown])
+                with gr.Row():
+                    with gr.Column(scale=1, min_width=250):
+                        btn_job_0 = gr.Button(visible=False, elem_classes="job-card-btn")
+                    with gr.Column(scale=1, min_width=250):
+                        btn_job_1 = gr.Button(visible=False, elem_classes="job-card-btn")
 
-    # 2. 【核心】简历上传事件 -> 触发后台处理
-    resume_file.upload(
-        fn=process_uploaded_resume,
-        inputs=[resume_file, user_dropdown],  # 传入文件和当前用户ID
-        outputs=[upload_status]  # 结果显示在状态框
+                with gr.Row():
+                    with gr.Column(scale=1, min_width=250):
+                        btn_job_2 = gr.Button(visible=False, elem_classes="job-card-btn")
+                    with gr.Column(scale=1, min_width=250):
+                        btn_job_3 = gr.Button(visible=False, elem_classes="job-card-btn")
+
+                with gr.Row():
+                    with gr.Column(scale=1, min_width=250):
+                        btn_job_4 = gr.Button(visible=False, elem_classes="job-card-btn")
+                    with gr.Column(scale=1, min_width=250):
+                        gr.Markdown("", visible=True)
+
+                        # --- 模式 2: 模拟面试室 ---
+            with gr.Group(visible=False) as interview_group:
+                interview_header = gr.Markdown("## 🎙️ 面试连接中...")
+
+                with gr.Row():
+                    with gr.Column(scale=1):
+                        radar_image = gr.Image(label="岗位匹配雷达", interactive=False)
+                        analysis_text = gr.Markdown(
+                            "等待分析...",
+                            elem_classes="match-analysis-card"
+                        )
+
+                    with gr.Column(scale=2):
+                        interview_chatbot = gr.Chatbot(label="面试官", height=600,
+                                                       avatar_images=("assets/user.png", "assets/bot.png"))
+                        interview_input = gr.Textbox(placeholder="回答面试官的问题...", show_label=False)
+
+                end_interview_btn = gr.Button("结束面试 / 返回大厅", variant="stop")
+
+    # === 事件绑定 ===
+    refresh_btn.click(refresh_user_dropdown, None, user_dropdown)
+    create_btn.click(create_new_user, [new_name_input], [create_status, user_dropdown])
+    resume_file.upload(process_uploaded_resume, [resume_file, user_dropdown], [upload_status])
+
+    chat_outputs = [chatbot, msg_input, jobs_state, btn_job_0, btn_job_1, btn_job_2, btn_job_3, btn_job_4]
+    msg_input.submit(respond, [msg_input, chatbot, user_dropdown], chat_outputs)
+    send_btn.click(respond, [msg_input, chatbot, user_dropdown], chat_outputs)
+
+    interview_outputs = [
+        main_group, interview_group,
+        radar_image, analysis_text,
+        interview_chatbot, interview_header,
+        interview_context_state
+    ]
+
+    btn_job_0.click(create_click_handler(0), inputs=[jobs_state, user_dropdown], outputs=interview_outputs)
+    btn_job_1.click(create_click_handler(1), inputs=[jobs_state, user_dropdown], outputs=interview_outputs)
+    btn_job_2.click(create_click_handler(2), inputs=[jobs_state, user_dropdown], outputs=interview_outputs)
+    btn_job_3.click(create_click_handler(3), inputs=[jobs_state, user_dropdown], outputs=interview_outputs)
+    btn_job_4.click(create_click_handler(4), inputs=[jobs_state, user_dropdown], outputs=interview_outputs)
+
+    # 【重要】删除了之前的 interview_chat dummy 函数
+    # 只保留 handle_interview_chat，并确保 inputs 正确
+    interview_input.submit(
+        handle_interview_chat,
+        inputs=[interview_input, interview_chatbot, interview_context_state, user_dropdown],
+        outputs=[interview_input, interview_chatbot]
     )
 
-    # 3. 对话事件
-    msg_input.submit(respond, [msg_input, chatbot, user_dropdown], [chatbot, msg_input])
-    send_btn.click(respond, [msg_input, chatbot, user_dropdown], [chatbot, msg_input])
+    end_interview_btn.click(
+        lambda: (gr.update(visible=True), gr.update(visible=False)),
+        None,
+        [main_group, interview_group]
+    )
 
 if __name__ == "__main__":
-    demo.launch(server_name="127.0.0.1", server_port=7860, theme=gr.themes.Soft(primary_hue="blue"), css=custom_css)
+    demo.launch(server_name="127.0.0.1", server_port=7860, theme=gr.themes.Soft(primary_hue="blue"), css=full_css)
