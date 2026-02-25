@@ -11,7 +11,6 @@ from sentence_transformers import CrossEncoder
 
 # 项目内部导入
 from utils.database import DatabaseManager
-from utils.global_state import GlobalState
 from utils.plotter import create_radar_chart
 from config.config import config
 
@@ -27,7 +26,7 @@ llm = ChatOllama(base_url=config.OLLAMA_URL, model=config.MARK_MODEL_NAME, tempe
 logger.info("🔄 [System] 正在加载 BGE-Reranker 模型...")
 try:
     # 请确保路径正确，建议改为相对路径或环境变量
-    MODEL_PATH = "F:/Python_Project/LLM_study/models/bge-reranker-v2-m3"
+    MODEL_PATH = "./models/bge-reranker-v2-m3"
     reranker = CrossEncoder(MODEL_PATH, device='cpu')
     logger.info("✅ [System] Reranker 模型加载完成")
 except Exception as e:
@@ -75,8 +74,12 @@ def search_jobs_tool(user_id: str, query: str):
     1. 数据库混合检索召回 Top 20。
     2. BGE-Reranker 模型精细打分。
     3. 返回得分最高的 Top 5。
-    副作用：将 Top 5 的结构化数据存入 GlobalState 供前端列表展示。
+
+    返回值：JSON 字符串，包含两部分：
+    - llm_text: 供 LLM 阅读的 Markdown 格式职位信息
+    - ui_cards: 供前端按钮展示的精简结构化数据
     """
+    import json
 
     logger.info(f"🛠️ [Tool:Search] 开始搜索: '{query}'")
 
@@ -85,17 +88,17 @@ def search_jobs_tool(user_id: str, query: str):
     logger.info(f"📊 [Tool:Search] 数据库召回: {len(candidates)} 条")
 
     if not candidates:
-        return "数据库反馈：没有找到匹配的职位。"
+        return json.dumps({
+            "llm_text": "数据库反馈：没有找到匹配的职位。",
+            "ui_cards": []
+        }, ensure_ascii=False)
 
     # 2. 精排
     if not reranker or len(candidates) < 2:
         final_results = candidates[:5]
     else:
-        # --- 阶段二：精排 / 重排序 (Rerank) ---
         rerank_pairs = []
-
         for res in candidates:
-            # 数据构造/数据清洗：去掉换行符，防止干扰模型
             doc_text = (
                 f"职位: {res.get('title')} | "
                 f"地点: {res.get('city')} {res.get('district')} | "
@@ -109,44 +112,34 @@ def search_jobs_tool(user_id: str, query: str):
 
             rerank_pairs.append([query, doc_text])
 
-        # 模型打分 (返回一个分数列表)
         scores = reranker.predict(rerank_pairs)
-        # 将 [职位, 分数] 绑定在一起
         scored_results = list(zip(candidates, scores))
-        # 按分数从高到低排序 (Reverse=True)
         scored_results.sort(key=lambda x: x[1], reverse=True)
 
-        # 记录分数情况到日志文件
         top_score = scored_results[0][1]
         low_score = scored_results[-1][1]
         logger.info(f"🧠 [Tool:Search] 重排序完成. Max: {top_score:.4f} | Min: {low_score:.4f}")
 
-        # 取前 5 名
         final_results = [item[0] for item in scored_results[:5]]
 
-    # 前端只需要 ID, Title, Company 用于展示卡片
-    simple_results_for_ui = []
+    # 3. 构造两份数据
+
+    # 3a. 前端 UI 卡片数据
+    ui_cards = []
     for res in final_results:
-        simple_results_for_ui.append({
-            "job_id": res['job_id'],  # 关键
+        ui_cards.append({
+            "job_id": res['job_id'],
             "title": res['title'],
             "company": res['company'],
             "salary": res['salary'],
             "tags": f"{res.get('city')} | {res.get('experience')}"
         })
 
-    logger.info(f"🛑 [DEBUG-TOOL] 准备写入缓存 -> Key(user_id): '{user_id}' | 数据量: {len(simple_results_for_ui)}")
-    # 存入缓存，Key 为 user_id (确保多用户隔离)
-    GlobalState.set_search_results(user_id, simple_results_for_ui)
-
-    check = GlobalState.get_search_results(user_id)
-    logger.info(f"🛑 [DEBUG-TOOL] 写入后立即读取验证 -> Key: '{user_id}' | 结果数量: {len(check)}")
-
-    # 3. 结果格式化
-    context_str = f"经 AI 深度筛选，为您找到最匹配的 {len(final_results)} 个职位：\n"
+    # 3b. LLM 阅读的 Markdown 文本
+    llm_text = f"经 AI 深度筛选，为您找到最匹配的 {len(final_results)} 个职位：\n"
     for res in final_results:
         intro = res.get('summary') if res.get('summary') else res['detail'][:200]
-        context_str += f"""
+        llm_text += f"""
         - **公司**: {res['company']} ({res['industry']} | {res['city']} {res['district']})
         - **职位**: {res['title']}
         - **薪资**: {res['salary']} ({res['welfare']})
@@ -154,8 +147,14 @@ def search_jobs_tool(user_id: str, query: str):
         - **链接**: {res['detail_url']}
         ------------------------------------------------
         """
-    logger.info(f"✅ [Tool:Search] 工具返回完成")
-    return context_str
+
+    logger.info(f"✅ [Tool:Search] 工具返回完成, UI卡片数: {len(ui_cards)}")
+
+    # 【关键】返回 JSON，包含两部分数据
+    return json.dumps({
+        "llm_text": llm_text,
+        "ui_cards": ui_cards
+    }, ensure_ascii=False)
 
 
 @tool("get_user_resume_tool", args_schema=GetResumeInput)

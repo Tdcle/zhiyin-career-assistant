@@ -1,0 +1,116 @@
+1、数据库重构
+
+    单例模式 — 多处 DatabaseManager() 只创建一个实例
+    连接池 — 替代单连接，支持并发
+    上下文管理器 — 统一的 cursor 获取/释放/事务管理
+    去掉 autocommit — 改为显式 commit/rollback
+    异常处理规范化 — 统一用 logger，去掉裸 print
+
+改动点总结
+改动	        原代码	                            新代码	                            原因
+连接方式    	psycopg2.connect()单连接	            ThreadedConnectionPool连接池	        支持并发，防连接耗尽
+实例化	    每次DatabaseManager()新建实例	        __new__ 单例模式	                    多模块共享同一实例
+事务控制	    autocommit=True	                    显式 commit/rollback	                数据一致性
+Cursor管理	每个方法自己with self.conn.cursor()	统一get_cursor()上下文管理器	        DRY，自动归还连接
+日志	        混用print + logger	                统一 logger	                        生产规范
+异常处理	    部分方法无 try/catch	                全部方法统一捕获	                    健壮性
+SQL 安全  	f"LIMIT {top_k}" 拼接	            LIMIT %s 参数化	                    防注入
+检索 SQL  	单层 query	                        CTE 两阶段(召回+加权)	                性能更优，语义清晰
+索引	        无	                                ivfflat + GIN trgm + 普通索引	    检索性能
+新增	        无	                                health_check(), get_pool_status()	运维可观测性
+
+
+
+现状分析
+
+当前的数据流是这样的：
+Tool(search_jobs_tool) --写入--> GlobalState(内存dict) --读取--> chat_flow.py(更新按钮)
+
+核心问题：Tool 执行完毕后，需要把结构化的职位列表传给前端 UI 更新按钮，但 Tool 的返回值是给 LLM 看的纯文本，不是给前端看的结构化数据。所以你用了一个全局字典做"暗通道"。
+改进方案：利用 LangGraph State 传递，彻底去掉 GlobalState
+
+思路：在 AgentState 中新增一个字段 search_results，Tool 执行完后数据自然留在 State 里，chat_flow.py 从 Graph 的最终 State 中读取即可。
+
+
+
+ILIKE 性能优化
+
+改动 1：在 _init_tables 中创建 GIN 三元组索引
+
+Python
+
+# 已在上一次数据库改造中加入
+cur.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm;")
+
+cur.execute("""
+    CREATE INDEX IF NOT EXISTS idx_jobs_title_trgm
+    ON jobs USING gin (title gin_trgm_ops);
+""")
+
+原理：pg_trgm 扩展将字符串拆分为三元组（trigram），建立 GIN 倒排索引。ILIKE 查询时 PostgreSQL 会自动利用该索引，避免全表扫描。
+
+改动 2：vector_search 的 SQL 重写为 CTE 两阶段
+
+Python
+
+sql = """
+    WITH vector_candidates AS (
+        -- 第一阶段：向量 ANN 召回，仅扫描索引，极快
+        SELECT *, (embedding <=> %s::vector) AS vec_dist
+        FROM jobs
+        WHERE embedding IS NOT NULL
+        ORDER BY embedding <=> %s::vector
+        LIMIT %s                            -- 召回 top_k * 4 条
+    )
+    -- 第二阶段：仅在召回集（几十条）内做 ILIKE，开销可忽略
+    SELECT *,
+        CASE
+            WHEN title ILIKE %s THEN vec_dist * 0.85    -- 标题命中，距离打85折
+            WHEN summary ILIKE %s THEN vec_dist * 0.92  -- 摘要命中，距离打92折
+            ELSE vec_dist
+        END AS final_score
+    FROM vector_candidates
+    ORDER BY final_score ASC
+    LIMIT %s;                               -- 最终返回 top_k 条
+"""
+
+性能对比：
+维度	            原方案	                                新方案
+ILIKE扫描范围	全表 (可能几万/几十万行)	                仅 CTE 结果集 (几十行)
+索引利用	        无	                                    GIN trgm 索引 + ivfflat 向量索引
+top_k           传入	f"LIMIT {top_k}" f-string 拼接	    LIMIT %s 参数化
+加权逻辑	        距离 - 0.2 (尺度不统一)	                距离 * 0.85 (比例缩放，语义合理)
+
+
+
+2、面试增加总结功能
+
+面试进行中
+    │
+    ├── 用户输入回答 ──> interview_input.submit
+    │       └── handle_interview_chat(should_end=False)
+    │               └── Graph: START -> interviewer_node -> (tools?) -> 回复
+    │
+    └── 点击 [📝 结束面试并生成总结]
+            └── end_interview_with_summary(should_end=True)
+                    └── Graph: START -> should_summarize 检测到 should_end
+                                    └── report_node
+                                            ├── 1. 汇总 summary + messages
+                                            ├── 2. LLM 生成评估报告 (流式)
+                                            ├── 3. 解析 5 维评分
+                                            ├── 4. 薄弱项写入用户画像
+                                            └── 5. -> END
+
+                    chat_flow 侧：
+                        ├── 报告流式输出到 interview_chatbot
+                        ├── 隐藏 summary_btn
+                        └── 显示 back_btn
+
+    点击 [🏠 返回求职大厅]
+            └── return_to_lobby()
+                    ├── main_group visible=True
+                    └── interview_group visible=False
+
+
+
+
