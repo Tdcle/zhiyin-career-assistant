@@ -42,7 +42,7 @@ def respond(message, chat_history, user_info):
     """
 
     # --- 1. 初始化 ---
-    current_btn_updates = [gr.update(visible=False, value="")] * 5
+    current_btn_updates = [gr.update(visible=False, value="")] * 6
     current_jobs_data = []
 
     if not message.strip():
@@ -110,7 +110,7 @@ def respond(message, chat_history, user_info):
             current_jobs_data = search_results
             new_updates = []
 
-            for i in range(5):
+            for i in range(len(search_results)):
                 if i < len(search_results):
                     job = search_results[i]
                     tags_clean = job.get('tags', '').replace('|', '·')

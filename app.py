@@ -56,13 +56,13 @@ def return_to_lobby():
 
 
 # --- UI 构建 ---
-with gr.Blocks(title="AI 智能招聘助手") as demo:
+with gr.Blocks(title="职小助") as demo:
     jobs_state = gr.State([])
     interview_context_state = gr.State({})
 
     # 顶部标题
     with gr.Row(elem_id="header-bar"):
-        gr.Markdown("## 🤖 AI 智能招聘助手 (Pro版)")
+        gr.Markdown("## 职小助——快速找到好工作")
 
     # 主体双列
     with gr.Row(elem_id="main-layout"):
@@ -87,7 +87,6 @@ with gr.Blocks(title="AI 智能招聘助手") as demo:
             resume_file = gr.File(
                 label="上传简历",
                 file_types=[".pdf", ".png", ".jpg"],
-                height=100
             )
             upload_status = gr.Textbox(label="状态", interactive=False)
             gr.Markdown(f"\nLog: `{os.path.basename(current_log_path)}`")
@@ -135,7 +134,7 @@ with gr.Blocks(title="AI 智能招聘助手") as demo:
                         with gr.Column(scale=1, min_width=240):
                             btn_job_4 = gr.Button(visible=False, elem_classes="job-card-btn")
                         with gr.Column(scale=1, min_width=240):
-                            gr.Markdown("", visible=True)
+                            btn_job_5 = gr.Button(visible=False, elem_classes="job-card-btn")
 
             # ========== 模式 2: 模拟面试室 ==========
             with gr.Column(visible=False, elem_id="interview-wrapper") as interview_group:
@@ -165,13 +164,14 @@ with gr.Blocks(title="AI 智能招聘助手") as demo:
                         "📝 结束面试并生成总结",
                         variant="primary",
                         scale=2,
-                        visible=True
+                        visible=True,
+                        interactive=True
                     )
                     back_btn = gr.Button(
                         "🏠 返回求职大厅",
                         variant="stop",
                         scale=1,
-                        visible=False
+                        visible=True
                     )
 
     # ================================================================
@@ -184,7 +184,7 @@ with gr.Blocks(title="AI 智能招聘助手") as demo:
 
     chat_outputs = [
         chatbot, msg_input, jobs_state,
-        btn_job_0, btn_job_1, btn_job_2, btn_job_3, btn_job_4
+        btn_job_0, btn_job_1, btn_job_2, btn_job_3, btn_job_4, btn_job_5
     ]
     msg_input.submit(respond, [msg_input, chatbot, user_dropdown], chat_outputs)
     send_btn.click(respond, [msg_input, chatbot, user_dropdown], chat_outputs)
@@ -202,6 +202,7 @@ with gr.Blocks(title="AI 智能招聘助手") as demo:
     btn_job_2.click(create_click_handler(2), inputs=[jobs_state, user_dropdown], outputs=interview_outputs)
     btn_job_3.click(create_click_handler(3), inputs=[jobs_state, user_dropdown], outputs=interview_outputs)
     btn_job_4.click(create_click_handler(4), inputs=[jobs_state, user_dropdown], outputs=interview_outputs)
+    btn_job_5.click(create_click_handler(5), inputs=[jobs_state, user_dropdown], outputs=interview_outputs)
 
     interview_input.submit(
         handle_interview_chat,

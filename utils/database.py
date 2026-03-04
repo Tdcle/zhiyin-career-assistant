@@ -488,37 +488,38 @@ class DatabaseManager:
     #                    搜索与分析接口
     # ================================================================
 
-    def vector_search(self, query_text: str, top_k: int = 5):
+    def vector_search(self, query_text: str, city: str = "", experience: str = "", top_k: int = 5):
         """
-        混合检索 (Hybrid Search)
-
-        策略：
-        1. 向量 ANN 召回 top_k * 4 条候选
-        2. 在候选集内用 ILIKE 加分 (标题命中则降低距离)
-        3. 按混合分排序，返回 top_k 条
-
-        注意：top_k 参数化传入，避免 SQL 注入风险
+        混合检索：硬条件过滤 + 向量 ANN + ILIKE 精排辅助
         """
         try:
-            # 1. 生成查询向量 (在事务外完成)
             query_vector = self.embed_model.embed_query(query_text)
-
             if not query_vector:
                 logger.warning("⚠️ 查询向量生成失败")
                 return []
 
             with self.get_cursor(dict_cursor=True) as cur:
-                # 两阶段 SQL：
-                # 内层 CTE：向量召回 (粗筛)
-                # 外层：关键词加权 (精排辅助)
-                sql = """
+                # 1. 动态构建 WHERE 条件 (硬过滤)
+                where_sql = ""
+                dynamic_params = []
+
+                if city:
+                    where_sql += " AND city ILIKE %s"
+                    dynamic_params.append(f"%{city}%")
+                if experience:
+                    # 实习/经验条件可能在多个字段中出现
+                    where_sql += " AND (experience ILIKE %s OR title ILIKE %s OR detail ILIKE %s)"
+                    dynamic_params.extend([f"%{experience}%", f"%{experience}%", f"%{experience}%"])
+
+                # 2. 组装最终 SQL
+                sql = f"""
                     WITH vector_candidates AS (
                         SELECT id, job_id, title, company, industry, salary,
                                city, district, experience, degree, welfare,
                                summary, detail, detail_url,
                                (embedding <=> %s::vector) AS vec_dist
                         FROM jobs
-                        WHERE embedding IS NOT NULL
+                        WHERE embedding IS NOT NULL {where_sql}
                         ORDER BY embedding <=> %s::vector
                         LIMIT %s
                     )
@@ -533,20 +534,18 @@ class DatabaseManager:
                     LIMIT %s;
                 """
 
+                # 3. 参数按顺序组装
                 like_kw = f"%{query_text}%"
-                recall_count = top_k * 4  # 召回量 = 最终需求的 4 倍
+                recall_count = top_k * 4
 
-                cur.execute(sql, (
-                    query_vector,   # CTE 中的向量距离计算
-                    query_vector,   # CTE 中的 ORDER BY
-                    recall_count,   # CTE 的 LIMIT (召回量)
-                    like_kw,        # 外层 title ILIKE
-                    like_kw,        # 外层 summary ILIKE
-                    top_k           # 外层最终 LIMIT
-                ))
+                # 参数顺序:
+                # [向量参数] + [动态WHERE参数] + [ORDER BY向量参数, LIMIT数] + [外层ILIKE参数x2, 外层LIMIT数]
+                params = [query_vector] + dynamic_params + [query_vector, recall_count, like_kw, like_kw, top_k]
 
+                cur.execute(sql, params)
                 results = cur.fetchall()
-                logger.info(f"🔍 混合检索完成: query='{query_text}', 返回 {len(results)} 条")
+                logger.info(
+                    f"🔍 检索完成: query='{query_text}', city='{city}', exp='{experience}', 返回 {len(results)} 条")
                 return results
 
         except Exception as e:

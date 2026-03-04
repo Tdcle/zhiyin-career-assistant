@@ -40,8 +40,8 @@ def start_interview_logic(job_data_dict, user_info):
         [{"role": "assistant", "content": f"⏳ 正在连接【{job_title}】面试官..."}],
         f"🎙️ 正在连接面试房间...",
         None,
-        gr.update(visible=True, interactive=True, value="📝 结束面试并生成总结"),
-        gr.update(visible=False)
+        gr.update(interactive=True, value="📝 结束面试并生成总结"),
+        gr.update(visible=True)
     )
 
     job_detail = db.get_job_details(selected_job_id)
@@ -96,8 +96,8 @@ def start_interview_logic(job_data_dict, user_info):
         [{"role": "assistant", "content": ai_opening}],
         f"🎙️ 正在面试：{job_detail['title']}",
         context_state,
-        gr.update(visible=True, interactive=True, value="📝 结束面试并生成总结"),
-        gr.update(visible=False)
+        gr.update(interactive=True, value="📝 结束面试并生成总结"),
+        gr.update(visible=True)
     )
 
 
@@ -185,7 +185,7 @@ def end_interview_with_summary(history, context_state, user_info):
     yield (
         new_history,
         gr.update(interactive=False, value="⏳ 正在生成报告..."),
-        gr.update(visible=False)
+        gr.update(visible=True)
     )
 
     # --- 2. 调用 Graph ---

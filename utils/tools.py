@@ -36,20 +36,14 @@ except Exception as e:
 
 
 # ================= 2. 定义输入结构 =================
+# ==========================================
+# 1. 定义更智能的 SearchInput 模型
+# ==========================================
 class SearchInput(BaseModel):
-    user_id: str = Field(description="用户ID")
-    query: str = Field(
-        description=(
-            "用于检索职位的组合关键词字符串。"
-            "关键词应包含以下维度中的一个或多个（用空格分隔）："
-            "1. 地点（如：北京、海淀区）"
-            "2. 职位方向/技术栈（如：Python、Java、大模型、前端）"
-            "3. 薪资范围（如：20k、30-50k）"
-            "4. 公司名（如：百度、字节）"
-            "5. 福利要求（如：双休、不加班）"
-            "例如输入：'北京 海淀 Python 20k 双休'"
-        )
-    )
+    user_id: str = Field(..., description="当前用户的系统ID")
+    semantic_query: str = Field(..., description="扩充后的语义搜索词。必须结合历史摘要，并将口语扩充为专业词（如把'后端'扩充为'后端开发 Java Go 服务端'）")
+    city: str = Field(default="", description="提取的城市硬性条件，如'北京'、'上海'。如果没有则为空")
+    experience: str = Field(default="", description="提取的经验或岗位类型硬性条件，如'实习'、'应届'、'1-3年'。如果没有则为空")
 
 class TrendInput(BaseModel):
     keyword: str = Field(description="关键词。")
@@ -67,9 +61,9 @@ class MatchInput(BaseModel):
 
 
 @tool("search_jobs_tool", args_schema=SearchInput)
-def search_jobs_tool(user_id: str, query: str):
+def search_jobs_tool(user_id: str, semantic_query: str, city: str = "", experience: str = ""):
     """
-    【核心工具】搜索职位 (Vector Recall -> Rerank)。
+    【核心工具】搜索职位 (硬条件过滤 + Vector Recall -> Rerank)。
     执行流程：
     1. 数据库混合检索召回 Top 20。
     2. BGE-Reranker 模型精细打分。
@@ -81,10 +75,16 @@ def search_jobs_tool(user_id: str, query: str):
     """
     import json
 
-    logger.info(f"🛠️ [Tool:Search] 开始搜索: '{query}'")
+    logger.info(f"🛠️ [Tool:Search] 意图解析结果: 语义='{semantic_query}', 城市='{city}', 经验='{experience}'")
+
 
     # 1. 召回
-    candidates = db.vector_search(query, top_k=20)
+    candidates = db.vector_search(
+        query_text=semantic_query,
+        city=city,
+        experience=experience,
+        top_k=20
+    )
     logger.info(f"📊 [Tool:Search] 数据库召回: {len(candidates)} 条")
 
     if not candidates:
@@ -95,7 +95,7 @@ def search_jobs_tool(user_id: str, query: str):
 
     # 2. 精排
     if not reranker or len(candidates) < 2:
-        final_results = candidates[:5]
+        final_results = candidates[:6]
     else:
         rerank_pairs = []
         for res in candidates:
@@ -110,7 +110,9 @@ def search_jobs_tool(user_id: str, query: str):
                 f"详情: {res.get('summary')}"
             ).replace('\n', ' ')
 
-            rerank_pairs.append([query, doc_text])
+            full_rerank_query = f"{city} {experience} {semantic_query}".strip()
+
+            rerank_pairs.append([full_rerank_query, doc_text])
 
         scores = reranker.predict(rerank_pairs)
         scored_results = list(zip(candidates, scores))
@@ -120,7 +122,7 @@ def search_jobs_tool(user_id: str, query: str):
         low_score = scored_results[-1][1]
         logger.info(f"🧠 [Tool:Search] 重排序完成. Max: {top_score:.4f} | Min: {low_score:.4f}")
 
-        final_results = [item[0] for item in scored_results[:5]]
+        final_results = [item[0] for item in scored_results[:6]]
 
     # 3. 构造两份数据
 
@@ -136,17 +138,19 @@ def search_jobs_tool(user_id: str, query: str):
         })
 
     # 3b. LLM 阅读的 Markdown 文本
-    llm_text = f"经 AI 深度筛选，为您找到最匹配的 {len(final_results)} 个职位：\n"
-    for res in final_results:
-        intro = res.get('summary') if res.get('summary') else res['detail'][:200]
-        llm_text += f"""
-        - **公司**: {res['company']} ({res['industry']} | {res['city']} {res['district']})
-        - **职位**: {res['title']}
-        - **薪资**: {res['salary']} ({res['welfare']})
-        - **概要**: {intro}
-        - **链接**: {res['detail_url']}
-        ------------------------------------------------
-        """
+    llm_text = f"为用户找到 {len(final_results)} 个匹配职位，请按格式展示：\n"
+    for i, res in enumerate(final_results, 1):
+        intro = res.get('summary') if res.get('summary') else res['detail'][:150]
+        welfare = res.get('welfare', '未标注')
+        llm_text += (
+        f"🏢 **{res['company']}**（{res.get('industry', '')} | {res.get('city', '')} {res.get('district', '')}）\n"
+        f"📌 职位：{res['title']}\n"
+        f"💰 薪资：{res['salary']} · {welfare}\n"
+        f"📋 要求：{res.get('degree', '')} / {res.get('experience', '')}\n"
+        f"📝 概要：{intro}\n"
+        f"🔗 链接：{res.get('detail_url', '')}\n"
+        f"\n---\n"
+    )
 
     logger.info(f"✅ [Tool:Search] 工具返回完成, UI卡片数: {len(ui_cards)}")
 

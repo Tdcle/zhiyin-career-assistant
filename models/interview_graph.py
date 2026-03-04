@@ -121,7 +121,10 @@ def interviewer_node(state: InterviewState):
     system_prompt_str = f"""
     你现在是【{company}】的资深技术面试官。
     正在面试岗位：【{title}】。
-
+    
+    【系统重要参数】
+    当前用户的 user_id:"{user_id}"
+    
     【岗位JD摘要】：
     {jd}
 
@@ -156,8 +159,6 @@ def report_node(state: InterviewState):
 
     简化设计：
     - 只生成一份完整的 Markdown 评估报告
-    - 不额外生成分数 JSON（报告正文中已包含评分）
-    - 将详细反馈写入用户画像
     - 不往 messages 中写入任何内容（避免重复显示）
     """
     import re
@@ -219,39 +220,14 @@ def report_node(state: InterviewState):
     注意：
     - 评分和内容必须一致，如果表现很差就给低分，不要客气
     - 直接输出报告内容即可，不要输出任何 JSON、代码块或额外格式
-
-    最后，在报告末尾另起一行，以如下格式输出需要写入候选人档案的信息（用于长期跟踪改进）：
-    PROFILE_UPDATE:简洁描述候选人的核心优势和所有薄弱环节，包括具体的技术知识点缺失
     """
 
+    sys_logger.info(f"📝 [Report] 开始生成用户 {user_id} 在 {company} 的面试报告...")
     response = report_llm.invoke(report_prompt)
-    report_content = response.content
+    clean_report = response.content.strip()
+    sys_logger.info(f"📊 [Report] 报告生成完成，长度: {len(clean_report)}")
 
-    # --- 解析并提取画像更新内容 ---
-    profile_update = ""
-    clean_report = report_content
-
-    try:
-        profile_match = re.search(r'PROFILE_UPDATE:(.*?)$', report_content, re.DOTALL)
-        if profile_match:
-            profile_update = profile_match.group(1).strip()
-            # 从展示报告中去掉这行
-            clean_report = report_content[:profile_match.start()].rstrip()
-    except AttributeError:
-        pass
-
-    # --- 写入用户画像 ---
-    if profile_update:
-        try:
-            old_profile = db_manager.get_user_profile(user_id)
-            timestamp_note = f"[面试反馈-{title}] {profile_update}"
-            new_profile = f"{old_profile}; {timestamp_note}" if old_profile else timestamp_note
-            db_manager.update_user_profile(user_id, new_profile)
-            sys_logger.info(f"🧠 [Report] 画像已更新: {profile_update[:100]}...")
-        except Exception as e:
-            sys_logger.error(f"画像更新失败: {e}")
-
-    # 【关键】只写独立字段，不动 messages
+    # 返回纯净的报告内容
     return {
         "final_report": clean_report,
     }
