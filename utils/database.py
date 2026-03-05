@@ -533,8 +533,8 @@ class DatabaseManager:
                         CASE
                             -- 【核心修改 2】使用 ~* 进行不区分大小写的正则匹配
                             -- 只要 title 或 summary 中命中任意一个关键词，就给予奖励分
-                            WHEN title ~* %s THEN vec_dist * 0.92
-                            WHEN summary ~* %s THEN vec_dist * 0.85
+                            WHEN title ~* %s THEN vec_dist * 0.85
+                            WHEN summary ~* %s THEN vec_dist * 0.92
                             ELSE vec_dist
                         END AS final_score
                     FROM vector_candidates
