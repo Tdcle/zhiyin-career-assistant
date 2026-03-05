@@ -490,13 +490,20 @@ class DatabaseManager:
 
     def vector_search(self, query_text: str, city: str = "", experience: str = "", top_k: int = 5):
         """
-        混合检索：硬条件过滤 + 向量 ANN + ILIKE 精排辅助
+        混合检索：硬条件过滤 + 向量 ANN + 正则精排辅助
         """
+        import re
         try:
             query_vector = self.embed_model.embed_query(query_text)
             if not query_vector:
                 logger.warning("⚠️ 查询向量生成失败")
                 return []
+
+            # 【核心修改 1】将多词查询转换为正则表达式 (例如 "前端 Java" -> "前端|Java")
+            # 按空格或标点切分，过滤空字符
+            keywords = [kw for kw in re.split(r'\s+', query_text.strip()) if kw]
+            # 组装正则，如果关键词为空则给个不会报错的默认值
+            regex_pattern = "|".join(keywords) if keywords else "^$"
 
             with self.get_cursor(dict_cursor=True) as cur:
                 # 1. 动态构建 WHERE 条件 (硬过滤)
@@ -507,7 +514,6 @@ class DatabaseManager:
                     where_sql += " AND city ILIKE %s"
                     dynamic_params.append(f"%{city}%")
                 if experience:
-                    # 实习/经验条件可能在多个字段中出现
                     where_sql += " AND (experience ILIKE %s OR title ILIKE %s OR detail ILIKE %s)"
                     dynamic_params.extend([f"%{experience}%", f"%{experience}%", f"%{experience}%"])
 
@@ -525,8 +531,10 @@ class DatabaseManager:
                     )
                     SELECT *,
                         CASE
-                            WHEN title ILIKE %s THEN vec_dist * 0.85
-                            WHEN summary ILIKE %s THEN vec_dist * 0.92
+                            -- 【核心修改 2】使用 ~* 进行不区分大小写的正则匹配
+                            -- 只要 title 或 summary 中命中任意一个关键词，就给予奖励分
+                            WHEN title ~* %s THEN vec_dist * 0.92
+                            WHEN summary ~* %s THEN vec_dist * 0.85
                             ELSE vec_dist
                         END AS final_score
                     FROM vector_candidates
@@ -535,17 +543,17 @@ class DatabaseManager:
                 """
 
                 # 3. 参数按顺序组装
-                like_kw = f"%{query_text}%"
                 recall_count = top_k * 4
 
                 # 参数顺序:
-                # [向量参数] + [动态WHERE参数] + [ORDER BY向量参数, LIMIT数] + [外层ILIKE参数x2, 外层LIMIT数]
-                params = [query_vector] + dynamic_params + [query_vector, recall_count, like_kw, like_kw, top_k]
+                # [向量参数] + [动态WHERE参数] + [ORDER BY向量参数, LIMIT数] + [外层正则参数x2, 外层LIMIT数]
+                params = [query_vector] + dynamic_params + [query_vector, recall_count, regex_pattern, regex_pattern,
+                                                            top_k]
 
                 cur.execute(sql, params)
                 results = cur.fetchall()
                 logger.info(
-                    f"🔍 检索完成: query='{query_text}', city='{city}', exp='{experience}', 返回 {len(results)} 条")
+                    f"🔍 检索完成: query='{query_text}'(正则:{regex_pattern}), city='{city}', exp='{experience}', 返回 {len(results)} 条")
                 return results
 
         except Exception as e:
