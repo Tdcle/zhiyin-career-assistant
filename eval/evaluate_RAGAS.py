@@ -1,6 +1,8 @@
 import os
 import sys
 import json
+import logging
+import pandas as pd
 from datetime import datetime
 from tqdm import tqdm
 from datasets import Dataset
@@ -14,16 +16,54 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if project_root not in sys.path:
     sys.path.append(project_root)
 
+# ================= 1. 自动归档与全局日志配置 =================
+EVAL_DIR = os.path.dirname(__file__)
+TEST_FILE = os.path.join(EVAL_DIR, "synthetic_eval_dataset.json")
+
+# 生成本次运行的独立文件夹
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+RUN_DIR = os.path.join(EVAL_DIR, "results", f"run_{timestamp}")
+os.makedirs(RUN_DIR, exist_ok=True)
+
+
+# 拦截系统标准输出 (print)，使其同时输出到控制台和日志文件
+class OutputLogger:
+    def __init__(self, filename):
+        self.terminal = sys.stdout
+        self.log = open(filename, "a", encoding="utf-8")
+
+    def write(self, message):
+        self.terminal.write(message)
+        self.log.write(message)
+        self.log.flush()
+
+    def flush(self):
+        self.terminal.flush()
+        self.log.flush()
+
+
+log_file_path = os.path.join(RUN_DIR, "eval_process.log")
+sys.stdout = OutputLogger(log_file_path)
+sys.stderr = sys.stdout  # 捕获错误信息
+
+# 尝试捕获 database.py 里的 sys_logger，使其搜索日志也落盘到同个 log 文件
+try:
+    from utils.logger import sys_logger
+
+    file_handler = logging.FileHandler(log_file_path, encoding='utf-8')
+    file_handler.setFormatter(logging.Formatter('%(asctime)s - [%(levelname)s] - %(message)s'))
+    sys_logger.addHandler(file_handler)
+except ImportError:
+    pass
+
 from utils.database import DatabaseManager
 from config.config import config
 from langchain_community.chat_models import ChatTongyi
 from langchain_ollama import OllamaEmbeddings
 from langchain_core.messages import HumanMessage
-
 from ragas import evaluate
 
-# ================= 兼容处理 RAGAS 的大版本更新 =================
-# 1. 兼容指标类导入 (新版要求大写类名并实例化)
+# ================= 2. 兼容处理 RAGAS 的大版本更新 =================
 try:
     from ragas.metrics import ContextPrecision, ContextRecall, Faithfulness, AnswerRelevancy
 
@@ -31,7 +71,6 @@ try:
 except ImportError:
     from ragas.metrics import context_precision, context_recall, faithfulness, answer_relevancy
 
-    # 动态判断：如果是类就加上 () 实例化
     eval_metrics = [
         context_precision() if isinstance(context_precision, type) else context_precision,
         context_recall() if isinstance(context_recall, type) else context_recall,
@@ -39,7 +78,6 @@ except ImportError:
         answer_relevancy() if isinstance(answer_relevancy, type) else answer_relevancy,
     ]
 
-# 尝试导入 RunConfig 以限制并发防止超时
 try:
     from ragas.run_config import RunConfig
 
@@ -47,19 +85,12 @@ try:
 except ImportError:
     run_config = None
 
-# ================= 1. 初始化系统 =================
+# ================= 3. 初始化系统与模型 =================
 db = DatabaseManager()
-EVAL_DIR = os.path.dirname(__file__)
-TEST_FILE = os.path.join(EVAL_DIR, "synthetic_eval_dataset.json")
 
-# 【新增】：结果保存目录
-RESULTS_DIR = os.path.join(EVAL_DIR, "results")
-os.makedirs(RESULTS_DIR, exist_ok=True)
-
-eval_llm = ChatTongyi(api_key=config.DASHSCOPE_API_KEY, model="qwen-max")
+eval_llm = ChatTongyi(api_key=config.DASHSCOPE_API_KEY, model="qwen3-235b-a22b")
 eval_embeddings = OllamaEmbeddings(base_url=config.OLLAMA_URL, model=config.EMBEDDING_MODEL_NAME)
 
-# 2. 兼容模型封装 (新版 RAGAS 要求使用 Wrapper)
 try:
     from ragas.llms import LangchainLLMWrapper
     from ragas.embeddings import LangchainEmbeddingsWrapper
@@ -72,13 +103,11 @@ except ImportError:
 
 
 def format_job_context(job: dict) -> str:
-    """统一的职位信息格式化函数，确保评测环境与真实链路一致"""
+    """统一的职位信息格式化函数"""
     if not job:
         return ""
-
     welfare = job.get('welfare') or ''
     intro = job.get('summary') or job.get('detail') or ''
-
     return (
         f"🏢 **{job.get('company', '')}**（{job.get('industry', '')} | {job.get('city', '')} {job.get('district', '')}）\n"
         f"📌 职位：{job.get('title', '')}\n"
@@ -90,12 +119,18 @@ def format_job_context(job: dict) -> str:
 
 
 def generate_rag_answer(query: str, contexts: list):
-    """模拟真实的 RAG 生成环节"""
+    """简化的提示词，对齐生成数据集时的参考答案约束"""
     context_str = "\n\n---\n\n".join([f"【职位 {i + 1}】\n{ctx}" for i, ctx in enumerate(contexts)])
-
     prompt = f"""
-    你是专业的求职顾问。请根据以下检索到的职位信息，回答求职者的问题。
-    如果检索到的信息无法回答，请直接说不知道，禁止编造。
+    你是专业的求职顾问。请根据以下【检索到的真实职位信息】，回答【求职者问题】。
+
+    【要求】：
+    请客观分析求职者需求与该岗位的匹配度（指出匹配点和可能的不足）
+    你的分析必须严谨，并且绝对不能编造职位信息中未提及的数据。
+    回答简洁，只需要回答一小段话不分点，控制在200字以内。
+    
+    示例：
+    
 
     【检索到的职位信息】：
     {context_str}
@@ -119,19 +154,21 @@ def main():
     with open(TEST_FILE, "r", encoding="utf-8") as f:
         synthetic_dataset = json.load(f)
 
+    print(f"🚀 本次运行日志与结果将保存在: {RUN_DIR}")
     print("开始执行评测流水线 (分离 Broad Search 与 Precise Match)...")
 
     # 用于保存的综合报告字典
     report_data = {
-        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "timestamp": timestamp,
         "broad_search_metrics": {},
         "precise_match_metrics": {}
     }
 
-    # 第一部分：纯检索评估指标记录
+    # 第一部分：纯检索评估指标与明细记录
     total_broad_queries = 0
     hits_at_5 = 0
     hits_at_10 = 0
+    broad_search_records = []
 
     # 第二部分：RAGAS 生成评估数据集
     data_samples = {
@@ -170,14 +207,26 @@ def main():
                 retrieved_ids = [job.get("job_id") for job in retrieved_jobs]
 
                 # 判断是否命中
-                if ground_truth_id in retrieved_ids[:5]:
-                    hits_at_5 += 1
-                if ground_truth_id in retrieved_ids[:10]:
-                    hits_at_10 += 1
+                is_hit_5 = ground_truth_id in retrieved_ids[:5]
+                is_hit_10 = ground_truth_id in retrieved_ids[:10]
+
+                if is_hit_5: hits_at_5 += 1
+                if is_hit_10: hits_at_10 += 1
+
+                # 压入泛化搜索明细记录，供后续排查使用
+                broad_search_records.append({
+                    "user_question": query,
+                    "semantic_query": semantic_query,
+                    "city": city,
+                    "experience": experience,
+                    "ground_truth_id": ground_truth_id,
+                    "hit_at_5": is_hit_5,
+                    "hit_at_10": is_hit_10,
+                    "retrieved_ids": ", ".join(retrieved_ids)
+                })
 
             # ================= 第二部分: 精确匹配 (交由 RAGAS 评估大模型生成能力) =================
             elif query_type == "precise_match":
-                # 检索 (Top 5 即可，模拟真实推荐数量)
                 retrieved_jobs = db.vector_search(
                     query_text=semantic_query,
                     city=city,
@@ -195,13 +244,10 @@ def main():
                 # 压入 RAGAS 数据集
                 data_samples["question"].append(query)
                 data_samples["user_input"].append(query)
-
                 data_samples["contexts"].append(contexts)
                 data_samples["retrieved_contexts"].append(contexts)
-
                 data_samples["answer"].append(answer)
                 data_samples["response"].append(answer)
-
                 data_samples["ground_truth"].append(reference_answer)
                 data_samples["reference"].append(reference_answer)
 
@@ -234,7 +280,6 @@ def main():
 
         print("\n🧠 第二部分：开始使用 RAGAS 进行生成质量打分 (Precise Match)...")
         try:
-            # 加入 run_config 控制并发，防止 TimeoutError
             evaluate_kwargs = {
                 "dataset": hf_dataset,
                 "metrics": eval_metrics,
@@ -250,7 +295,6 @@ def main():
             print("🏆 RAGAS 精确人岗匹配 (Precise Match) 生成报告")
             print("=" * 40)
 
-            # 安全地从 EvaluationResult 对象中提取分数
             score_dict = {}
             if hasattr(score, 'items'):
                 score_dict = score
@@ -264,7 +308,7 @@ def main():
                 try:
                     score_dict = dict(score)
                 except:
-                    print(f"原始打分对象: {score}")
+                    pass
 
             # 打印提取出的分数并存入报告
             if score_dict:
@@ -280,27 +324,32 @@ def main():
     else:
         print("\n⚠️ 未在数据集中找到 query_type='precise_match' 的用例，跳过 RAGAS 评测。")
 
-    # ================= 结果落盘保存 =================
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    # ================= 结果与明细统一落盘保存 =================
+    print(f"\n📁 正在打包写入所有明细至目录: {RUN_DIR}")
 
-    # 1. 保存汇总 JSON 报告
-    report_path = os.path.join(RESULTS_DIR, f"eval_report_{timestamp}.json")
+    # 1. 泛化搜索记录 CSV 落盘 (新增)
+    if broad_search_records:
+        broad_df = pd.DataFrame(broad_search_records)
+        broad_csv_path = os.path.join(RUN_DIR, "broad_search_details.csv")
+        broad_df.to_csv(broad_csv_path, index=False, encoding="utf-8-sig")
+        print(f"✅ 泛化搜索明细已保存至: {broad_csv_path}")
+
+    # 2. RAGAS 生成质量明细 CSV 落盘
+    if ragas_score_df is not None:
+        csv_path = os.path.join(RUN_DIR, "ragas_details.csv")
+        ragas_score_df.to_csv(csv_path, index=False, encoding="utf-8-sig")
+        print(f"✅ RAGAS评估明细已保存至: {csv_path}")
+
+    # 3. 最终汇总 JSON 落盘
+    report_path = os.path.join(RUN_DIR, "eval_report.json")
     try:
         with open(report_path, "w", encoding="utf-8") as f:
             json.dump(report_data, f, ensure_ascii=False, indent=4)
-        print(f"\n✅ 评测汇总报告已保存至: {report_path}")
+        print(f"✅ 核心评测报告已保存至: {report_path}")
     except Exception as e:
         print(f"❌ 报告保存失败: {e}")
 
-    # 2. 保存 RAGAS 每条测试用例的得分明细 CSV
-    if ragas_score_df is not None:
-        csv_path = os.path.join(RESULTS_DIR, f"ragas_details_{timestamp}.csv")
-        try:
-            # utf-8-sig 可以防止用 Excel 打开中文乱码
-            ragas_score_df.to_csv(csv_path, index=False, encoding="utf-8-sig")
-            print(f"✅ RAGAS明细数据已保存至: {csv_path}")
-        except Exception as e:
-            print(f"❌ 明细数据保存失败: {e}")
+    print(f"\n🎉 评测完成！请查阅文件夹: {RUN_DIR}")
 
 
 if __name__ == "__main__":

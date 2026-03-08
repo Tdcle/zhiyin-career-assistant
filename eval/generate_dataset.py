@@ -17,12 +17,12 @@ from langchain_core.messages import HumanMessage, SystemMessage
 db = DatabaseManager()
 llm = ChatTongyi(
     api_key=config.DASHSCOPE_API_KEY,
-    model="qwen-max",
+    model="qwen3-max",
     temperature=0.7
 )
 
 OUTPUT_FILE = os.path.join(os.path.dirname(__file__), "synthetic_eval_dataset.json")
-SAMPLE_SIZE = 5  # 测试通过后可调大
+SAMPLE_SIZE = 15  # 测试通过后可调大
 
 
 def fetch_random_jobs(limit=50):
@@ -46,7 +46,7 @@ def fetch_random_jobs(limit=50):
 
 
 def generate_queries_for_job(job):
-    """生成两种不同意图的测试数据"""
+    """【修改点】对齐评测目标，Type1测召回，Type2测大模型分析"""
     system_prompt = """
     你是一个资深的招聘专家和数据标注工程师。
     我将提供一个真实的职位信息。请你模拟真实的求职者，为该职位生成 2 个完全不同场景的求职提问，并提取对应的检索参数。
@@ -55,22 +55,23 @@ def generate_queries_for_job(job):
     数组必须包含且仅包含 2 个对象，分别对应以下两种 query_type：
 
     【Type 1: 泛化搜索 (broad_search)】
-    - 场景：用户只想找某一类工作，没有特定公司偏好。
+    - 场景：用户只想找某一类工作，没有特定公司偏好。测试数据库的纯检索能力。
     - user_question 示例："我想找北京的前端开发的实习，期望薪资150一天左右，会Vue，有什么推荐吗？"
-    - 约束：user_question 中 **绝对不能** 出现公司名称。
+    - 约束：user_question 中绝对不能出现公司名称。"reference_answer" 字段请直接留空字符串 ""。
 
     【Type 2: 精确人岗匹配 (precise_match)】
-    - 场景：用户看中了特定公司，询问自身条件是否匹配。
+    - 场景：用户看中了特定公司，询问自身条件是否匹配。测试大模型的分析评价能力。
     - user_question 示例："我想去[公司名称]，我会[技能]，有[X年]经验，这个适合我吗？"
-    - 约束：user_question 中 **必须明确包含** 该职位的公司名称。
+    - 约束：user_question 必须明确包含公司名称。
+    - "reference_answer" 约束：你必须客观分析用户需求与该岗位的匹配度（指出匹配点和可能的不足），作为标准答案。
 
     每个对象必须包含以下字段：
     1. "query_type": "broad_search" 或 "precise_match"
-    2. "user_question": 模拟真实求职者的自然语言提问（根据上述要求）。
-    3. "semantic_query": 从提问中提炼的核心语义检索词，用空格隔开。若是 precise_match，必须把公司名也放进来（如：腾讯 前端 Vue）。
-    4. "city": 提取的城市（如：北京。若无则为空 ""）
-    5. "experience": 提取的经验要求（如：1-3年、实习。若无则为空 ""）
-    6. "reference_answer": 作为 AI 助手的标准完美回答（Ground Truth）。客观分析用户需求与该岗位的匹配度并进行推荐。
+    2. "user_question": 模拟真实求职者的自然语言提问。
+    3. "semantic_query": 核心语义词（空格隔开）。注意：请将用户的经验年限、学历等条件也补充进语义词中。若是 precise_match，包含公司名。
+    4. "city": 提取的城市。若无则为空 ""。
+    5. "experience": 提取用户的经验。若无则为空 ""。
+    6. "reference_answer": broad_search 留空；precise_match 写匹配度分析。
     """
 
     human_prompt = f"""
@@ -88,7 +89,6 @@ def generate_queries_for_job(job):
         HumanMessage(content=human_prompt)
     ]
 
-    content = ""
     try:
         response = llm.invoke(messages)
         content = response.content.strip()

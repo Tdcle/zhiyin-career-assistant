@@ -490,74 +490,115 @@ class DatabaseManager:
 
     def vector_search(self, query_text: str, city: str = "", experience: str = "", top_k: int = 5):
         """
-        混合检索：硬条件过滤 + 向量 ANN + 正则精排辅助
+        混合检索 V2.0：向量 ANN 扩大召回 + Python 内存级多维精准重排 (Rerank)
+        彻底解决正则崩溃、停用词干扰与 OR 逻辑稀释问题。
         """
         import re
         try:
-            query_vector = self.embed_model.embed_query(query_text)
+            from utils.logger import sys_logger
+
+            # 1. 生成查询向量
+            # 【优化】将大模型提取的经验合并到查询中，让向量模型也能感知到"实习"的语义
+            combined_query = f"{query_text} {experience}".strip()
+            query_vector = self.embed_model.embed_query(combined_query)
             if not query_vector:
-                logger.warning("⚠️ 查询向量生成失败")
+                sys_logger.warning("⚠️ 查询向量生成失败")
                 return []
 
-            # 【核心修改 1】将多词查询转换为正则表达式 (例如 "前端 Java" -> "前端|Java")
-            # 按空格或标点切分，过滤空字符
-            keywords = [kw for kw in re.split(r'\s+', query_text.strip()) if kw]
-            # 组装正则，如果关键词为空则给个不会报错的默认值
-            regex_pattern = "|".join(keywords) if keywords else "^$"
+            # 2. 提取并清洗有效关键词 (用于 Python 内存重排)
+            raw_keywords = [kw.strip().lower() for kw in re.split(r'\s+', combined_query.strip()) if kw.strip()]
+
+            # 【优化】移除了 '实习', '应届', '无经验'，它们现在是极其重要的有效关键词！
+            # 仅保留纯粹的无意义单位和城市名（城市已通过 ILIKE 硬过滤）
+            stop_words = {'年', '经验', '月薪', '以上', '以下', 'k',
+                          '北京', '上海', '广州', '深圳', '杭州', '成都', '武汉', '西安'}
+
+            valid_keywords = []
+            for kw in raw_keywords:
+                # 过滤纯数字、停用词
+                if kw in stop_words or kw.isdigit():
+                    continue
+                # 过滤类似 "3年", "15k" 这种带单位的数字干扰项（但保留"实习"等文字）
+                if re.match(r'^\d+[kwW年]$', kw):
+                    continue
+                valid_keywords.append(kw)
 
             with self.get_cursor(dict_cursor=True) as cur:
-                # 1. 动态构建 WHERE 条件 (硬过滤)
+                # 3. 动态构建 WHERE 条件 (仅保留极度明确的 city 作为硬过滤)
                 where_sql = ""
                 dynamic_params = []
 
                 if city:
                     where_sql += " AND city ILIKE %s"
                     dynamic_params.append(f"%{city}%")
-                if experience:
-                    where_sql += " AND (experience ILIKE %s OR title ILIKE %s OR detail ILIKE %s)"
-                    dynamic_params.extend([f"%{experience}%", f"%{experience}%", f"%{experience}%"])
 
-                # 2. 组装最终 SQL
+                # 4. 执行 SQL：使用向量搜索获取更宽泛的候选集 (扩大召回池)
+                # 故意获取 top_k * 5 的数量，留给 Python 层进行优中选优
+                recall_count = top_k * 5
+
                 sql = f"""
-                    WITH vector_candidates AS (
-                        SELECT id, job_id, title, company, industry, salary,
-                               city, district, experience, degree, welfare,
-                               summary, detail, detail_url,
-                               (embedding <=> %s::vector) AS vec_dist
-                        FROM jobs
-                        WHERE embedding IS NOT NULL {where_sql}
-                        ORDER BY embedding <=> %s::vector
-                        LIMIT %s
-                    )
-                    SELECT *,
-                        CASE
-                            -- 【核心修改 2】使用 ~* 进行不区分大小写的正则匹配
-                            -- 只要 title 或 summary 中命中任意一个关键词，就给予奖励分
-                            WHEN title ~* %s THEN vec_dist * 0.85
-                            WHEN summary ~* %s THEN vec_dist * 0.92
-                            ELSE vec_dist
-                        END AS final_score
-                    FROM vector_candidates
-                    ORDER BY final_score ASC
+                    SELECT id, job_id, title, company, industry, salary,
+                           city, district, experience, degree, welfare,
+                           summary, detail, detail_url,
+                           (embedding <=> %s::vector) AS vec_dist
+                    FROM jobs
+                    WHERE embedding IS NOT NULL {where_sql}
+                    ORDER BY embedding <=> %s::vector
                     LIMIT %s;
                 """
 
-                # 3. 参数按顺序组装
-                recall_count = top_k * 4
-
-                # 参数顺序:
-                # [向量参数] + [动态WHERE参数] + [ORDER BY向量参数, LIMIT数] + [外层正则参数x2, 外层LIMIT数]
-                params = [query_vector] + dynamic_params + [query_vector, recall_count, regex_pattern, regex_pattern,
-                                                            top_k]
-
+                params = [query_vector] + dynamic_params + [query_vector, recall_count]
                 cur.execute(sql, params)
-                results = cur.fetchall()
-                logger.info(
-                    f"🔍 检索完成: query='{query_text}'(正则:{regex_pattern}), city='{city}', exp='{experience}', 返回 {len(results)} 条")
-                return results
+                candidates = cur.fetchall()
+
+            # 5. Python 内存级精细化重排 (Rerank) - 彻底解决崩溃和分数稀释
+            for row in candidates:
+                hit_count = 0
+                title_lower = (row.get('title') or '').lower()
+                summary_lower = (row.get('summary') or '').lower()
+                exp_lower = (row.get('experience') or '').lower()
+
+                # A. 遍历清洗后的纯正技术栈关键词
+                for kw in valid_keywords:
+                    # 使用原生的 in 判定，绝对不会引发正则崩溃
+                    if kw in title_lower:
+                        hit_count += 2.0  # 命中标题，权重极高
+                    elif kw in summary_lower:
+                        hit_count += 1.0  # 命中摘要，增加权重
+
+                bonus = hit_count * 0.05
+
+                # B. 【核心优化】专属经验加分通道 (Soft Match)
+                # 如果 LLM 明确提取出了用户的经验诉求（如 "实习", "应届"）
+                if experience:
+                    clean_exp = experience.lower().replace("经验", "").strip()
+                    if clean_exp:
+                        # 只要官方的 experience 字段，或者职位标题里写了，给予【极高额奖励】
+                        if clean_exp in exp_lower or clean_exp in title_lower:
+                            bonus += 0.20  # 这个权重足以让实习岗瞬间排到全职岗位前面！
+
+                # 重新计算得分：向量距离 vec_dist 是越小越好
+                row['final_score'] = row['vec_dist'] - bonus
+
+            # 6. 根据最终得分重新排序 (升序，越小越靠前)
+            candidates.sort(key=lambda x: x['final_score'])
+
+            # 截取最终的 Top K 返回
+            final_results = candidates[:top_k]
+
+            sys_logger.info(
+                f"🔍 检索完成: query='{query_text}', 提纯关键词={valid_keywords}, 候选池={len(candidates)}, 最终返回={len(final_results)}"
+            )
+            return final_results
 
         except Exception as e:
-            logger.error(f"❌ 向量检索失败: {e}", exc_info=True)
+            from utils.logger import sys_logger
+            sys_logger.error(f"❌ 混合检索失败: {e}", exc_info=True)
+            return []
+
+        except Exception as e:
+            from utils.logger import sys_logger
+            sys_logger.error(f"❌ 混合检索失败: {e}", exc_info=True)
             return []
 
     def get_market_analytics(self, keyword: str):
