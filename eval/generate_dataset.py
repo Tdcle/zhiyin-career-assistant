@@ -17,12 +17,12 @@ from langchain_core.messages import HumanMessage, SystemMessage
 db = DatabaseManager()
 llm = ChatTongyi(
     api_key=config.DASHSCOPE_API_KEY,
-    model="qwen3-max",
+    model="deepseek-v3.2",
     temperature=0.7
 )
 
 OUTPUT_FILE = os.path.join(os.path.dirname(__file__), "synthetic_eval_dataset.json")
-SAMPLE_SIZE = 15  # 测试通过后可调大
+SAMPLE_SIZE = 20  # 测试通过后可调大
 
 
 def fetch_random_jobs(limit=50):
@@ -46,41 +46,49 @@ def fetch_random_jobs(limit=50):
 
 
 def generate_queries_for_job(job):
-    """【修改点】对齐评测目标，Type1测召回，Type2测大模型分析"""
+    """【修改点】全维度参数提取，对齐 V5.0 极简对称检索架构"""
     system_prompt = """
     你是一个资深的招聘专家和数据标注工程师。
-    我将提供一个真实的职位信息。请你模拟真实的求职者，为该职位生成 2 个完全不同场景的求职提问，并提取对应的检索参数。
+    我将提供一个真实的职位信息。请你模拟真实的求职者，为该职位生成 2 个完全不同场景的求职提问，并提取出对应的全维度检索参数。
 
     请严格输出 JSON 数组格式，不要包含 Markdown 标记代码块。
     数组必须包含且仅包含 2 个对象，分别对应以下两种 query_type：
 
     【Type 1: 泛化搜索 (broad_search)】
-    - 场景：用户只想找某一类工作，没有特定公司偏好。测试数据库的纯检索能力。
-    - user_question 示例："我想找北京的前端开发的实习，期望薪资150一天左右，会Vue，有什么推荐吗？"
+    - 场景：用户只想找某一类工作，没有特定公司偏好。
+    - user_question 示例："我想找北京的前端开发的实习，要求本科，期望薪资150一天左右，会Vue，有双休吗？"
     - 约束：user_question 中绝对不能出现公司名称。"reference_answer" 字段请直接留空字符串 ""。
 
     【Type 2: 精确人岗匹配 (precise_match)】
-    - 场景：用户看中了特定公司，询问自身条件是否匹配。测试大模型的分析评价能力。
-    - user_question 示例："我想去[公司名称]，我会[技能]，有[X年]经验，这个适合我吗？"
+    - 场景：用户看中了特定公司，询问自身条件是否匹配。
+    - user_question 示例："我想去[公司名称]，我是大专学历，会[技能]，有[X年]经验，期望薪资[XX]，这个适合我吗？"
     - 约束：user_question 必须明确包含公司名称。
-    - "reference_answer" 约束：你必须客观分析用户需求与该岗位的匹配度（指出匹配点和可能的不足），作为标准答案。
+    - "reference_answer" 约束：你必须客观分析用户需求与该岗位的匹配度（指出匹配点和可能的不足），作为标准答案，写成一段话150字以内。
 
-    每个对象必须包含以下字段：
+    每个对象必须包含以下 11 个字段。如果 user_question 中没有提及某项信息，对应的字段必须留空字符串 ""：
     1. "query_type": "broad_search" 或 "precise_match"
     2. "user_question": 模拟真实求职者的自然语言提问。
-    3. "semantic_query": 核心语义词（空格隔开）。注意：请将用户的经验年限、学历等条件也补充进语义词中。若是 precise_match，包含公司名。
-    4. "city": 提取的城市。若无则为空 ""。
-    5. "experience": 提取用户的经验。若无则为空 ""。
-    6. "reference_answer": broad_search 留空；precise_match 写匹配度分析。
+    3. "title": 提取的岗位（如：前端开发）。
+    3. "semantic_query": 技术栈词汇（如：Vue、CSS，绝不能出现公司名称）。
+    4. "city": 提取的城市（如：北京）。
+    5. "experience": 提取用户的经验或工作性质（如：3-5年、实习、应届）。
+    6. "company": 提取的公司名称（仅 precise_match 场景可能有）。
+    7. "salary": 提取的薪资诉求（如：15K、150元/天）。
+    8. "degree": 提取的学历要求（如：本科、大专）。
+    9. "welfare": 提取的福利诉求（如：双休、五险一金）。
+    10. "reference_answer": broad_search 留空；precise_match 写匹配度客观分析。
     """
 
+    # 【优化点】在喂给大模型的岗位信息中，补全 degree 和 welfare
     human_prompt = f"""
     【职位信息】
     - 岗位名称：{job.get('title')}
     - 公司：{job.get('company')}
     - 城市：{job.get('city')}
     - 经验要求：{job.get('experience')}
+    - 学历要求：{job.get('degree', '未说明')}
     - 薪资：{job.get('salary')}
+    - 福利：{job.get('welfare', '未说明')}
     - 职位摘要：{job.get('summary')}
     """
 

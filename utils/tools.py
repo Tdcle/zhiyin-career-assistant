@@ -40,52 +40,61 @@ except Exception as e:
 # 1. 定义更智能的 SearchInput 模型
 # ==========================================
 class SearchInput(BaseModel):
-    user_id: str = Field(..., description="当前用户的系统ID")
-    semantic_query: str = Field(..., description="扩充后的语义搜索词。必须结合历史摘要，并将口语扩充为专业词（如把'后端'扩充为'后端开发 Java Go 服务端'）")
-    city: str = Field(default="", description="提取的城市硬性条件，如'北京'、'上海'。如果没有则为空")
-    experience: str = Field(default="", description="提取的经验或岗位类型硬性条件，如'实习'、'应届'、'1-3年'。如果没有则为空")
+    resolved_query: str = Field(..., description="【极其重要】结合多轮对话上下文，将用户的搜索意图改写为一句完整的自然语言。例如用户之前说'北京前端实习'，现在问'那测试呢'，需改写为'在北京寻找一份测试的实习工作'。用于最终的语义精排。")
+    title: str = Field(default="", description="提取的核心职位名词，如'前端'、'测试'。")
+    city: str = Field(default="", description="提取的城市硬性条件，如'北京'。如果没有则为空")
+    company: str = Field(default="", description="提取的公司名称，如'腾讯'。如果没有则为空")
+    experience: str = Field(default="", description="提取的经验要求，如'实习'、'应届'、'1-3年'。如果没有则为空")
+    welfare: str = Field(default="", description="福利要求，如'双休'。如果没有则为空")
+
 
 class TrendInput(BaseModel):
     keyword: str = Field(description="关键词。")
+
 
 class PreferenceInput(BaseModel):
     user_id: str = Field(description="用户ID")
     preference: str = Field(description="需要保存的信息。")
 
+
 class GetResumeInput(BaseModel):
     user_id: str = Field(description="用户ID")
+
 
 class MatchInput(BaseModel):
     user_id: str = Field(description="用户ID")
     job_description: str = Field(description="目标职位的详细描述或职位JD内容")
 
 
+# 注意：确保文件顶部已经导入了你的 db 和 reranker 实例
+
 @tool("search_jobs_tool", args_schema=SearchInput)
-def search_jobs_tool(user_id: str, semantic_query: str, city: str = "", experience: str = ""):
+def search_jobs_tool(
+        resolved_query: str,
+        title: str = "",
+        city: str = "",
+        company: str = "",
+        experience: str = "",
+        welfare: str = ""
+):
     """
-    【核心工具】搜索职位 (硬条件过滤 + Vector Recall -> Rerank)。
-    执行流程：
-    1. 数据库混合检索召回 Top 20。
-    2. BGE-Reranker 模型精细打分。
-    3. 返回得分最高的 Top 5。
-
-    返回值：JSON 字符串，包含两部分：
-    - llm_text: 供 LLM 阅读的 Markdown 格式职位信息
-    - ui_cards: 供前端按钮展示的精简结构化数据
+    【核心工具】搜索职位 (V8.0: 融合 Query Rewrite + BGE-Reranker)。
     """
-    import json
+    logger.info(
+        f"🛠️ [Tool:Search] 意图改写: '{resolved_query}' | 提取参数: title='{title}', city='{city}', experience='{experience}'")
 
-    logger.info(f"🛠️ [Tool:Search] 意图解析结果: 语义='{semantic_query}', 城市='{city}', 经验='{experience}'")
-
-
-    # 1. 召回
+    # 1. 数据库广度召回 + Python 初筛 (召回 Top 20 候选池)
+    # 把 experience 重新传给底层，防止百万级库里实习生被全职岗淹没
     candidates = db.vector_search(
-        query_text=semantic_query,
+        title=title,
         city=city,
+        company=company,
         experience=experience,
+        welfare=welfare,
         top_k=20
     )
-    logger.info(f"📊 [Tool:Search] 数据库召回: {len(candidates)} 条")
+
+    logger.info(f"📊 [Tool:Search] 数据库底层召回: {len(candidates)} 条候选岗位")
 
     if not candidates:
         return json.dumps({
@@ -93,11 +102,13 @@ def search_jobs_tool(user_id: str, semantic_query: str, city: str = "", experien
             "ui_cards": []
         }, ensure_ascii=False)
 
-    # 2. 精排
+    # 2. BGE-Reranker 深度交叉精排 (终极审判层)
     if not reranker or len(candidates) < 2:
         final_results = candidates[:6]
     else:
         rerank_pairs = []
+
+        # 使用具备完整多轮上下文的 resolved_query 去和岗位信息做 Cross-Encoder 计算
         for res in candidates:
             doc_text = (
                 f"职位: {res.get('title')} | "
@@ -110,9 +121,7 @@ def search_jobs_tool(user_id: str, semantic_query: str, city: str = "", experien
                 f"详情: {res.get('summary')}"
             ).replace('\n', ' ')
 
-            full_rerank_query = f"{city} {experience} {semantic_query}".strip()
-
-            rerank_pairs.append([full_rerank_query, doc_text])
+            rerank_pairs.append([resolved_query, doc_text])
 
         scores = reranker.predict(rerank_pairs)
         scored_results = list(zip(candidates, scores))
@@ -120,13 +129,12 @@ def search_jobs_tool(user_id: str, semantic_query: str, city: str = "", experien
 
         top_score = scored_results[0][1]
         low_score = scored_results[-1][1]
-        logger.info(f"🧠 [Tool:Search] 重排序完成. Max: {top_score:.4f} | Min: {low_score:.4f}")
+        logger.info(
+            f"🧠 [Tool:Search] Rerank 完成. Max分: {top_score:.4f} | Min分: {low_score:.4f} (依据 Query: '{resolved_query}')")
 
         final_results = [item[0] for item in scored_results[:6]]
 
     # 3. 构造两份数据
-
-    # 3a. 前端 UI 卡片数据
     ui_cards = []
     for res in final_results:
         ui_cards.append({
@@ -134,27 +142,23 @@ def search_jobs_tool(user_id: str, semantic_query: str, city: str = "", experien
             "title": res['title'],
             "company": res['company'],
             "salary": res['salary'],
-            "tags": f"{res.get('city')} | {res.get('experience')}"
+            "tags": f"{res.get('city', '')} | {res.get('experience', '')}"
         })
 
-    # 3b. LLM 阅读的 Markdown 文本
     llm_text = f"为用户找到 {len(final_results)} 个匹配职位，请按格式展示：\n"
     for i, res in enumerate(final_results, 1):
-        intro = res.get('summary') if res.get('summary') else res['detail'][:150]
-        welfare = res.get('welfare', '未标注')
+        intro = res.get('summary') if res.get('summary') else res.get('detail', '')[:150]
+        welfare_text = res.get('welfare') or '未标注'
         llm_text += (
-        f"🏢 **{res['company']}**（{res.get('industry', '')} | {res.get('city', '')} {res.get('district', '')}）\n"
-        f"📌 职位：{res['title']}\n"
-        f"💰 薪资：{res['salary']} · {welfare}\n"
-        f"📋 要求：{res.get('degree', '')} / {res.get('experience', '')}\n"
-        f"📝 概要：{intro}\n"
-        f"🔗 链接：{res.get('detail_url', '')}\n"
-        f"\n---\n"
-    )
+            f"🏢 **{res['company']}**（{res.get('industry', '')} | {res.get('city', '')} {res.get('district', '')}）\n"
+            f"📌 职位：{res['title']}\n"
+            f"💰 薪资：{res['salary']} · {welfare_text}\n"
+            f"📋 要求：{res.get('degree', '')} / {res.get('experience', '')}\n"
+            f"📝 概要：{intro}\n"
+            f"🔗 链接：{res.get('detail_url', '')}\n"
+            f"\n---\n"
+        )
 
-    logger.info(f"✅ [Tool:Search] 工具返回完成, UI卡片数: {len(ui_cards)}")
-
-    # 【关键】返回 JSON，包含两部分数据
     return json.dumps({
         "llm_text": llm_text,
         "ui_cards": ui_cards
@@ -180,14 +184,6 @@ def get_user_resume_tool(user_id: str):
         content = content[:4000] + "\n...(后文截断)..."
 
     return f"【用户简历内容 (文件名: {resume_data['filename']})】:\n{content}"
-
-@tool("analyze_trend_tool", args_schema=TrendInput)
-def analyze_trend_tool(keyword: str):
-    """分析市场趋势"""
-    logger.info(f"🛠️ [Tool:Trend] 分析关键词: {keyword}")
-    result = db.get_market_analytics(keyword)
-    count = result['job_count'] if result else 0
-    return f"数据库统计：关于 '{keyword}' 的职位现有 {count} 个。"
 
 
 @tool("save_preference_tool", args_schema=PreferenceInput)

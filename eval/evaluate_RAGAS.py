@@ -78,17 +78,10 @@ except ImportError:
         answer_relevancy() if isinstance(answer_relevancy, type) else answer_relevancy,
     ]
 
-try:
-    from ragas.run_config import RunConfig
-
-    run_config = RunConfig(max_workers=4)
-except ImportError:
-    run_config = None
-
 # ================= 3. 初始化系统与模型 =================
 db = DatabaseManager()
 
-eval_llm = ChatTongyi(api_key=config.DASHSCOPE_API_KEY, model="qwen3-235b-a22b")
+eval_llm = ChatTongyi(api_key=config.DASHSCOPE_API_KEY, model="deepseek-v3.2")
 eval_embeddings = OllamaEmbeddings(base_url=config.OLLAMA_URL, model=config.EMBEDDING_MODEL_NAME)
 
 try:
@@ -128,9 +121,7 @@ def generate_rag_answer(query: str, contexts: list):
     请客观分析求职者需求与该岗位的匹配度（指出匹配点和可能的不足）
     你的分析必须严谨，并且绝对不能编造职位信息中未提及的数据。
     回答简洁，只需要回答一小段话不分点，控制在200字以内。
-    
-    示例：
-    
+    回答参考：“配度较高。您的8年经验完全满足5-10年的要求，大专学历和会计专业也符合岗位核心要求，期望薪资在岗位预算范围内。岗位职责与您的技能（财务报表、成本核算）高度匹配。主要的不确定因素是岗位未明确说明的学历要求，但您的专业背景是优势。建议关注具体福利和工作细节以做最终决定。”。
 
     【检索到的职位信息】：
     {context_str}
@@ -188,19 +179,31 @@ def main():
             query_type = test_case.get("query_type", "")
             query = test_case["user_question"]
             semantic_query = test_case.get("semantic_query", "")
+            title = test_case.get("title", "")
             city = test_case.get("city", "")
+
+            # 解析新增字段，但不再传入底层向量检索
             experience = test_case.get("experience", "")
+            company = test_case.get("company", "")
+            salary = test_case.get("salary", "")
+            degree = test_case.get("degree", "")
+            welfare = test_case.get("welfare", "")
+
             reference_answer = test_case.get("reference_answer", "")
 
             # ================= 第一部分: 泛化搜索 (评估纯数据库召回率) =================
             if query_type == "broad_search":
                 total_broad_queries += 1
 
-                # 检索 Top 10 用于计算 Recall
+                # 【核心重构】：拥抱二阶段检索架构。底层向量只负责按 title/city 广度召回。
+                # 把大模型提取出来的核心词 semantic_query 交给 title 去匹配，保证语义精准性。
                 retrieved_jobs = db.vector_search(
-                    query_text=semantic_query,
+                    title=title,
+                    semantic_query=semantic_query,
                     city=city,
-                    experience=experience,
+                    company=company,
+                    experience="",
+                    welfare=welfare,
                     top_k=10
                 )
 
@@ -213,12 +216,16 @@ def main():
                 if is_hit_5: hits_at_5 += 1
                 if is_hit_10: hits_at_10 += 1
 
-                # 压入泛化搜索明细记录，供后续排查使用
+                # 将所有提取出来的参数依然记入明细，方便复盘与日后的 Rerank 模型对比
                 broad_search_records.append({
                     "user_question": query,
                     "semantic_query": semantic_query,
                     "city": city,
                     "experience": experience,
+                    "company": company,
+                    "salary": salary,
+                    "degree": degree,
+                    "welfare": welfare,
                     "ground_truth_id": ground_truth_id,
                     "hit_at_5": is_hit_5,
                     "hit_at_10": is_hit_10,
@@ -227,11 +234,15 @@ def main():
 
             # ================= 第二部分: 精确匹配 (交由 RAGAS 评估大模型生成能力) =================
             elif query_type == "precise_match":
+                # 【核心重构】：同步应用召回逻辑
                 retrieved_jobs = db.vector_search(
-                    query_text=semantic_query,
+                    title=title,
+                    semantic_query=semantic_query,
                     city=city,
+                    company=company,
                     experience=experience,
-                    top_k=5
+                    welfare=welfare,
+                    top_k=1
                 )
 
                 contexts = [format_job_context(job) for job in retrieved_jobs]
@@ -286,8 +297,7 @@ def main():
                 "llm": ragas_llm,
                 "embeddings": ragas_embeddings
             }
-            if run_config:
-                evaluate_kwargs["run_config"] = run_config
+
 
             score = evaluate(**evaluate_kwargs)
 
@@ -327,7 +337,7 @@ def main():
     # ================= 结果与明细统一落盘保存 =================
     print(f"\n📁 正在打包写入所有明细至目录: {RUN_DIR}")
 
-    # 1. 泛化搜索记录 CSV 落盘 (新增)
+    # 1. 泛化搜索记录 CSV 落盘
     if broad_search_records:
         broad_df = pd.DataFrame(broad_search_records)
         broad_csv_path = os.path.join(RUN_DIR, "broad_search_details.csv")
