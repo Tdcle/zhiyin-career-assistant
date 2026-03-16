@@ -13,7 +13,7 @@ from langgraph.checkpoint.memory import MemorySaver
 
 from config.config import config
 from utils.database import DatabaseManager
-from utils.tools import search_jobs_tool, analyze_trend_tool, save_preference_tool, get_user_resume_tool
+from utils.tools import search_jobs_tool, save_preference_tool, get_user_resume_tool
 
 db_manager = DatabaseManager()
 
@@ -29,7 +29,7 @@ class AgentState(TypedDict):
 
 
 # ================= 2. 初始化模型 =================
-tools = [search_jobs_tool, analyze_trend_tool, save_preference_tool, get_user_resume_tool]
+tools = [search_jobs_tool, save_preference_tool, get_user_resume_tool]
 
 llm = ChatTongyi(
     api_key=config.DASHSCOPE_API_KEY,
@@ -112,11 +112,9 @@ def bot_node(state: AgentState):
            - 结合【历史对话摘要】来提取搜索参数
            - **意图识别与参数提取要求**：
              - resolved_query：【极其重要】结合多轮对话上下文，将用户的搜索意图改写为一句完整的自然语言。（例如：用户之前说"北京前端实习"，现在问"那测试呢"，必须改写为"在北京寻找一份测试的实习工作"）。此项将直接用于最终的语义精准重排。
-             - title：提取核心职位名词（如"前端"、"测试"、"会计"）。若无则留空。
+             - keyword_query：提取用户的核心诉求关键词（用空格分隔）。请务必将职位名词(如"前端")、经验要求(如"实习"、"应届")、福利诉求(如"双休")及核心技能提取并组合在一起传给此参数。例如："前端 实习 双休 Vue"。若无则留空。
              - city：提取明确的城市（如"北京"）。若无则留空。
              - company：提取明确的公司名称（如"腾讯"、"字节跳动"）。若无则留空。
-             - experience：提取经验要求或求职类型（如"实习"、"应届"、"3-5年"）。若无则留空。
-             - welfare：提取福利诉求（如"双休"、"五险一金"）。若无则留空。
         2. 需要简历信息 → 调用 get_user_resume_tool
         3. 保存偏好 → 调用 save_preference_tool (仅当用户自述新的核心技能或求职地时)
 

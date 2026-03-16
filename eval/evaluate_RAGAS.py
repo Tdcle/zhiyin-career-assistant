@@ -81,7 +81,7 @@ except ImportError:
 # ================= 3. 初始化系统与模型 =================
 db = DatabaseManager()
 
-eval_llm = ChatTongyi(api_key=config.DASHSCOPE_API_KEY, model="deepseek-v3.2")
+eval_llm = ChatTongyi(api_key=config.DASHSCOPE_API_KEY, model="qwen-plus-2025-07-28")
 eval_embeddings = OllamaEmbeddings(base_url=config.OLLAMA_URL, model=config.EMBEDDING_MODEL_NAME)
 
 try:
@@ -159,6 +159,8 @@ def main():
     total_broad_queries = 0
     hits_at_5 = 0
     hits_at_10 = 0
+    sum_reciprocal_ranks = 0.0  # 用于计算 MRR
+    sum_best_ranks = 0.0  # 用于计算平均最佳排名
     broad_search_records = []
 
     # 第二部分：RAGAS 生成评估数据集
@@ -197,13 +199,10 @@ def main():
 
                 # 【核心重构】：拥抱二阶段检索架构。底层向量只负责按 title/city 广度召回。
                 # 把大模型提取出来的核心词 semantic_query 交给 title 去匹配，保证语义精准性。
-                retrieved_jobs = db.vector_search(
-                    title=title,
-                    semantic_query=semantic_query,
+                retrieved_jobs = db.hybrid_search(
                     city=city,
-                    company=company,
-                    experience="",
-                    welfare=welfare,
+                    company="",
+                    keyword_query=semantic_query,
                     top_k=10
                 )
 
@@ -215,6 +214,19 @@ def main():
 
                 if is_hit_5: hits_at_5 += 1
                 if is_hit_10: hits_at_10 += 1
+
+                # 计算排名指标
+                try:
+                    best_rank = retrieved_ids.index(ground_truth_id) + 1  # 1-based
+                    sum_best_ranks += best_rank
+
+                    # MRR (Mean Reciprocal Rank) - 倒数排名
+                    reciprocal_rank = 1.0 / best_rank
+                    sum_reciprocal_ranks += reciprocal_rank
+                except ValueError:
+                    # 未找到，排名记为 len(retrieved_ids) + 1
+                    sum_best_ranks += (len(retrieved_ids) + 1)
+                    # MRR 不增加（相当于 0）
 
                 # 将所有提取出来的参数依然记入明细，方便复盘与日后的 Rerank 模型对比
                 broad_search_records.append({
@@ -231,17 +243,17 @@ def main():
                     "hit_at_10": is_hit_10,
                     "retrieved_ids": ", ".join(retrieved_ids)
                 })
+                # 重置局部变量
+                if 'best_rank' in locals():
+                    del locals()['best_rank']
 
             # ================= 第二部分: 精确匹配 (交由 RAGAS 评估大模型生成能力) =================
             elif query_type == "precise_match":
                 # 【核心重构】：同步应用召回逻辑
-                retrieved_jobs = db.vector_search(
-                    title=title,
-                    semantic_query=semantic_query,
+                retrieved_jobs = db.hybrid_search(
                     city=city,
                     company=company,
-                    experience=experience,
-                    welfare=welfare,
+                    keyword_query=semantic_query,
                     top_k=1
                 )
 
@@ -269,9 +281,13 @@ def main():
     if total_broad_queries > 0:
         recall_5 = (hits_at_5 / total_broad_queries) * 100
         recall_10 = (hits_at_10 / total_broad_queries) * 100
-        print(f"总测试问题数: {total_broad_queries}")
+        mean_rank = sum_best_ranks / total_broad_queries
+        mrr = sum_reciprocal_ranks / total_broad_queries
+        print(f"总测试问题数：{total_broad_queries}")
         print(f"🎯 Recall@5  : {recall_5:.2f}% ({hits_at_5}/{total_broad_queries})")
         print(f"🎯 Recall@10 : {recall_10:.2f}% ({hits_at_10}/{total_broad_queries})")
+        print(f"📈 Average Rank (MR)  : {mean_rank:.2f}")
+        print(f"🏆 MRR (Mean Reciprocal Rank): {mrr:.4f} ({mrr * 100:.2f}%)")
 
         # 存入报告字典
         report_data["broad_search_metrics"] = {
@@ -279,7 +295,9 @@ def main():
             "recall_5": round(recall_5, 2),
             "recall_10": round(recall_10, 2),
             "hits_at_5": hits_at_5,
-            "hits_at_10": hits_at_10
+            "hits_at_10": hits_at_10,
+            "mean_rank": round(mean_rank, 2),
+            "mrr": round(mrr, 4)
         }
     else:
         print("⚠️ 未在数据集中找到 query_type='broad_search' 的用例")

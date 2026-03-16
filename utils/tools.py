@@ -17,9 +17,7 @@ from config.config import config
 # 获取日志记录器（注意：这里假设 app.py 已经初始化了配置名为 "JobAgent" 的 logger）
 # 这样可以确保工具的日志和主程序的日志写入同一个文件
 logger = logging.getLogger("JobAgent")
-
 db = DatabaseManager()
-
 llm = ChatOllama(base_url=config.OLLAMA_URL, model=config.MARK_MODEL_NAME, temperature=0.1)
 
 # ================= 1. 初始化重排序模型 =================
@@ -40,12 +38,10 @@ except Exception as e:
 # 1. 定义更智能的 SearchInput 模型
 # ==========================================
 class SearchInput(BaseModel):
-    resolved_query: str = Field(..., description="【极其重要】结合多轮对话上下文，将用户的搜索意图改写为一句完整的自然语言。例如用户之前说'北京前端实习'，现在问'那测试呢'，需改写为'在北京寻找一份测试的实习工作'。用于最终的语义精排。")
-    title: str = Field(default="", description="提取的核心职位名词，如'前端'、'测试'。")
+    resolved_query: str = Field(...,description="【极其重要】结合多轮对话上下文，将用户的搜索意图改写为一句完整的自然语言。例如用户之前说'北京前端实习'，现在问'那测试呢'，需改写为'在北京寻找一份测试的实习工作'。用于最终的语义精排。")
+    keyword_query: str = Field(default="",description="提取的核心关键词集合（用空格分隔）。必须将职位名词(如'前端')、经验要求(如'实习'、'应届')、福利诉求(如'双休')、核心技能等组合在一起。例如：'前端 实习 双休'。如果没有则为空")
     city: str = Field(default="", description="提取的城市硬性条件，如'北京'。如果没有则为空")
     company: str = Field(default="", description="提取的公司名称，如'腾讯'。如果没有则为空")
-    experience: str = Field(default="", description="提取的经验要求，如'实习'、'应届'、'1-3年'。如果没有则为空")
-    welfare: str = Field(default="", description="福利要求，如'双休'。如果没有则为空")
 
 
 class TrendInput(BaseModel):
@@ -71,26 +67,22 @@ class MatchInput(BaseModel):
 @tool("search_jobs_tool", args_schema=SearchInput)
 def search_jobs_tool(
         resolved_query: str,
-        title: str = "",
+        keyword_query: str = "",
         city: str = "",
         company: str = "",
-        experience: str = "",
-        welfare: str = ""
 ):
     """
-    【核心工具】搜索职位 (V8.0: 融合 Query Rewrite + BGE-Reranker)。
+    【核心工具】搜索职位 (混合检索 + BGE-Reranker)。
     """
     logger.info(
-        f"🛠️ [Tool:Search] 意图改写: '{resolved_query}' | 提取参数: title='{title}', city='{city}', experience='{experience}'")
+        f"🛠️ [Tool:Search] 意图改写: '{resolved_query}' | 综合关键词: '{keyword_query}' | city='{city}', company='{company}'")
 
     # 1. 数据库广度召回 + Python 初筛 (召回 Top 20 候选池)
     # 把 experience 重新传给底层，防止百万级库里实习生被全职岗淹没
-    candidates = db.vector_search(
-        title=title,
+    candidates = db.hybrid_search(
+        keyword_query=keyword_query,
         city=city,
         company=company,
-        experience=experience,
-        welfare=welfare,
         top_k=20
     )
 
