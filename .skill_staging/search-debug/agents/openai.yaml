@@ -1,0 +1,4 @@
+interface:
+  display_name: "Search Debug"
+  short_description: "Debug search failures and ranking issues"
+  default_prompt: "Use $search-debug to diagnose why a job search in find_a_good_job returned poor, stale, or mismatched results."

@@ -184,6 +184,7 @@ def respond(message, chat_history, user_info):
             "extract_search_results",
             "intent_parse_node",
             "result_judge_node",
+            "rewrite_search_plan_node",
         }
 
         for msg, metadata in event_stream:

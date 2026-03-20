@@ -1,0 +1,4 @@
+interface:
+  display_name: "Retrieval Eval"
+  short_description: "Run and interpret retrieval evaluation"
+  default_prompt: "Use $retrieval-eval to run and interpret retrieval evaluation for find_a_good_job."

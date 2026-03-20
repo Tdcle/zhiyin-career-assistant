@@ -5,3 +5,4 @@ __pycache__/
 /static/
 /eval/logs/
 /eval/results/
+/docs
