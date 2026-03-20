@@ -237,6 +237,47 @@ body {
     line-height: 1.7 !important;
 }
 
+.chatbot-container .message.bot .bubble-wrap .bubble,
+.chatbot-container .message.assistant .bubble-wrap .bubble {
+    font-size: 14px !important;
+    font-weight: 400 !important;
+}
+
+.chatbot-container .message.bot .bubble-wrap .bubble p,
+.chatbot-container .message.bot .bubble-wrap .bubble li,
+.chatbot-container .message.bot .bubble-wrap .bubble blockquote,
+.chatbot-container .message.assistant .bubble-wrap .bubble p,
+.chatbot-container .message.assistant .bubble-wrap .bubble li,
+.chatbot-container .message.assistant .bubble-wrap .bubble blockquote {
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    line-height: 1.7 !important;
+    margin: 0.35em 0 !important;
+}
+
+.chatbot-container .message.bot .bubble-wrap .bubble h1,
+.chatbot-container .message.bot .bubble-wrap .bubble h2,
+.chatbot-container .message.bot .bubble-wrap .bubble h3,
+.chatbot-container .message.bot .bubble-wrap .bubble h4,
+.chatbot-container .message.bot .bubble-wrap .bubble h5,
+.chatbot-container .message.bot .bubble-wrap .bubble h6,
+.chatbot-container .message.assistant .bubble-wrap .bubble h1,
+.chatbot-container .message.assistant .bubble-wrap .bubble h2,
+.chatbot-container .message.assistant .bubble-wrap .bubble h3,
+.chatbot-container .message.assistant .bubble-wrap .bubble h4,
+.chatbot-container .message.assistant .bubble-wrap .bubble h5,
+.chatbot-container .message.assistant .bubble-wrap .bubble h6 {
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    line-height: 1.6 !important;
+    margin: 0.45em 0 0.3em 0 !important;
+}
+
+.chatbot-container .message.bot .bubble-wrap .bubble strong,
+.chatbot-container .message.assistant .bubble-wrap .bubble strong {
+    font-weight: 600 !important;
+}
+
 .chatbot-container .message.bot pre {
     background: #1e293b !important;
     border-radius: 8px !important;
@@ -305,6 +346,24 @@ body {
 #send-btn:hover {
     transform: translateY(-1px) !important;
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.35) !important;
+}
+
+#clear-chat-btn {
+    background: #eef2ff !important;
+    border: 1px solid #c7d2fe !important;
+    border-radius: 10px !important;
+    color: #4338ca !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    min-height: 42px !important;
+    padding: 0 18px !important;
+    transition: all 0.2s ease !important;
+    white-space: nowrap !important;
+}
+
+#clear-chat-btn:hover {
+    background: #e0e7ff !important;
+    border-color: #a5b4fc !important;
 }
 
 

@@ -135,15 +135,38 @@ def main():
     conn = pool.getconn()
     try:
         with conn.cursor() as cur:
-            cur.execute("SELECT count(*) FROM jobs")
-            total = cur.fetchone()[0]
-
-            cur.execute("SELECT count(*) FROM jobs WHERE tsv IS NOT NULL")
+            # 检查 jobs 表是否存在 tsv 列
+            cur.execute("""
+                        SELECT EXISTS (SELECT 1
+                                       FROM information_schema.columns
+                                       WHERE table_name = 'jobs'
+                                         AND column_name = 'tsv')
+                        """)
             tsv_exists = cur.fetchone()[0]
 
-            need_update = total - tsv_exists
+            if not tsv_exists:
+                logger.info("⚠️  检测到 jobs 表没有 tsv 列，正在创建...")
+                cur.execute("ALTER TABLE jobs ADD COLUMN tsv tsvector")
+                conn.commit()
+                logger.info("✅ tsv 列创建成功！")
+            else:
+                logger.info("✅ tsv 列已存在")
     finally:
         pool.putconn(conn)
+
+        # 统计
+        conn = pool.getconn()
+        try:
+            with conn.cursor() as cur:
+                cur.execute("SELECT count(*) FROM jobs")
+                total = cur.fetchone()[0]
+
+                cur.execute("SELECT count(*) FROM jobs WHERE tsv IS NOT NULL")
+                tsv_not_null = cur.fetchone()[0]
+
+                need_update = total - tsv_not_null
+        finally:
+            pool.putconn(conn)
 
     logger.info(f"📊 总记录数：{total}, 已有 tsv: {tsv_exists}, 需更新：{need_update}")
 

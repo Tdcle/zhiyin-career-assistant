@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import logging
+import re
 import pandas as pd
 from datetime import datetime
 from tqdm import tqdm
@@ -15,6 +16,8 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if project_root not in sys.path:
     sys.path.append(project_root)
+
+from utils.logger import add_file_handler, get_logger
 
 # ================= 1. 自动归档与全局日志配置 =================
 EVAL_DIR = os.path.dirname(__file__)
@@ -47,18 +50,11 @@ sys.stdout = OutputLogger(log_file_path)
 sys.stderr = sys.stdout  # 捕获错误信息
 
 # 尝试捕获 database.py 里的 sys_logger，使其搜索日志也落盘到同个 log 文件
-try:
-    from utils.logger import sys_logger
-
-    file_handler = logging.FileHandler(log_file_path, encoding='utf-8')
-    file_handler.setFormatter(logging.Formatter('%(asctime)s - [%(levelname)s] - %(message)s'))
-    sys_logger.addHandler(file_handler)
-except ImportError:
-    pass
+logger = get_logger("eval.evaluate_ragas")
+add_file_handler(log_file_path)
 
 from utils.database import DatabaseManager
 from config.config import config
-from langchain_community.chat_models import ChatTongyi
 from langchain_ollama import OllamaEmbeddings
 from langchain_core.messages import HumanMessage
 from ragas import evaluate
@@ -81,8 +77,8 @@ except ImportError:
 # ================= 3. 初始化系统与模型 =================
 db = DatabaseManager()
 
-eval_llm = ChatTongyi(api_key=config.DASHSCOPE_API_KEY, model="qwen-plus-2025-07-28")
-eval_embeddings = OllamaEmbeddings(base_url=config.OLLAMA_URL, model=config.EMBEDDING_MODEL_NAME)
+eval_llm = config.create_tongyi(config.CHAT_MODELS.eval_judge)
+eval_embeddings = OllamaEmbeddings(base_url=config.OLLAMA_URL, model=config.OLLAMA_MODELS.embedding)
 
 try:
     from ragas.llms import LangchainLLMWrapper
@@ -109,6 +105,85 @@ def format_job_context(job: dict) -> str:
         f"📝 概要：{intro}\n"
         f"🔗 链接：{job.get('detail_url', '')}"
     )
+
+
+SUPPORTED_CITIES = [
+    "北京", "上海", "深圳", "广州", "杭州", "成都",
+    "武汉", "西安", "南京", "苏州", "天津", "重庆",
+]
+
+
+def normalize_city(city: str, *texts: str) -> str:
+    raw = (city or "").strip()
+    combined = " ".join(part for part in (raw, *texts) if part)
+    if any(token in combined for token in ["全国", "不限城市", "城市不限", "远程"]):
+        return ""
+    for candidate in SUPPORTED_CITIES:
+        if candidate in combined:
+            return candidate
+    return raw
+
+
+def normalize_experience(experience: str, *texts: str) -> str:
+    combined = " ".join(part for part in (experience, *texts) if part).strip().lower()
+    if not combined:
+        return ""
+
+    if any(token in combined for token in ["实习", "在校", "intern"]):
+        return "实习"
+    if any(token in combined for token in ["应届", "校招", "毕业生", "new grad"]):
+        return "应届"
+
+    # 评测直接走数据库接口时，不把“2年”“4年”这类自由文本当成硬过滤条件，
+    # 否则会和库里的“1-3年 / 3-5年 / 经验不限”错位。
+    if re.search(r"\d+\s*年", combined):
+        return ""
+
+    return (experience or "").strip()
+
+
+def normalize_keyword_query(*texts: str) -> str:
+    merged = " ".join(text for text in texts if text)
+    merged = re.sub(r"[\/|,，、;；]+", " ", merged)
+    merged = re.sub(r"\s+", " ", merged)
+    return merged.strip()
+
+
+def parse_salary_filter(salary: str, *texts: str) -> tuple[int, str]:
+    combined = " ".join(part for part in (salary, *texts) if part).lower()
+    if not combined.strip():
+        return 0, ""
+
+    monthly_match = re.search(r"(\d{1,2})(?:\s*[kK]|千)", combined)
+    if monthly_match:
+        return int(monthly_match.group(1)), "k_month"
+
+    daily_match = re.search(r"(\d{2,4})\s*元\s*/?\s*天", combined)
+    if daily_match:
+        return int(daily_match.group(1)), "yuan_day"
+
+    return 0, ""
+
+
+def build_eval_search_params(test_case: dict, default_top_k: int) -> dict:
+    query = test_case.get("user_question", "")
+    semantic_query = test_case.get("semantic_query", "")
+    title = test_case.get("title", "")
+    city = normalize_city(test_case.get("city", ""), query, semantic_query, title)
+    company = (test_case.get("company", "") or "").strip()
+    experience = normalize_experience(test_case.get("experience", ""), query, semantic_query, title)
+    salary_min, salary_unit = parse_salary_filter(test_case.get("salary", ""), query)
+    keyword_query = normalize_keyword_query(semantic_query or query, title)
+
+    return {
+        "keyword_query": keyword_query,
+        "city": city,
+        "company": company,
+        "experience": experience,
+        "salary_min": salary_min,
+        "salary_unit": salary_unit,
+        "top_k": default_top_k,
+    }
 
 
 def generate_rag_answer(query: str, contexts: list):
@@ -181,8 +256,10 @@ def main():
             query_type = test_case.get("query_type", "")
             query = test_case["user_question"]
             semantic_query = test_case.get("semantic_query", "")
-            title = test_case.get("title", "")
-            city = test_case.get("city", "")
+            search_params = build_eval_search_params(
+                test_case,
+                default_top_k=10 if query_type == "broad_search" else 1,
+            )
 
             # 解析新增字段，但不再传入底层向量检索
             experience = test_case.get("experience", "")
@@ -197,14 +274,7 @@ def main():
             if query_type == "broad_search":
                 total_broad_queries += 1
 
-                # 【核心重构】：拥抱二阶段检索架构。底层向量只负责按 title/city 广度召回。
-                # 把大模型提取出来的核心词 semantic_query 交给 title 去匹配，保证语义精准性。
-                retrieved_jobs = db.hybrid_search(
-                    city=city,
-                    company="",
-                    keyword_query=semantic_query,
-                    top_k=10
-                )
+                retrieved_jobs = db.hybrid_search(**search_params)
 
                 retrieved_ids = [job.get("job_id") for job in retrieved_jobs]
 
@@ -232,12 +302,18 @@ def main():
                 broad_search_records.append({
                     "user_question": query,
                     "semantic_query": semantic_query,
-                    "city": city,
+                    "city": test_case.get("city", ""),
                     "experience": experience,
                     "company": company,
                     "salary": salary,
                     "degree": degree,
                     "welfare": welfare,
+                    "search_keyword_query": search_params["keyword_query"],
+                    "search_city": search_params["city"],
+                    "search_company": search_params["company"],
+                    "search_experience": search_params["experience"],
+                    "search_salary_min": search_params["salary_min"],
+                    "search_salary_unit": search_params["salary_unit"],
                     "ground_truth_id": ground_truth_id,
                     "hit_at_5": is_hit_5,
                     "hit_at_10": is_hit_10,
@@ -249,13 +325,7 @@ def main():
 
             # ================= 第二部分: 精确匹配 (交由 RAGAS 评估大模型生成能力) =================
             elif query_type == "precise_match":
-                # 【核心重构】：同步应用召回逻辑
-                retrieved_jobs = db.hybrid_search(
-                    city=city,
-                    company=company,
-                    keyword_query=semantic_query,
-                    top_k=1
-                )
+                retrieved_jobs = db.hybrid_search(**search_params)
 
                 contexts = [format_job_context(job) for job in retrieved_jobs]
                 if not contexts:

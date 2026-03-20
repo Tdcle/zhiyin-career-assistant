@@ -1,39 +1,60 @@
-# utils/logger.py
 import logging
 import os
 from datetime import datetime
 
-# 配置日志目录
-LOG_DIR = "logs"
+from config.config import config
+
+LOG_DIR = config.LOG_DIR
 os.makedirs(LOG_DIR, exist_ok=True)
 
-def setup_logger(name="JobAgent"):
-    """
-    初始化并返回一个 Logger 对象
-    """
-    # 生成带时间戳的文件名
-    log_filename = f"{LOG_DIR}/run_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+_FORMATTER = logging.Formatter(
+    "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
+)
+current_log_path = os.path.join(
+    LOG_DIR,
+    f"run_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log",
+)
 
-    logger = logging.getLogger(name)
-    logger.setLevel(logging.INFO)
 
-    # 防止重复添加 Handler (避免日志重复打印)
+def _build_file_handler(path: str) -> logging.Handler:
+    handler = logging.FileHandler(path, encoding="utf-8")
+    handler.setFormatter(_FORMATTER)
+    return handler
+
+
+def _build_stream_handler() -> logging.Handler:
+    handler = logging.StreamHandler()
+    handler.setFormatter(_FORMATTER)
+    return handler
+
+
+def setup_logger() -> logging.Logger:
+    logger = logging.getLogger(config.APP_NAME)
+    logger.setLevel(getattr(logging, config.LOG_LEVEL, logging.INFO))
+    logger.propagate = False
+
     if not logger.handlers:
-        # 1. 文件输出 (详细记录)
-        file_handler = logging.FileHandler(log_filename, encoding='utf-8')
-        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-        file_handler.setFormatter(formatter)
-        logger.addHandler(file_handler)
+        logger.addHandler(_build_file_handler(current_log_path))
+        logger.addHandler(_build_stream_handler())
 
-        # 2. 控制台输出 (开发调试用)
-        stream_handler = logging.StreamHandler()
-        stream_handler.setFormatter(formatter)
-        logger.addHandler(stream_handler)
+    return logger
 
-    return logger, log_filename
 
-# ==========================================
-# 【新增】这里直接初始化一个全局实例
-# 这样其他文件只需要: from utils.logger import sys_logger 即可使用
-# ==========================================
-sys_logger, current_log_path = setup_logger()
+def get_logger(name: str | None = None) -> logging.Logger:
+    root_logger = setup_logger()
+    if not name:
+        return root_logger
+    normalized = name.replace("/", ".").replace("\\", ".")
+    if normalized == config.APP_NAME or normalized.startswith(f"{config.APP_NAME}."):
+        return logging.getLogger(normalized)
+    return logging.getLogger(f"{config.APP_NAME}.{normalized}")
+
+
+def add_file_handler(path: str) -> logging.Handler:
+    logger = setup_logger()
+    handler = _build_file_handler(path)
+    logger.addHandler(handler)
+    return handler
+
+
+sys_logger = setup_logger()

@@ -6,9 +6,11 @@ from http import HTTPStatus
 from DrissionPage import ChromiumPage
 from utils.database import DatabaseManager
 from config.config import config
+from utils.logger import get_logger
 
 # ================= 配置区域 =================
-SUMMARY_MODEL = "qwen-turbo"
+logger = get_logger("fetch_data")
+SUMMARY_MODEL = config.CHAT_MODELS.data_summary
 
 
 # ================= 工具函数 (保持不变) =================
@@ -43,7 +45,7 @@ def generate_summary(detail_text):
             return response.output.text
         return detail_text[:100]
     except Exception as e:
-        print(f"⚠️ 摘要生成异常: {e}")
+        logger.error("summary generation failed: %s", e, exc_info=True)
         return detail_text[:100]
 
 

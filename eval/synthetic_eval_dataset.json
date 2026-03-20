@@ -1,0 +1,902 @@
+[
+    {
+        "ground_truth_job_id": "ed9b9cf2f82507e30nV609q_EVJQ",
+        "job_meta": {
+            "title": "工程测试工程师",
+            "company": "交控信号",
+            "city": "北京"
+        },
+        "test_cases": [
+            {
+                "query_type": "broad_search",
+                "user_question": "我是应届毕业生，想在北京找工程测试相关的工作，会CAD软件，有什么岗位推荐吗？",
+                "title": "工程测试工程师",
+                "semantic_query": "工程测试工程师 工程测试 应届 本科 CAD",
+                "city": "北京",
+                "experience": "实习",
+                "company": "",
+                "salary": "",
+                "degree": "本科",
+                "welfare": "",
+                "reference_answer": ""
+            },
+            {
+                "query_type": "precise_match",
+                "user_question": "我是铁路信号专业的应届本科生，过了英语四级，会用CAD，想去交控信号应聘工程测试工程师，这个岗位适合我吗？",
+                "title": "工程测试工程师",
+                "semantic_query": "工程测试工程师 工程测试 应届 本科 铁路信号 CAD",
+                "city": "北京",
+                "experience": "实习",
+                "company": "交控信号",
+                "salary": "15K",
+                "degree": "本科",
+                "welfare": "五险一金",
+                "reference_answer": "匹配度很高。您的铁路信号专业、本科学历、英语四级和CAD技能完全符合岗位的核心要求。作为应届生，您也满足了该岗位“在校/应届”的经验要求。岗位职责如室内测试、环境搭建等，需要您具备扎实的专业基础和学习能力。薪资福利（如15薪、各类补贴）对您很有吸引力。主要挑战在于实际项目经验，但岗位定位清晰，是很好的职业起点。"
+            }
+        ]
+    },
+    {
+        "ground_truth_job_id": "c8b2867a68361ed81XJ629-6FltY",
+        "job_meta": {
+            "title": "助理设计师",
+            "company": "宽之",
+            "city": "北京"
+        },
+        "test_cases": [
+            {
+                "query_type": "broad_search",
+                "user_question": "我想在北京找助理设计师的工作，会用CAD和SketchUp，请问有什么相关职位吗？",
+                "title": "助理设计师",
+                "semantic_query": "助理设计师 助理设计师 CAD SketchUp",
+                "city": "北京",
+                "experience": "",
+                "company": "",
+                "salary": "",
+                "degree": "",
+                "welfare": "",
+                "reference_answer": ""
+            },
+            {
+                "query_type": "precise_match",
+                "user_question": "我想去宽之应聘助理设计师，我有半年的设计助理经验，会用CAD制图，也跟过工地现场，这个职位适合我吗？",
+                "title": "助理设计师",
+                "semantic_query": "助理设计师 助理设计师 CAD SketchUp 工地跟进",
+                "city": "北京",
+                "experience": "",
+                "company": "宽之",
+                "salary": "",
+                "degree": "本科",
+                "welfare": "五险一金 带薪年假 绩效奖金",
+                "reference_answer": "您的条件与该岗位匹配度较高。您的CAD制图和工地跟进经验直接符合职位摘要要求。经验上，岗位要求‘1年以内’，您的半年经验属于可接受范围。学历要求本科，您也需符合。技能上，建议您再确认是否熟悉SketchUp。整体来看，您基本满足岗位核心要求，可以尝试投递。"
+            }
+        ]
+    },
+    {
+        "ground_truth_job_id": "ba76eb9265a6a53c0nR53967GFVQ",
+        "job_meta": {
+            "title": "前端开发工程师（北京）",
+            "company": "北京起步软件",
+            "city": "北京"
+        },
+        "test_cases": [
+            {
+                "query_type": "broad_search",
+                "user_question": "我想找一份在北京的前端开发工作，主要使用Vue2或Vue3，并且对Uni-app和地图开发有一定了解，有什么机会吗？",
+                "title": "前端开发工程师",
+                "semantic_query": "前端开发工程师 前端开发 Vue2 Vue3 Uni-app 地图",
+                "city": "北京",
+                "experience": "",
+                "company": "",
+                "salary": "",
+                "degree": "",
+                "welfare": "",
+                "reference_answer": ""
+            },
+            {
+                "query_type": "precise_match",
+                "user_question": "我想去北京起步软件应聘前端开发工程师。我有4年工作经验，熟练使用Vue2/Vue3和Uni-app，并且有地图开发相关的项目经验。我大专学历，能很快入职，这个岗位适合我吗？",
+                "title": "前端开发工程师",
+                "semantic_query": "前端开发工程师 前端开发 Vue2 Vue3 Uni-app 地图",
+                "city": "北京",
+                "experience": "",
+                "company": "北京起步软件",
+                "salary": "",
+                "degree": "大专",
+                "welfare": "",
+                "reference_answer": "匹配度很高。你的4年经验满足3-5年的要求，技能栈（Vue2/Vue3, Uni-app, 地图开发）与岗位核心要求完全一致，大专学历也符合。你提到能快速入职，与‘可当天入职’的期望也吻合。主要潜在不足是该岗位薪资为7-9K，若你期望薪资更高，可能需要进一步沟通确认。整体来看，你的条件非常适合这个岗位。"
+            }
+        ]
+    },
+    {
+        "ground_truth_job_id": "72d99ed14739834b03J72d-5FFJQ",
+        "job_meta": {
+            "title": "产品经理（地信遥感测绘）",
+            "company": "威特空间",
+            "city": "北京"
+        },
+        "test_cases": [
+            {
+                "query_type": "broad_search",
+                "user_question": "我想找北京的产品经理工作，有GIS相关的产品经验，会做需求分析和产品规划，请问有合适的岗位吗？",
+                "title": "产品经理",
+                "semantic_query": "产品经理 产品经理 地信 遥感 GIS 需求分析 产品规划",
+                "city": "北京",
+                "experience": "",
+                "company": "",
+                "salary": "",
+                "degree": "",
+                "welfare": "",
+                "reference_answer": ""
+            },
+            {
+                "query_type": "precise_match",
+                "user_question": "我想去威特空间应聘地信遥感测绘方向的产品经理，我有4年GIS产品经验，擅长需求分析、方案设计和文档输出，逻辑思维和协调能力都不错，也有WebGIS基础，这个岗位适合我吗？",
+                "title": "产品经理（地信遥感测绘）",
+                "semantic_query": "产品经理（地信遥感测绘） 产品经理 GIS 需求分析 WebGIS",
+                "city": "北京",
+                "experience": "3-5年",
+                "company": "威特空间",
+                "salary": "15K",
+                "degree": "本科",
+                "welfare": "五险一金",
+                "reference_answer": "匹配度较高。您4年的GIS产品经验完全满足3-5年的要求，核心技能（需求分析、方案设计、文档输出）与岗位职责高度契合，WebGIS基础和逻辑协调能力也是岗位所需。学历本科也符合。主要匹配点在于专业背景和核心能力。可能的不足是岗位更侧重地信遥感测绘领域，需确认您的具体项目经验与该领域的结合深度。整体来看，您是很有竞争力的候选人。"
+            }
+        ]
+    },
+    {
+        "ground_truth_job_id": "3f2c9b02d580ef2a0nV53dS6F1ZW",
+        "job_meta": {
+            "title": "运维巡检工程师",
+            "company": "北京拾念科技发展",
+            "city": "北京"
+        },
+        "test_cases": [
+            {
+                "query_type": "broad_search",
+                "user_question": "在北京想找运维巡检类的工作，对Linux和大数据巡检有了解，有相关专业背景，请问有什么岗位推荐吗？",
+                "title": "运维巡检工程师",
+                "semantic_query": "运维巡检工程师 运维巡检 工程师 Linux 大数据 数据库 巡检",
+                "city": "北京",
+                "experience": "实习",
+                "company": "",
+                "salary": "",
+                "degree": "大专",
+                "welfare": "",
+                "reference_answer": ""
+            },
+            {
+                "query_type": "precise_match",
+                "user_question": "我想去北京拾念科技发展应聘运维巡检工程师，我是计算机专业的大专应届生，了解Linux和大数据巡检流程，这个岗位适合我吗？",
+                "title": "运维巡检工程师",
+                "semantic_query": "运维巡检工程师 运维巡检 工程师 Linux 大数据 数据库 巡检",
+                "city": "北京",
+                "experience": "实习",
+                "company": "北京拾念科技发展",
+                "salary": "5K",
+                "degree": "大专",
+                "welfare": "",
+                "reference_answer": "匹配度较高。您的大专学历、计算机专业背景以及Linux和大数据巡检的知识，完全符合岗位的硬性要求。但职位要求有1年以上运维经验，而您是应届生，这可能是主要差距。不过，岗位同时接受在校/应届生，且您具备专业基础，因此仍有较大机会，面试中需重点展示对巡检工作的理解和学习能力。"
+            }
+        ]
+    },
+    {
+        "ground_truth_job_id": "3c2a61c6585eb05503Z53t-4EVtZ",
+        "job_meta": {
+            "title": "测试",
+            "company": "神州通誉",
+            "city": "北京"
+        },
+        "test_cases": [
+            {
+                "query_type": "broad_search",
+                "user_question": "在北京想找一份测试工程师的工作，熟悉自动化测试和白盒测试，有哪些合适的岗位？",
+                "title": "测试",
+                "semantic_query": "测试 测试 自动化测试 白盒测试",
+                "city": "北京",
+                "experience": "",
+                "company": "",
+                "salary": "",
+                "degree": "",
+                "welfare": "",
+                "reference_answer": ""
+            },
+            {
+                "query_type": "precise_match",
+                "user_question": "我有7年测试经验，掌握自动化测试和白盒测试，能独立完成测试工作，请问去神州通誉做测试工程师合适吗？",
+                "title": "测试",
+                "semantic_query": "测试 测试 自动化测试 白盒测试",
+                "city": "北京",
+                "experience": "5-10年",
+                "company": "神州通誉",
+                "salary": "16K",
+                "degree": "大专",
+                "welfare": "五险一金",
+                "reference_answer": "匹配度较高。您的7年经验符合该岗位5-10年的核心要求，且您掌握的自动化测试和白盒测试技能正是职位摘要中强调的关键能力。独立完成测试工作的能力也与岗位职责吻合。学历方面，您的条件应能满足大专要求。薪资范围11-16K可以作为参考。主要的匹配点在于丰富的经验与核心技术要求高度契合。"
+            }
+        ]
+    },
+    {
+        "ground_truth_job_id": "bd58369215bfa31b031y2N24EFdW",
+        "job_meta": {
+            "title": "电子产品测试员",
+            "company": "河北廊翼科技有限公司",
+            "city": "北京"
+        },
+        "test_cases": [
+            {
+                "query_type": "broad_search",
+                "user_question": "我想在北京找电子产品测试相关的工作，主要负责测试和品控，有什么岗位推荐吗？",
+                "title": "电子产品测试员",
+                "semantic_query": "电子产品测试员 电子产品 测试 品控 质量",
+                "city": "北京",
+                "experience": "",
+                "company": "",
+                "salary": "",
+                "degree": "",
+                "welfare": "",
+                "reference_answer": ""
+            },
+            {
+                "query_type": "precise_match",
+                "user_question": "我今年22岁，做事认真负责，有团队合作精神，想去河北廊翼科技有限公司做电子产品测试员，这个岗位适合我吗？",
+                "title": "电子产品测试员",
+                "semantic_query": "电子产品测试员 电子产品 测试 质量 沟通",
+                "city": "北京",
+                "experience": "",
+                "company": "河北廊翼科技有限公司",
+                "salary": "",
+                "degree": "",
+                "welfare": "",
+                "reference_answer": "匹配度较高。您的年龄（22岁）完全符合岗位要求的18-25岁范围，且具备团队合作精神，这是岗位明确要求的能力。岗位核心职责是负责二手电子产品测试与质量反馈，对学历和经验均无硬性要求，只要您能独立完成任务并善于沟通即可。因此，您的基本条件与该岗位匹配。"
+            }
+        ]
+    },
+    {
+        "ground_truth_job_id": "38f091ed0073a8db03By2t67EFNV",
+        "job_meta": {
+            "title": "家装设计师",
+            "company": "梵客家装",
+            "city": "北京"
+        },
+        "test_cases": [
+            {
+                "query_type": "broad_search",
+                "user_question": "我想在北京找家装设计师的工作，有5年以上经验，会用CAD，有什么合适的岗位推荐吗？",
+                "title": "家装设计师",
+                "semantic_query": "家装设计师 家装设计师 CAD 室内设计",
+                "city": "北京",
+                "experience": "",
+                "company": "",
+                "salary": "",
+                "degree": "",
+                "welfare": "",
+                "reference_answer": ""
+            },
+            {
+                "query_type": "precise_match",
+                "user_question": "我想去梵客家装应聘家装设计师，我有8年室内设计经验，熟悉CAD和装修流程，这个岗位适合我吗？",
+                "title": "家装设计师",
+                "semantic_query": "家装设计师 家装设计师 室内设计 CAD",
+                "city": "北京",
+                "experience": "",
+                "company": "梵客家装",
+                "salary": "",
+                "degree": "",
+                "welfare": "",
+                "reference_answer": "匹配度较高。您的8年经验符合岗位‘5-10年’及‘8年以上’的核心要求，CAD技能和装修流程知识也是关键匹配点。需要注意的潜在不足是，岗位学历要求为‘中专/中技’，请确认您的学历是否符合。此外，岗位强调创意、表达和学习能力，您的经验若包含这些软技能则更佳。"
+            }
+        ]
+    },
+    {
+        "ground_truth_job_id": "a2a9f13497fe3115031729y1E1tZ",
+        "job_meta": {
+            "title": "销售岗+按时发薪+接受小白+不坐班不加班",
+            "company": "北京国文轩文化遗...",
+            "city": "北京"
+        },
+        "test_cases": [
+            {
+                "query_type": "broad_search",
+                "user_question": "我在北京，想找一个时间自由、不强制坐班的销售工作，有什么推荐吗？",
+                "title": "销售",
+                "semantic_query": "销售 销售 时间自由 不坐班",
+                "city": "北京",
+                "experience": "经验不限",
+                "company": "",
+                "salary": "",
+                "degree": "",
+                "welfare": "",
+                "reference_answer": ""
+            },
+            {
+                "query_type": "precise_match",
+                "user_question": "我想去北京国文轩文化遗产公司做销售岗，我是应届生，没有销售经验，但学习能力强，也接受培训，这个岗位适合我吗？",
+                "title": "销售岗",
+                "semantic_query": "销售岗 销售 培训 无经验",
+                "city": "北京",
+                "experience": "应届",
+                "company": "北京国文轩文化遗产公司",
+                "salary": "10K",
+                "degree": "",
+                "welfare": "",
+                "reference_answer": "匹配度较高。您的情况与该岗位要求非常契合：岗位明确接受小白、提供培训，且无需开发客户，完美对应您作为应届生无经验但学习能力强的特点。新人月薪10K+的预期与您期望相符。岗位时间自由、不坐班不加班，工作模式灵活。主要匹配点在于‘经验不限’和‘提供培训’，您需要表现出对销售工作的热情和努力，以匹配‘收入与努力成正比’的岗位特点。"
+            }
+        ]
+    },
+    {
+        "ground_truth_job_id": "a6192e8afd8eb6220nR72dq0GFpV",
+        "job_meta": {
+            "title": "产品经理(J10052)",
+            "company": "航旅纵横",
+            "city": "北京"
+        },
+        "test_cases": [
+            {
+                "query_type": "broad_search",
+                "user_question": "我是应届生，想在北京找产品经理的工作，有互联网产品相关经验，有什么岗位推荐吗？",
+                "title": "产品经理",
+                "semantic_query": "产品经理 产品经理 互联网产品 应届",
+                "city": "北京",
+                "experience": "实习",
+                "company": "",
+                "salary": "",
+                "degree": "本科",
+                "welfare": "",
+                "reference_answer": ""
+            },
+            {
+                "query_type": "precise_match",
+                "user_question": "我想去航旅纵横应聘产品经理，我是应届本科生，有过互联网产品实习经验，逻辑思维和沟通能力都不错，这个岗位适合我吗？",
+                "title": "产品经理(J10052)",
+                "semantic_query": "产品经理(J10052) 产品经理 互联网产品 航旅 应届",
+                "city": "北京",
+                "experience": "实习",
+                "company": "航旅纵横",
+                "salary": "12K",
+                "degree": "本科",
+                "welfare": "五险一金",
+                "reference_answer": "匹配度较高。您是应届本科生，符合硬性要求，且有互联网产品实习经验，与岗位核心需求相符。您的逻辑思维和沟通能力也是岗位所需的关键素质。岗位明确负责航旅产品，如果您对出行、旅游领域有兴趣或了解，将是加分项。可能的不足在于，作为应届生，独立负责产品设计与运营的实际项目经验可能相对较少。"
+            }
+        ]
+    },
+    {
+        "ground_truth_job_id": "360b05b152dedd070nR83Nu5GVVX",
+        "job_meta": {
+            "title": "Java",
+            "company": "博彦科技",
+            "city": "北京"
+        },
+        "test_cases": [
+            {
+                "query_type": "broad_search",
+                "user_question": "我在北京，有4年Java开发经验，熟悉SpringBoot和Vue，请问有合适的岗位推荐吗？",
+                "title": "Java",
+                "semantic_query": "Java Java 后端 SpringBoot Vue",
+                "city": "北京",
+                "experience": "",
+                "company": "",
+                "salary": "",
+                "degree": "",
+                "welfare": "",
+                "reference_answer": ""
+            },
+            {
+                "query_type": "precise_match",
+                "user_question": "我关注到博彦科技在北京招聘Java开发，我有5年Java后端经验，熟练使用SpringBoot、MyBatis和Vue.js，并且有数据库优化经验，这个岗位适合我吗？",
+                "title": "Java",
+                "semantic_query": "Java Java SpringBoot MyBatis Vue",
+                "city": "北京",
+                "experience": "",
+                "company": "博彦科技",
+                "salary": "",
+                "degree": "本科",
+                "welfare": "五险一金",
+                "reference_answer": "您的条件与该岗位高度匹配。您有5年经验（满足3-5年要求），本科（符合学历要求），技术栈（SpringBoot、MyBatis、Vue.js）与岗位要求完全吻合，且具备数据库优化经验。主要匹配点在于技术栈和经验的深度契合。需要注意的细节是薪资期望是否在14-16K范围内。整体来看，您非常适合这个岗位。"
+            }
+        ]
+    },
+    {
+        "ground_truth_job_id": "225fe475600da70403Nz3N21F1NQ",
+        "job_meta": {
+            "title": "产品经理（军工方向北京）",
+            "company": "高维数据",
+            "city": "北京"
+        },
+        "test_cases": [
+            {
+                "query_type": "broad_search",
+                "user_question": "想在北京找产品经理的工作，我有5年以上企业产品经验，熟悉设计流程和PRD编写，有什么岗位推荐吗？",
+                "title": "产品经理",
+                "semantic_query": "产品经理 产品经理 企业产品 设计流程 PRD 项目管理",
+                "city": "北京",
+                "experience": "",
+                "company": "",
+                "salary": "",
+                "degree": "",
+                "welfare": "",
+                "reference_answer": ""
+            },
+            {
+                "query_type": "precise_match",
+                "user_question": "我想去高维数据应聘产品经理（军工方向），我有6年企业软件产品经验，熟悉设计流程、PRD编写和项目管理，沟通能力也不错，这个岗位适合我吗？",
+                "title": "产品经理（军工方向）",
+                "semantic_query": "产品经理（军工方向） 产品经理 军工 企业产品 PRD 项目管理",
+                "city": "北京",
+                "experience": "",
+                "company": "高维数据",
+                "salary": "",
+                "degree": "本科",
+                "welfare": "五险一金 带薪年假 交通补助 住房补贴",
+                "reference_answer": "匹配度较高。您6年的企业产品经验超过4年的要求，熟悉设计流程和PRD编写完全符合核心技能。匹配点在于项目管理能力和沟通能力。潜在不足是岗位明确要求‘军工方向’，您的描述中未提及行业相关经验，这是需要确认的关键点。"
+            }
+        ]
+    },
+    {
+        "ground_truth_job_id": "15ac0468846631d50nR939S6F1pY",
+        "job_meta": {
+            "title": "多媒体设备运维",
+            "company": "阳光雨露",
+            "city": "北京"
+        },
+        "test_cases": [
+            {
+                "query_type": "broad_search",
+                "user_question": "我在北京找多媒体设备运维的工作，有3年多相关经验，熟悉音响灯光系统，有什么合适的岗位吗？",
+                "title": "多媒体设备运维",
+                "semantic_query": "多媒体设备运维 多媒体设备运维 音响灯光系统 设备维护",
+                "city": "北京",
+                "experience": "",
+                "company": "",
+                "salary": "",
+                "degree": "",
+                "welfare": "",
+                "reference_answer": ""
+            },
+            {
+                "query_type": "precise_match",
+                "user_question": "我想去阳光雨露应聘多媒体设备运维，我有计算机专业背景和4年的多媒体设备维护、灯光音响系统操作经验，这个岗位适合我吗？",
+                "title": "多媒体设备运维",
+                "semantic_query": "多媒体设备运维 多媒体设备运维 音响灯光系统 PPT制作 设备维护",
+                "city": "北京",
+                "experience": "",
+                "company": "阳光雨露",
+                "salary": "",
+                "degree": "",
+                "welfare": "",
+                "reference_answer": "您的条件与该岗位匹配度较高。匹配点在于：您的计算机专业背景和4年经验满足其硬性要求；多媒体设备维护和音响灯光系统的经验直接对应核心技术栈。可能的不足是，岗位职责中包含展示方案设计和培训支持，这些能力在您的描述中未明确体现。整体来看，您是符合岗位核心要求的候选人。"
+            }
+        ]
+    },
+    {
+        "ground_truth_job_id": "7c440a4bcb03fb2f0nV43tq5GVpR",
+        "job_meta": {
+            "title": "foreign english teacher",
+            "company": "京师管家",
+            "city": "北京"
+        },
+        "test_cases": [
+            {
+                "query_type": "broad_search",
+                "user_question": "在北京找外教工作，我有TEFL证书和儿童英语教学经验，有什么岗位推荐吗？",
+                "title": "foreign english teacher",
+                "semantic_query": "foreign english teacher foreign english teacher TEFL 儿童教学",
+                "city": "北京",
+                "experience": "",
+                "company": "",
+                "salary": "",
+                "degree": "",
+                "welfare": "",
+                "reference_answer": ""
+            },
+            {
+                "query_type": "precise_match",
+                "user_question": "我想去京师管家应聘外教岗位，我有英语母语背景，本科学历，持有TEFL证书，还有4年的K-12学生教学经验，这个岗位适合我吗？",
+                "title": "foreign english teacher",
+                "semantic_query": "foreign english teacher foreign english teacher TEFL 儿童教学",
+                "city": "北京",
+                "experience": "",
+                "company": "京师管家",
+                "salary": "",
+                "degree": "本科",
+                "welfare": "",
+                "reference_answer": "您的匹配度很高。岗位要求英语母语、本科学历、TEFL/TESOL证书及儿童教学经验，您均符合，且4年经验满足‘3-5年’要求。您还具备K-12教学经验，与岗位职责高度契合。可能的不足是岗位可能涉及数学、科学等学科教学，需确认您是否具备相应能力。"
+            }
+        ]
+    },
+    {
+        "ground_truth_job_id": "ee117e3f8cd5dc3903R92d26GVtW",
+        "job_meta": {
+            "title": "退休教师（旅居）",
+            "company": "游舍文旅",
+            "city": "北京"
+        },
+        "test_cases": [
+            {
+                "query_type": "broad_search",
+                "user_question": "我在北京，想找一份退休教师的工作，有音乐教学经验，有什么机会吗？",
+                "title": "退休教师（旅居）",
+                "semantic_query": "退休教师（旅居） 退休教师 音乐 教学",
+                "city": "北京",
+                "experience": "10年以上",
+                "company": "",
+                "salary": "8K",
+                "degree": "本科",
+                "welfare": "员工旅游 餐补 免费班车",
+                "reference_answer": ""
+            },
+            {
+                "query_type": "precise_match",
+                "user_question": "我想去游舍文旅应聘退休教师（旅居）岗位，我是一位退休音乐老师，有蒙特梭利教育背景，适合这个职位吗？",
+                "title": "退休教师（旅居）",
+                "semantic_query": "退休教师（旅居） 退休教师 音乐 蒙特梭利 教育",
+                "city": "北京",
+                "experience": "10年以上",
+                "company": "游舍文旅",
+                "salary": "8K",
+                "degree": "本科",
+                "welfare": "员工旅游 餐补 免费班车",
+                "reference_answer": "匹配度很高。您的退休音乐教师身份和蒙特梭利背景完全符合核心要求。工作地点在北京，负责1-2岁幼儿教育互动，每日5-6小时，并提供食宿，这与旅居养老结合的岗位性质非常契合。您只需确认自身年龄在50-70岁区间，即可视为理想人选。"
+            }
+        ]
+    },
+    {
+        "ground_truth_job_id": "d10da32e7434d3e103153927E1NY",
+        "job_meta": {
+            "title": "产品经理 （双休+每月团建）",
+            "company": "泽羚科技",
+            "city": "北京"
+        },
+        "test_cases": [
+            {
+                "query_type": "broad_search",
+                "user_question": "我在北京，有2年左右的产品经验，熟悉Axure和需求分析，想找产品经理的职位，有什么机会吗？",
+                "title": "产品经理",
+                "semantic_query": "产品经理 产品经理 Axure 需求分析 产品规划",
+                "city": "北京",
+                "experience": "",
+                "company": "",
+                "salary": "",
+                "degree": "本科",
+                "welfare": "双休",
+                "reference_answer": ""
+            },
+            {
+                "query_type": "precise_match",
+                "user_question": "我想去泽羚科技做产品经理。我有1年半的政府项目产品经验，会用Axure和墨刀，沟通能力不错，这个岗位适合我吗？",
+                "title": "产品经理",
+                "semantic_query": "产品经理 产品经理 政府项目 Axure 产品规划 沟通",
+                "city": "北京",
+                "experience": "1-3年",
+                "company": "泽羚科技",
+                "salary": "13K",
+                "degree": "本科",
+                "welfare": "五险一金 双休",
+                "reference_answer": "匹配度较高。您的1.5年政府项目经验、设计工具技能及沟通能力均符合岗位核心要求，薪资期望也匹配。主要差距在于经验年限（岗位要求1-3年，您处于下限）以及岗位明确要求2年政府项目经验，您可突出项目成果来弥补年限差异。"
+            }
+        ]
+    },
+    {
+        "ground_truth_job_id": "02ccbb9642d4d71f03N93tm9EFZY",
+        "job_meta": {
+            "title": "Java 大模型应用工程",
+            "company": "快手",
+            "city": "北京"
+        },
+        "test_cases": [
+            {
+                "query_type": "broad_search",
+                "user_question": "我想找北京的Java开发岗位，主要方向是中间件和高并发，有什么推荐吗？",
+                "title": "Java 大模型应用工程",
+                "semantic_query": "Java 大模型应用工程 Java 多线程 中间件 高并发 架构",
+                "city": "北京",
+                "experience": "",
+                "company": "",
+                "salary": "",
+                "degree": "",
+                "welfare": "",
+                "reference_answer": ""
+            },
+            {
+                "query_type": "precise_match",
+                "user_question": "我想去快手应聘Java大模型应用工程师，我有4年Java后端经验，熟悉多线程、中间件和高并发架构设计，这个岗位适合我吗？",
+                "title": "Java 大模型应用工程",
+                "semantic_query": "Java 大模型应用工程 Java 大模型 多线程 中间件 高并发",
+                "city": "北京",
+                "experience": "",
+                "company": "快手",
+                "salary": "",
+                "degree": "本科",
+                "welfare": "五险一金 年终奖",
+                "reference_answer": "匹配度较高。您4年的Java后端经验及对多线程、中间件、高并发架构的熟悉度，与该岗位的核心技术栈和职责高度匹配。学历也符合本科要求。可能的不足是职位摘要中提到硬性要求为3年以上经验，但您未明确提及是否具备大模型或多模态应用开发的具体经验，这可能是需要进一步确认或准备的方向。"
+            }
+        ]
+    },
+    {
+        "ground_truth_job_id": "a9b4aebb816f62bd0nV53d-6FlJQ",
+        "job_meta": {
+            "title": "会计",
+            "company": "B 612",
+            "city": "北京"
+        },
+        "test_cases": [
+            {
+                "query_type": "broad_search",
+                "user_question": "我想在北京找一份会计工作，会用财务软件，大概1到3年经验，有什么职位推荐吗？",
+                "title": "会计",
+                "semantic_query": "会计 会计 财务软件 税务 资金",
+                "city": "北京",
+                "experience": "",
+                "company": "",
+                "salary": "",
+                "degree": "本科",
+                "welfare": "五险一金",
+                "reference_answer": ""
+            },
+            {
+                "query_type": "precise_match",
+                "user_question": "我想去B 612公司应聘会计岗位，我有一年半的财务工作经验，会韩语，能熟练使用办公软件和财务软件，这个职位适合我吗？",
+                "title": "会计",
+                "semantic_query": "会计 会计 韩语 财务软件 税务",
+                "city": "北京",
+                "experience": "1-3年",
+                "company": "B 612",
+                "salary": "12K",
+                "degree": "本科",
+                "welfare": "五险一金",
+                "reference_answer": "匹配度较高。您1.5年经验在要求的1-3年内，会韩语是显著加分项，且熟练办公及财务软件符合核心要求。您满足学历要求，目标城市也匹配。可能需要注意的是，该岗位还涉及税务和资金管理，需确认您在这些方面有具体实操经验。总体而言，您的条件与职位描述非常契合。"
+            }
+        ]
+    },
+    {
+        "ground_truth_job_id": "08c318c98d5633840nR-0tW1FFRQ",
+        "job_meta": {
+            "title": "JAVA",
+            "company": "校企脉",
+            "city": "北京"
+        },
+        "test_cases": [
+            {
+                "query_type": "broad_search",
+                "user_question": "我想在北京找Java后端开发的工作，主要用SpringBoot和MyBatis，有什么合适的岗位推荐吗？",
+                "title": "Java",
+                "semantic_query": "Java Java SpringBoot MyBatis",
+                "city": "北京",
+                "experience": "",
+                "company": "",
+                "salary": "",
+                "degree": "",
+                "welfare": "",
+                "reference_answer": ""
+            },
+            {
+                "query_type": "precise_match",
+                "user_question": "我想去校企脉应聘Java岗位，我有8年Java开发经验，熟悉SpringBoot和MyBatis，也做过一些系统框架设计，这个岗位适合我吗？",
+                "title": "Java",
+                "semantic_query": "Java Java SpringBoot MyBatis",
+                "city": "北京",
+                "experience": "",
+                "company": "校企脉",
+                "salary": "",
+                "degree": "",
+                "welfare": "",
+                "reference_answer": "您的条件与岗位匹配度较高。您8年的经验满足了6年以上的硬性要求，且技能栈（Java/SpringBoot/MyBatis）完全吻合，具备框架设计经验也符合岗位职责。主要考虑点在于，薪资范围为10-13K，您需要评估是否符合您的期望。此外，岗位强调业务梳理能力，您在提问中未明确提及，需确认是否具备。"
+            }
+        ]
+    },
+    {
+        "ground_truth_job_id": "e65d026dbe0065960nR52tq6GVtY",
+        "job_meta": {
+            "title": "总账会计",
+            "company": "北京云渡贸易有限公司",
+            "city": "北京"
+        },
+        "test_cases": [
+            {
+                "query_type": "broad_search",
+                "user_question": "我想在北京找一份总账会计的工作，会用财务软件，有几年经验，有什么合适的岗位吗？",
+                "title": "总账会计",
+                "semantic_query": "总账会计 总账会计 财务软件",
+                "city": "北京",
+                "experience": "",
+                "company": "",
+                "salary": "",
+                "degree": "",
+                "welfare": "",
+                "reference_answer": ""
+            },
+            {
+                "query_type": "precise_match",
+                "user_question": "我想去北京云渡贸易有限公司应聘总账会计，我有7年总账工作经验，本科学历，熟悉财务软件，工作细心，请问这个岗位适合我吗？",
+                "title": "总账会计",
+                "semantic_query": "总账会计 总账会计 财务软件",
+                "city": "北京",
+                "experience": "",
+                "company": "北京云渡贸易有限公司",
+                "salary": "",
+                "degree": "本科",
+                "welfare": "",
+                "reference_answer": "您的条件与该岗位匹配度较高。您拥有7年总账经验，符合其5-10年的要求，且具备本科学历和财务软件技能。岗位强调细心、稳定和无账目错误，您的‘工作细心’描述与之契合。主要不足在于薪资期望需明确，该岗位薪资为8-10K，您未提及个人薪资要求。整体而言，您是符合条件的候选人。"
+            }
+        ]
+    },
+    {
+        "ground_truth_job_id": "7cf4c74fa176041e0nV53N-6FldT",
+        "job_meta": {
+            "title": "国风珠宝设计师",
+            "company": "江苏天后珠宝有限公司",
+            "city": "北京"
+        },
+        "test_cases": [
+            {
+                "query_type": "broad_search",
+                "user_question": "我想找北京的珠宝设计师工作，有5年以上的国风设计经验，请问有什么合适的岗位吗？",
+                "title": "珠宝设计师",
+                "semantic_query": "珠宝设计师 珠宝设计 国风 翡翠 镶嵌",
+                "city": "北京",
+                "experience": "",
+                "company": "",
+                "salary": "",
+                "degree": "本科",
+                "welfare": "",
+                "reference_answer": ""
+            },
+            {
+                "query_type": "precise_match",
+                "user_question": "我想去江苏天后珠宝有限公司做国风珠宝设计师，我有8年的珠宝设计经验，主要做金镶玉和花丝镶嵌，这个岗位适合我吗？",
+                "title": "国风珠宝设计师",
+                "semantic_query": "国风珠宝设计师 珠宝设计 国风 金镶玉 花丝镶嵌",
+                "city": "北京",
+                "experience": "",
+                "company": "江苏天后珠宝有限公司",
+                "salary": "13K",
+                "degree": "本科",
+                "welfare": "",
+                "reference_answer": "您的匹配度很高。您的8年经验符合5-10年的要求，且主攻的金镶玉、花丝镶嵌正是岗位核心方向，学历也达标。不足在于岗位明确要求翡翠镶嵌经验，如果您对此不熟悉，可能成为短板。总体而言，您是极具竞争力的候选人。"
+            }
+        ]
+    },
+    {
+        "ground_truth_job_id": "543c060616e269970nV42N20EFNU",
+        "job_meta": {
+            "title": "注册会计师、审计经理、审计助理",
+            "company": "鼎恒会计师事务所",
+            "city": "北京"
+        },
+        "test_cases": [
+            {
+                "query_type": "broad_search",
+                "user_question": "我在北京，有CPA证书，想找审计经理或注册会计师相关的工作，有什么合适的职位吗？",
+                "title": "审计经理",
+                "semantic_query": "审计经理 注册会计师 审计经理 CPA",
+                "city": "北京",
+                "experience": "",
+                "company": "",
+                "salary": "",
+                "degree": "",
+                "welfare": "",
+                "reference_answer": ""
+            },
+            {
+                "query_type": "precise_match",
+                "user_question": "我想去鼎恒会计师事务所应聘审计经理的岗位，我有CPA证书和4年的审计项目经验，是大专学历，这个岗位适合我吗？",
+                "title": "审计经理",
+                "semantic_query": "审计经理 审计经理 CPA 审计经验",
+                "city": "北京",
+                "experience": "",
+                "company": "鼎恒会计师事务所",
+                "salary": "",
+                "degree": "大专",
+                "welfare": "",
+                "reference_answer": "您的条件与该岗位有不错的匹配度。匹配点在于您拥有CPA证书，符合核心要求；4年审计经验接近3-5年的范围；大专学历也符合要求。主要不足在于职位摘要明确要求5-10年审计经验，您的4年经验略低于其下限，在项目管理和报告编制方面的资深经验可能需要进一步证明。整体来看，是值得尝试投递的。"
+            }
+        ]
+    },
+    {
+        "ground_truth_job_id": "80b80d381daeaa280nV73dW1ElBT",
+        "job_meta": {
+            "title": "web前端/测试",
+            "company": "飞鱼云",
+            "city": "北京"
+        },
+        "test_cases": [
+            {
+                "query_type": "broad_search",
+                "user_question": "在北京想找一个会Vue3和React的前端工作，有什么机会吗？",
+                "title": "web前端",
+                "semantic_query": "web前端 web前端 Vue3 React TypeScript NodeJS",
+                "city": "北京",
+                "experience": "",
+                "company": "",
+                "salary": "",
+                "degree": "",
+                "welfare": "",
+                "reference_answer": ""
+            },
+            {
+                "query_type": "precise_match",
+                "user_question": "我想去飞鱼云应聘web前端/测试的岗位，我有6年经验，熟悉Vue3、React和TypeScript，并且有SCRM项目经验，这个岗位适合我吗？",
+                "title": "web前端 测试",
+                "semantic_query": "web前端 测试 web前端 Vue3 React TypeScript SCRM",
+                "city": "北京",
+                "experience": "5-10年",
+                "company": "飞鱼云",
+                "salary": "15K",
+                "degree": "本科",
+                "welfare": "五险一金",
+                "reference_answer": "匹配度较高。你的6年经验满足5-10年要求，技术栈Vue3、React、TypeScript与岗位核心要求完全匹配，且具备关键的SCRM项目经验。学历（假设为本科）也符合。主要差距在于薪资，该岗位标注为10-15K，你的期望可能需要在此范围内。岗位职责包含测试，若你对此经验较少，可能需要补充。"
+            }
+        ]
+    },
+    {
+        "ground_truth_job_id": "a2447207591f0e540nRy2tm6FlBX",
+        "job_meta": {
+            "title": "物联网产品经理",
+            "company": "甲板智慧",
+            "city": "北京"
+        },
+        "test_cases": [
+            {
+                "query_type": "broad_search",
+                "user_question": "北京有什么物联网产品经理的岗位推荐吗？我熟悉IoT、AI和GIS这些技术。",
+                "title": "物联网产品经理",
+                "semantic_query": "物联网产品经理 物联网 产品经理 IoT AI GIS",
+                "city": "北京",
+                "experience": "",
+                "company": "",
+                "salary": "",
+                "degree": "",
+                "welfare": "",
+                "reference_answer": ""
+            },
+            {
+                "query_type": "precise_match",
+                "user_question": "我想去甲板智慧应聘物联网产品经理，我有4年智慧城市项目经验，熟悉IoT、AI和无人机平台，这个岗位适合我吗？",
+                "title": "物联网产品经理",
+                "semantic_query": "物联网产品经理 物联网 产品经理 IoT AI 无人机",
+                "city": "北京",
+                "experience": "",
+                "company": "甲板智慧",
+                "salary": "",
+                "degree": "",
+                "welfare": "",
+                "reference_answer": "您的条件与该岗位匹配度很高。您的4年智慧城市经验完全符合‘优先有智慧城市场景背景’的要求，且您熟悉的IoT、AI技术是岗位核心技术栈。岗位要求3-5年经验，您的4年经验也符合。您提到的无人机平台经验与岗位职责‘设计机器人/无人机管理平台’高度相关。因此，从硬性要求和核心技术来看，您是较为合适的候选人。"
+            }
+        ]
+    },
+    {
+        "ground_truth_job_id": "2ad67d23c09148860nRy2du-FltU",
+        "job_meta": {
+            "title": "JAVA（银行）",
+            "company": "宇信科技",
+            "city": "北京"
+        },
+        "test_cases": [
+            {
+                "query_type": "broad_search",
+                "user_question": "我想找北京的Java开发工作，熟悉Spring和分布式系统，有什么合适的岗位吗？",
+                "title": "JAVA开发",
+                "semantic_query": "JAVA开发 Java Spring 分布式 高并发",
+                "city": "北京",
+                "experience": "",
+                "company": "",
+                "salary": "",
+                "degree": "",
+                "welfare": "",
+                "reference_answer": ""
+            },
+            {
+                "query_type": "precise_match",
+                "user_question": "我目前在北京，有4年Java开发经验，熟练使用Spring、Redis和MySQL，也接触过一些分布式项目。请问我适合宇信科技的JAVA岗位吗？",
+                "title": "JAVA（银行）",
+                "semantic_query": "JAVA（银行） Java Spring Redis MySQL 分布式",
+                "city": "北京",
+                "experience": "",
+                "company": "宇信科技",
+                "salary": "",
+                "degree": "",
+                "welfare": "",
+                "reference_answer": "匹配度较高。您4年经验符合3-5年的要求，且精通Spring、Redis、MySQL等核心技术栈，并有分布式项目经验，与该岗位核心要求高度匹配。您可能需确认对中间件、容器化部署的熟悉程度是否完全满足要求。整体来看，您是强竞争力的候选人。"
+            }
+        ]
+    }
+]

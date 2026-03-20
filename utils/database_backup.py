@@ -1,15 +1,14 @@
 # utils/database.py
 
-import logging
 import psycopg2
 import psycopg2.pool
 from psycopg2.extras import RealDictCursor
 from contextlib import contextmanager
 
-from langchain_ollama import OllamaEmbeddings
 from config.config import config
+from utils.logger import get_logger
 
-logger = logging.getLogger("JobAgent")
+logger = get_logger("database_backup")
 
 
 class DatabaseManager:
@@ -51,12 +50,9 @@ class DatabaseManager:
             raise e
 
         # --- 2. 初始化 Embedding 模型 ---
-        logger.info(f"🔄 正在加载向量模型: {config.EMBEDDING_MODEL_NAME} ...")
-        self.embed_model = OllamaEmbeddings(
-            base_url=config.OLLAMA_URL,
-            model=config.EMBEDDING_MODEL_NAME
-        )
-        logger.info(f"✅ 向量模型加载完成: {config.EMBEDDING_MODEL_NAME}")
+        logger.info("loading embedding model: %s", config.OLLAMA_MODELS.embedding)
+        self.embed_model = config.create_embeddings()
+        logger.info("embedding model loaded: %s", config.OLLAMA_MODELS.embedding)
 
         # --- 3. 初始化表结构 & 种子数据 ---
         self._init_tables()
@@ -489,8 +485,6 @@ class DatabaseManager:
 
     def vector_search(self, title: str = "", semantic_query: str = "", city: str = "", company: str = "", experience: str = "", welfare: str = "", top_k: int = 5):
         try:
-            from utils.logger import sys_logger
-
             # -------------------------------------------------------------------------
             # 阶段一：精确公司过滤层 (Exact Company Match)
             # -------------------------------------------------------------------------
@@ -535,11 +529,11 @@ class DatabaseManager:
                     final_results = exact_candidates[:top_k]
 
                     log_details = [f"[{r['title']}|score:{r['exact_match_score']:.1f}]" for r in final_results]
-                    sys_logger.info(
+                    logger.info(
                         f"✅ [阶段一: 精准命中] 公司 '{clean_company}', 返回={len(final_results)} \n得分明细: {', '.join(log_details)}")
                     return final_results
                 else:
-                    sys_logger.info(f"⚠️ [阶段一: 未命中] 未查到公司 '{clean_company}'，进入向量召回...")
+                    logger.info(f"⚠️ [阶段一: 未命中] 未查到公司 '{clean_company}'，进入向量召回...")
 
             # -------------------------------------------------------------------------
             # 阶段二：向量模糊召回与重排兜底 (Vector Recall & Rerank)
@@ -557,7 +551,7 @@ class DatabaseManager:
 
             query_vector = self.embed_model.embed_query(symmetric_query)
             if not query_vector:
-                sys_logger.warning("⚠️ 查询向量生成失败")
+                logger.warning("⚠️ 查询向量生成失败")
                 return []
 
             with self.get_cursor(dict_cursor=True) as cur:
@@ -622,14 +616,13 @@ class DatabaseManager:
                 final_results]
 
             clean_log_query = symmetric_query.replace('\n', ' | ')
-            sys_logger.info(
+            logger.info(
                 f"🔍 [阶段二: 向量召回] V8: bridge='{clean_log_query}', 候选={len(candidates)}, 返回={len(final_results)} \n得分明细: {', '.join(log_details)}"
             )
             return final_results
 
         except Exception as e:
-            from utils.logger import sys_logger
-            sys_logger.error(f"❌ 混合检索失败: {e}", exc_info=True)
+            logger.error(f"❌ 混合检索失败: {e}", exc_info=True)
             return []
 
 

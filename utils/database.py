@@ -2,16 +2,18 @@
 
 import logging
 import re
+from contextlib import contextmanager
+from datetime import date, datetime
+
 import psycopg2
 import psycopg2.pool
-from psycopg2.extras import RealDictCursor
-from contextlib import contextmanager
+from psycopg2.extras import Json, RealDictCursor
 
 import jieba
-from langchain_ollama import OllamaEmbeddings
 from config.config import config
+from utils.logger import get_logger
 
-logger = logging.getLogger("JobAgent")
+logger = get_logger("database")
 
 
 # ====================================================================
@@ -99,6 +101,83 @@ def _build_tsv_sql_and_params(title, company, welfare, summary, detail):
     )
 
 
+def _parse_salary_info(salary_text: str) -> dict:
+    text = (salary_text or "").strip().lower()
+    if not text:
+        return {"unit": "", "min": 0.0, "max": 0.0}
+
+    nums = [float(item) for item in re.findall(r"\d+(?:\.\d+)?", text)]
+    if not nums:
+        return {"unit": "", "min": 0.0, "max": 0.0}
+
+    low = nums[0]
+    high = nums[1] if len(nums) > 1 else nums[0]
+
+    if "元/天" in text or "元/日" in text:
+        return {"unit": "yuan_day", "min": low, "max": high}
+    if "k" in text:
+        return {"unit": "k_month", "min": low, "max": high}
+    return {"unit": "", "min": low, "max": high}
+
+
+def _salary_matches(salary_text: str, salary_min: int = 0, salary_unit: str = "") -> bool:
+    if not salary_min or not salary_unit:
+        return True
+    parsed = _parse_salary_info(salary_text)
+    if parsed["unit"] != salary_unit:
+        return False
+    return parsed["max"] >= float(salary_min)
+
+
+def _should_apply_experience_filter(experience: str) -> bool:
+    exp = (experience or "").strip()
+    if not exp:
+        return False
+    if exp in {"实习", "应届"}:
+        return False
+    return True
+
+
+def _make_json_safe(value):
+    if isinstance(value, dict):
+        return {str(k): _make_json_safe(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [_make_json_safe(item) for item in value]
+    if isinstance(value, tuple):
+        return [_make_json_safe(item) for item in value]
+    if isinstance(value, (datetime, date)):
+        return value.isoformat()
+    return value
+
+
+def _parse_salary_info(salary_text: str) -> dict:
+    text = (salary_text or "").strip().lower()
+    if not text:
+        return {"unit": "", "min": 0.0, "max": 0.0}
+
+    nums = [float(item) for item in re.findall(r"\d+(?:\.\d+)?", text)]
+    if not nums:
+        return {"unit": "", "min": 0.0, "max": 0.0}
+
+    low = nums[0]
+    high = nums[1] if len(nums) > 1 else nums[0]
+
+    if any(token in text for token in ["元/天", "元每天", "/day", "per day", "day"]):
+        return {"unit": "yuan_day", "min": low, "max": high}
+    if any(token in text for token in ["k", "千/月", "月", "薪"]):
+        return {"unit": "k_month", "min": low, "max": high}
+    return {"unit": "", "min": low, "max": high}
+
+
+def _salary_matches(salary_text: str, salary_min: int = 0, salary_unit: str = "") -> bool:
+    if not salary_min or not salary_unit:
+        return True
+    parsed = _parse_salary_info(salary_text)
+    if parsed["unit"] != salary_unit:
+        return False
+    return parsed["max"] >= float(salary_min)
+
+
 # ====================================================================
 #  数据库管理器
 # ====================================================================
@@ -128,12 +207,9 @@ class DatabaseManager:
             logger.critical(f"❌ 数据库连接池创建失败: {e}")
             raise
 
-        logger.info(f"🔄 正在加载向量模型: {config.EMBEDDING_MODEL_NAME} ...")
-        self.embed_model = OllamaEmbeddings(
-            base_url=config.OLLAMA_URL,
-            model=config.EMBEDDING_MODEL_NAME,
-        )
-        logger.info(f"✅ 向量模型加载完成: {config.EMBEDDING_MODEL_NAME}")
+        logger.info("loading embedding model: %s", config.OLLAMA_MODELS.embedding)
+        self.embed_model = config.create_embeddings()
+        logger.info("embedding model loaded: %s", config.OLLAMA_MODELS.embedding)
 
         self._init_tables()
         self._seed_default_users()
@@ -241,6 +317,18 @@ class DatabaseManager:
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 );
             """)
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS long_term_memories (
+                    id SERIAL PRIMARY KEY,
+                    user_id VARCHAR(50) NOT NULL REFERENCES users(user_id),
+                    memory_type VARCHAR(50) NOT NULL DEFAULT 'preference',
+                    content TEXT NOT NULL,
+                    source VARCHAR(50) NOT NULL DEFAULT 'chat',
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    UNIQUE (user_id, memory_type, content)
+                );
+            """)
             cur.execute(f"""
                 CREATE TABLE IF NOT EXISTS resumes (
                     id SERIAL PRIMARY KEY,
@@ -252,8 +340,21 @@ class DatabaseManager:
                 );
             """)
             cur.execute("CREATE INDEX IF NOT EXISTS idx_resumes_user_id ON resumes (user_id);")
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS conversation_states (
+                    thread_id VARCHAR(100) PRIMARY KEY,
+                    user_id VARCHAR(50) NOT NULL REFERENCES users(user_id),
+                    scene VARCHAR(30) NOT NULL,
+                    summary TEXT DEFAULT '',
+                    recent_messages JSONB DEFAULT '[]'::jsonb,
+                    extra_state JSONB DEFAULT '{}'::jsonb,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                );
+            """)
+            cur.execute("CREATE INDEX IF NOT EXISTS idx_long_term_memories_user_id ON long_term_memories (user_id, updated_at DESC);")
+            cur.execute("CREATE INDEX IF NOT EXISTS idx_conversation_states_user_id ON conversation_states (user_id, scene, updated_at DESC);")
 
-        logger.info("✅ 数据库表结构 & 索引初始化完成")
+        logger.info("database schema and indexes ready")
 
     def _add_tsv_column_if_not_exists(self, cur):
         cur.execute("""
@@ -317,7 +418,7 @@ class DatabaseManager:
                     "INSERT INTO users (user_id, username) VALUES (%s, %s) ON CONFLICT DO NOTHING",
                     ("admin", "管理员"),
                 )
-                logger.info("✅ 默认用户创建完成")
+                logger.info("default user ensured")
 
     # ================================================================
     #                    用户管理
@@ -370,6 +471,9 @@ class DatabaseManager:
 
     def get_user_profile(self, user_id: str) -> str:
         try:
+            memories = self.get_long_term_memories(user_id)
+            if memories:
+                return "；".join(memory["content"] for memory in reversed(memories))
             with self.get_cursor(dict_cursor=True) as cur:
                 cur.execute("SELECT preferences FROM user_profiles WHERE user_id = %s", (user_id,))
                 res = cur.fetchone()
@@ -389,6 +493,109 @@ class DatabaseManager:
                 return True
         except Exception as e:
             logger.error(f"❌ 更新画像失败: {e}", exc_info=True)
+            return False
+
+    def get_long_term_memories(self, user_id: str, limit: int = 20) -> list[dict]:
+        try:
+            with self.get_cursor(dict_cursor=True) as cur:
+                cur.execute("""
+                    SELECT memory_type, content, source, updated_at
+                    FROM long_term_memories
+                    WHERE user_id = %s
+                    ORDER BY updated_at DESC, id DESC
+                    LIMIT %s
+                """, (user_id, limit))
+                return cur.fetchall() or []
+        except Exception as e:
+            logger.error(f"❌ 获取长期记忆失败: {e}", exc_info=True)
+            return []
+
+    def add_long_term_memory(
+        self,
+        user_id: str,
+        content: str,
+        memory_type: str = "preference",
+        source: str = "chat",
+    ) -> bool:
+        normalized_content = (content or "").strip()
+        if not normalized_content:
+            return False
+
+        try:
+            with self.get_cursor() as cur:
+                cur.execute("""
+                    INSERT INTO long_term_memories (user_id, memory_type, content, source)
+                    VALUES (%s, %s, %s, %s)
+                    ON CONFLICT (user_id, memory_type, content)
+                    DO UPDATE SET source = EXCLUDED.source, updated_at = CURRENT_TIMESTAMP;
+                """, (user_id, memory_type, normalized_content, source))
+            self.sync_user_profile_from_memories(user_id)
+            return True
+        except Exception as e:
+            logger.error(f"❌ 保存长期记忆失败: {e}", exc_info=True)
+            return False
+
+    def sync_user_profile_from_memories(self, user_id: str) -> bool:
+        memories = self.get_long_term_memories(user_id, limit=50)
+        preferences = "；".join(memory["content"] for memory in reversed(memories))
+        return self.update_user_profile(user_id, preferences)
+
+    def get_conversation_state(self, thread_id: str):
+        try:
+            with self.get_cursor(dict_cursor=True) as cur:
+                cur.execute("""
+                    SELECT thread_id, user_id, scene, summary, recent_messages, extra_state, updated_at
+                    FROM conversation_states
+                    WHERE thread_id = %s
+                """, (thread_id,))
+                return cur.fetchone()
+        except Exception as e:
+            logger.error(f"❌ 获取会话状态失败: {e}", exc_info=True)
+            return None
+
+    def upsert_conversation_state(
+        self,
+        thread_id: str,
+        user_id: str,
+        scene: str,
+        summary: str,
+        recent_messages: list[dict],
+        extra_state: dict | None = None,
+    ) -> bool:
+        try:
+            with self.get_cursor() as cur:
+                cur.execute("""
+                    INSERT INTO conversation_states
+                        (thread_id, user_id, scene, summary, recent_messages, extra_state, updated_at)
+                    VALUES (%s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP)
+                    ON CONFLICT (thread_id)
+                    DO UPDATE SET
+                        user_id = EXCLUDED.user_id,
+                        scene = EXCLUDED.scene,
+                        summary = EXCLUDED.summary,
+                        recent_messages = EXCLUDED.recent_messages,
+                        extra_state = EXCLUDED.extra_state,
+                        updated_at = CURRENT_TIMESTAMP;
+                """, (
+                    thread_id,
+                    user_id,
+                    scene,
+                    summary or "",
+                    Json(_make_json_safe(recent_messages or [])),
+                    Json(_make_json_safe(extra_state or {})),
+                ))
+                return True
+        except Exception as e:
+            logger.error(f"❌ 保存会话状态失败: {e}", exc_info=True)
+            return False
+
+    def delete_conversation_state(self, thread_id: str) -> bool:
+        try:
+            with self.get_cursor() as cur:
+                cur.execute("DELETE FROM conversation_states WHERE thread_id = %s", (thread_id,))
+                return True
+        except Exception as e:
+            logger.error(f"❌ 删除会话状态失败: {e}", exc_info=True)
             return False
 
     # ================================================================
@@ -700,6 +907,9 @@ class DatabaseManager:
         keyword_query: str,
         city: str = "",
         company: str = "",
+        experience: str = "",
+        salary_min: int = 0,
+        salary_unit: str = "",
         top_k: int = 10,
         vector_recall_n: int = 200,
         bm25_recall_n: int = 200,
@@ -779,6 +989,108 @@ class DatabaseManager:
     # ================================================================
     #                    生命周期
     # ================================================================
+
+    def hybrid_search(
+        self,
+        keyword_query: str,
+        city: str = "",
+        company: str = "",
+        experience: str = "",
+        salary_min: int = 0,
+        salary_unit: str = "",
+        top_k: int = 10,
+        vector_recall_n: int = 200,
+        bm25_recall_n: int = 200,
+    ) -> list[dict]:
+        try:
+            logger.info(
+                "hybrid search: keywords=%s city=%s company=%s experience=%s salary_min=%s salary_unit=%s",
+                keyword_query,
+                city,
+                company,
+                experience,
+                salary_min,
+                salary_unit,
+            )
+
+            where_parts = []
+            where_params = []
+
+            if city and city.strip():
+                where_parts.append("city = %s")
+                where_params.append(city.strip())
+
+            if company and company.strip():
+                where_parts.append("company ILIKE %s")
+                where_params.append(f"%{company.strip()}%")
+
+            if _should_apply_experience_filter(experience):
+                exp = experience.strip()
+                where_parts.append("(experience ILIKE %s OR title ILIKE %s)")
+                where_params.extend([f"%{exp}%", f"%{exp}%"])
+
+            where_clause = " AND ".join(where_parts) if where_parts else ""
+            recall_boost = 80 if (experience or salary_min) else 0
+
+            vector_results = self._vector_recall(
+                keyword_query,
+                where_clause,
+                where_params,
+                vector_recall_n + recall_boost,
+            )
+            bm25_results = self._bm25_recall(
+                keyword_query,
+                where_clause,
+                where_params,
+                bm25_recall_n + recall_boost,
+            )
+
+            logger.info("recall count: vec=%s bm25=%s", len(vector_results), len(bm25_results))
+
+            if vector_results and bm25_results:
+                merged_results = self._rrf_fuse(
+                    vector_results,
+                    bm25_results,
+                    max(top_k * 3, top_k + 10),
+                )
+            elif vector_results:
+                logger.info("hybrid search fallback: vector only")
+                merged_results = vector_results
+                for row in merged_results:
+                    row["rrf_score"] = 1.0 / (self.RRF_K + row["vec_rank"])
+                    row["from_paths"] = ["vec"]
+            elif bm25_results:
+                logger.info("hybrid search fallback: bm25 only")
+                merged_results = bm25_results
+                for row in merged_results:
+                    row["rrf_score"] = 1.0 / (self.RRF_K + row["bm25_rank"])
+                    row["from_paths"] = ["bm25"]
+            else:
+                logger.warning("hybrid search returned no recall results")
+                return []
+
+            filtered_results = [
+                row
+                for row in merged_results
+                if _salary_matches(
+                    row.get("salary", ""),
+                    salary_min=salary_min,
+                    salary_unit=salary_unit,
+                )
+            ]
+
+            if salary_min and salary_unit:
+                logger.info(
+                    "salary filter kept %s/%s results",
+                    len(filtered_results),
+                    len(merged_results),
+                )
+
+            return filtered_results[:top_k]
+
+        except Exception as e:
+            logger.error("hybrid search failed: %s", e, exc_info=True)
+            return []
 
     def close(self):
         if hasattr(self, "_pool") and self._pool:

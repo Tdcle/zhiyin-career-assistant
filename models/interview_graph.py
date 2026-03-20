@@ -1,253 +1,451 @@
-# models/interview_graph.py
-import os
 import json
-import re
-from utils.logger import sys_logger
-from typing import Annotated, Dict, Any, Optional
-from typing_extensions import TypedDict
-
-from langgraph.graph import StateGraph, START, END
-from langgraph.graph.message import add_messages
-from langgraph.prebuilt import ToolNode, tools_condition
-from langchain_core.messages import SystemMessage, HumanMessage, AIMessage, RemoveMessage
+from typing import Annotated, Any, Dict, List, Optional
 
 from langchain_community.chat_models import ChatTongyi
+from langchain_core.messages import AIMessage, HumanMessage, RemoveMessage, SystemMessage
 from langgraph.checkpoint.memory import MemorySaver
+from langgraph.graph import END, START, StateGraph
+from langgraph.graph.message import add_messages
+from langgraph.prebuilt import ToolNode, tools_condition
+from typing_extensions import TypedDict
 
 from config.config import config
 from utils.database import DatabaseManager
+from utils.logger import get_logger
 from utils.tools import save_preference_tool
 
 db_manager = DatabaseManager()
+logger = get_logger("interview_graph")
+
+DEFAULT_SCORECARD = {
+    "tech_depth": 0,
+    "project_depth": 0,
+    "experience_match": 0,
+    "communication": 0,
+    "jd_fit": 0,
+}
+
+DEFAULT_TOPICS = [
+    "self_intro",
+    "core_skill",
+    "project_depth",
+    "tradeoff",
+    "problem_solving",
+    "jd_fit",
+]
 
 
-# ================= 1. 定义面试专用状态 =================
-class InterviewState(TypedDict):
+class InterviewState(TypedDict, total=False):
     messages: Annotated[list, add_messages]
     user_id: str
     job_context: Dict[str, Any]
     summary: str
-    # 面试总结相关（由 report_node 写入）
+    phase: str
+    interview_round: int
+    scorecard: Dict[str, int]
+    evidence_log: List[Dict[str, Any]]
+    covered_topics: List[str]
+    uncovered_topics: List[str]
+    recommended_next_focus: str
+    gap_hypotheses: List[str]
+    risk_flags: List[str]
+    stop_reason: str
+    live_assessment_md: str
     final_report: Optional[str]
-    # 控制信号
     should_end: bool
 
 
-# ================= 2. 初始化模型 =================
 tools = [save_preference_tool]
 
-llm = ChatTongyi(
-    api_key=config.DASHSCOPE_API_KEY,
-    model="qwen-max",
-    streaming=True
-)
+interviewer_llm = config.create_tongyi(config.CHAT_MODELS.interviewer, streaming=True)
+assessment_llm = config.create_tongyi(config.CHAT_MODELS.interview_assessment)
+report_llm = config.create_tongyi(config.CHAT_MODELS.interview_report)
+summary_llm = config.create_tongyi(config.CHAT_MODELS.interview_summary)
 
-report_llm = ChatTongyi(
-    api_key=config.DASHSCOPE_API_KEY,
-    model="qwen-plus",
-    streaming=False  # 【改为非流式】报告一次性生成，由 interview_flow 控制展示
-)
-
-summ_llm = ChatTongyi(
-    api_key=config.DASHSCOPE_API_KEY,
-    model="qwen-turbo",
-    streaming=False
-)
-
-llm_with_tools = llm.bind_tools(tools)
+interviewer_with_tools = interviewer_llm.bind_tools(tools)
 
 
-# ================= 3. 节点逻辑 =================
+def _safe_json_loads(raw: str) -> dict:
+    text = (raw or "").strip()
+    if "```" in text:
+        chunks = text.split("```")
+        if len(chunks) >= 3:
+            text = chunks[1].replace("json", "", 1).strip()
+    start = text.find("{")
+    end = text.rfind("}")
+    if start != -1 and end != -1:
+        text = text[start:end + 1]
+    return json.loads(text)
+
+
+def _normalize_scores(raw_scores: dict | None) -> dict:
+    merged = dict(DEFAULT_SCORECARD)
+    for key in DEFAULT_SCORECARD:
+        try:
+            value = int((raw_scores or {}).get(key, merged[key]))
+        except (TypeError, ValueError):
+            value = merged[key]
+        merged[key] = max(0, min(100, value))
+    return merged
+
+
+def _merge_unique(existing: list | None, delta: list | None) -> list:
+    merged = []
+    for item in (existing or []) + (delta or []):
+        if not item:
+            continue
+        if item not in merged:
+            merged.append(item)
+    return merged
+
+
+def _format_dialogue(messages: list, limit: int = 10) -> str:
+    lines = []
+    kept = messages[-limit:]
+    for message in kept:
+        if not isinstance(message, (HumanMessage, AIMessage)) or not message.content:
+            continue
+        speaker = "candidate" if isinstance(message, HumanMessage) else "interviewer"
+        lines.append(f"{speaker}: {message.content}")
+    return "\n".join(lines)
+
+
+def _render_live_assessment(
+    interview_round: int,
+    scorecard: dict,
+    recommended_next_focus: str,
+    uncovered_topics: list,
+    risk_flags: list,
+) -> str:
+    lines = [
+        "### 实时评估面板",
+        f"- 面试轮次: {interview_round}",
+        f"- 技术深度: {scorecard.get('tech_depth', 0)}",
+        f"- 项目深度: {scorecard.get('project_depth', 0)}",
+        f"- 经验匹配: {scorecard.get('experience_match', 0)}",
+        f"- 表达沟通: {scorecard.get('communication', 0)}",
+        f"- JD 契合度: {scorecard.get('jd_fit', 0)}",
+        f"- 下一问焦点: {recommended_next_focus or '继续核验核心能力'}",
+        f"- 未覆盖主题: {', '.join(uncovered_topics) if uncovered_topics else '已覆盖核心主题'}",
+        f"- 风险信号: {', '.join(risk_flags) if risk_flags else '暂无明显风险'}",
+    ]
+    return "\n".join(lines)
+
 
 def summarize_node(state: InterviewState):
-    """【记忆压缩节点】"""
     summary = state.get("summary", "")
-    messages = state["messages"]
+    dialogue = _format_dialogue(state.get("messages", []), limit=12)
+    if not dialogue:
+        return {}
 
     if summary:
-        summary_message = (
-            f"这是之前的面试摘要: {summary}\n\n"
-            "请将上面的摘要与下方的新对话合并，生成更全面的摘要。"
+        instruction = (
+            f"已有摘要：{summary}\n"
+            "请把已有摘要和最新对话合并成更紧凑的面试摘要，保留能力证据、暴露短板和已覆盖主题。"
         )
     else:
-        summary_message = "请将下面的面试对话生成一份精炼摘要。"
+        instruction = "请基于下面对话生成一段紧凑面试摘要，保留能力证据、暴露短板和已覆盖主题。"
 
-    messages_content = "\n".join(
-        [f"{m.type}: {m.content}" for m in messages if isinstance(m, (HumanMessage, AIMessage))]
+    prompt = (
+        f"{instruction}\n\n"
+        "要求：\n"
+        "1. 只写摘要正文，不要加标题。\n"
+        "2. 保留可复用信息：候选人经历、技术栈、项目细节、明显风险。\n"
+        "3. 避免复述寒暄和重复问答。\n\n"
+        f"对话：\n{dialogue}"
+    )
+    response = summary_llm.invoke(prompt)
+    messages = state.get("messages", [])
+    delete_messages = [RemoveMessage(id=message.id) for message in messages[:-6]]
+    return {"summary": response.content.strip(), "messages": delete_messages}
+
+
+def route_from_start(state: InterviewState):
+    phase = state.get("phase", "interviewing")
+    if phase != "finalizing" and len(state.get("messages", [])) > 12:
+        return "summarize_node"
+    if phase == "finalizing" or state.get("should_end", False):
+        return "report_node"
+    if phase == "opening":
+        return "interviewer_node"
+    return "assessment_node"
+
+
+def route_after_summary(state: InterviewState):
+    phase = state.get("phase", "interviewing")
+    if phase == "finalizing" or state.get("should_end", False):
+        return "report_node"
+    if phase == "opening":
+        return "interviewer_node"
+    return "assessment_node"
+
+
+def assessment_node(state: InterviewState):
+    messages = state.get("messages", [])
+    latest_answer = ""
+    for message in reversed(messages):
+        if isinstance(message, HumanMessage) and message.content:
+            latest_answer = message.content
+            break
+
+    if not latest_answer:
+        return {}
+
+    job_context = state.get("job_context", {})
+    prompt = f"""
+你是后台评审 agent，只负责评估，不直接和候选人对话。
+
+岗位信息：
+- 公司: {job_context.get("company", "未知公司")}
+- 岗位: {job_context.get("title", "未知岗位")}
+- JD 摘要: {(job_context.get("detail", "") or "")[:1000]}
+
+已有摘要：
+{state.get("summary", "暂无")}
+
+最近对话：
+{_format_dialogue(messages, limit=8)}
+
+上一轮结构化状态：
+- scorecard: {json.dumps(state.get("scorecard") or DEFAULT_SCORECARD, ensure_ascii=False)}
+- covered_topics: {json.dumps(state.get("covered_topics") or [], ensure_ascii=False)}
+- uncovered_topics: {json.dumps(state.get("uncovered_topics") or DEFAULT_TOPICS, ensure_ascii=False)}
+- risk_flags: {json.dumps(state.get("risk_flags") or [], ensure_ascii=False)}
+
+请严格输出 JSON，字段必须完整：
+{{
+  "scorecard": {{
+    "tech_depth": 0,
+    "project_depth": 0,
+    "experience_match": 0,
+    "communication": 0,
+    "jd_fit": 0
+  }},
+  "evidence_delta": [
+    {{
+      "dimension": "project_depth",
+      "signal": "positive",
+      "quote": "候选人的关键表述",
+      "reason": "为什么支持这个判断"
+    }}
+  ],
+  "covered_topics": ["self_intro"],
+  "uncovered_topics": ["tradeoff"],
+  "recommended_next_focus": "project_tradeoff",
+  "gap_hypotheses": ["项目复杂度证据不足"],
+  "risk_flags": ["回答偏抽象"],
+  "should_end": false,
+  "stop_reason": ""
+}}
+
+要求：
+1. 分数要和证据一致，不能客气。
+2. 如果候选人已经明显无法补充新信息，或核心主题已覆盖，should_end 可设为 true。
+3. uncovered_topics 尽量控制在 1-3 个。
+"""
+    try:
+        parsed = _safe_json_loads(assessment_llm.invoke(prompt).content)
+    except Exception as exc:
+        logger.error("assessment parse failed: %s", exc, exc_info=True)
+        parsed = {}
+
+    interview_round = int(state.get("interview_round", 0)) + 1
+    scorecard = _normalize_scores(parsed.get("scorecard"))
+    covered_topics = _merge_unique(state.get("covered_topics"), parsed.get("covered_topics"))
+    uncovered_topics = parsed.get("uncovered_topics") or [
+        item for item in DEFAULT_TOPICS if item not in covered_topics
+    ]
+    evidence_log = _merge_unique(state.get("evidence_log"), parsed.get("evidence_delta"))
+    evidence_log = evidence_log[-12:]
+    risk_flags = _merge_unique(state.get("risk_flags"), parsed.get("risk_flags"))
+    gap_hypotheses = _merge_unique(state.get("gap_hypotheses"), parsed.get("gap_hypotheses"))
+    recommended_next_focus = parsed.get("recommended_next_focus") or (
+        uncovered_topics[0] if uncovered_topics else "综合复盘"
     )
 
-    prompt = f"""
-    {summary_message}
-    【要求】
-    1. 保留核心技术问答：面试官问了什么，候选人答得如何（对/错/深度）。
-    2. 保留候选人自述的关键信息（技能、经验）。
-    3. 忽略客套话。
+    should_end = bool(parsed.get("should_end", False))
+    stop_reason = parsed.get("stop_reason", "")
+    if interview_round >= 6 and not should_end:
+        should_end = True
+        stop_reason = "已达到轮次上限"
+    if not uncovered_topics and not should_end:
+        should_end = True
+        stop_reason = "核心主题已覆盖"
 
-    【内容】
-    {messages_content}
-    """
+    live_assessment_md = _render_live_assessment(
+        interview_round=interview_round,
+        scorecard=scorecard,
+        recommended_next_focus=recommended_next_focus,
+        uncovered_topics=uncovered_topics,
+        risk_flags=risk_flags,
+    )
 
-    response = summ_llm.invoke(prompt)
-    new_summary = response.content
-    delete_messages = [RemoveMessage(id=m.id) for m in messages[:-4]]
-    return {"summary": new_summary, "messages": delete_messages}
-
-
-def should_summarize(state: InterviewState):
-    """【条件边】入口路由"""
-    if state.get("should_end", False):
-        return "report_node"
-
-    messages = state["messages"]
-    if len(messages) > 8:
-        return "summarize_node"
-    return "interviewer_node"
+    return {
+        "phase": "interviewing",
+        "interview_round": interview_round,
+        "scorecard": scorecard,
+        "covered_topics": covered_topics,
+        "uncovered_topics": uncovered_topics,
+        "recommended_next_focus": recommended_next_focus,
+        "gap_hypotheses": gap_hypotheses,
+        "risk_flags": risk_flags,
+        "evidence_log": evidence_log,
+        "should_end": should_end,
+        "stop_reason": stop_reason,
+        "live_assessment_md": live_assessment_md,
+    }
 
 
 def interviewer_node(state: InterviewState):
-    """【面试官节点】"""
     user_id = state["user_id"]
-    summary = state.get("summary", "")
-    job_ctx = state.get("job_context", {})
+    job_context = state.get("job_context", {})
+    company = job_context.get("company", "目标公司")
+    title = job_context.get("title", "目标岗位")
+    jd = (job_context.get("detail", "") or "")[:1200]
+    profile = db_manager.get_user_profile(user_id) or "暂无"
+    phase = state.get("phase", "interviewing")
 
-    company = job_ctx.get("company", "该公司")
-    title = job_ctx.get("title", "该岗位")
-    jd = job_ctx.get("detail", "")[:1000]
+    if phase == "opening":
+        prompt = f"""
+你现在是 {company} 的技术面试官，正在面试岗位：{title}。
 
-    db_profile = db_manager.get_user_profile(user_id)
-    if not db_profile:
-        db_profile = "暂无"
+候选人画像：
+- user_id: {user_id}
+- 长期画像: {profile}
 
-    system_prompt_str = f"""
-    你现在是【{company}】的资深技术面试官。
-    正在面试岗位：【{title}】。
-    
-    【系统重要参数】
-    当前用户的 user_id:"{user_id}"
-    
-    【岗位JD摘要】：
-    {jd}
+要求：
+1. 只输出一段简短开场白，然后请候选人做自我介绍。
+2. 不要直接进入技术追问。
+3. 保持专业、克制、有压迫感，但不要失礼。
+4. 输出控制在 120 字以内。
+"""
+    else:
+        prompt = f"""
+你现在是 {company} 的技术面试官，正在面试岗位：{title}。
 
-    【候选人长期画像(参考)】：
-    {db_profile}
+岗位 JD 摘要：
+{jd}
 
-    【之前的面试摘要】：
-    {summary}
+候选人画像：
+- user_id: {user_id}
+- 长期画像: {profile}
+- 历史摘要: {state.get("summary", "暂无")}
 
-    【你的行为准则】：
-    1. **角色定位**：你是严格的考核者，不是老师。禁止长篇大论的教学。
-    2. **记忆与画像**：
-       - 如果候选人在对话中透露了新的技能、年限、项目经历，**必须立即调用 `save_preference_tool` 保存**。
-       - 结合【长期画像】和JD进行提问。
-    3. **冷启动**：如果这是对话开始，根据候选人介绍和JD直接抛出技术问题。
-    4. **点评规则**：
-       - 候选人回答后，仅进行"判卷式"简评（对/错/不完整）。
-       - 严禁解释技术原理（除非被问）。
-       - 字数控制在 200 字以内。
-    5. **追问机制**：点评后立即追问细节，或开启新话题。禁止客套。
-    """
+后台评审状态：
+- 当前轮次: {state.get("interview_round", 0)}
+- scorecard: {json.dumps(state.get("scorecard") or DEFAULT_SCORECARD, ensure_ascii=False)}
+- 下一问焦点: {state.get("recommended_next_focus", "继续核验核心能力")}
+- 未覆盖主题: {json.dumps(state.get("uncovered_topics") or [], ensure_ascii=False)}
+- 风险信号: {json.dumps(state.get("risk_flags") or [], ensure_ascii=False)}
+- stop_reason: {state.get("stop_reason", "")}
 
-    sys_msg = SystemMessage(content=system_prompt_str)
-    messages = [sys_msg] + state["messages"]
-    response = llm_with_tools.invoke(messages)
-    return {"messages": [response]}
+要求：
+1. 先用一句话点评候选人刚才的回答，再继续追问。
+2. 追问必须围绕“下一问焦点”或“未覆盖主题”，不要泛泛而谈。
+3. 若候选人暴露了新的长期信息，可以调用 `save_preference_tool` 保存。
+4. 单轮回复控制在 180 字以内。
+5. 不要给教学式提示，不要抢答，不要总结整场面试。
+"""
+
+    response = interviewer_with_tools.invoke([SystemMessage(content=prompt)] + state.get("messages", []))
+    return {"messages": [response], "phase": "interviewing"}
 
 
 def report_node(state: InterviewState):
-    """
-    【面试总结报告节点】
-
-    简化设计：
-    - 只生成一份完整的 Markdown 评估报告
-    - 不往 messages 中写入任何内容（避免重复显示）
-    """
-    import re
-
     user_id = state["user_id"]
-    summary = state.get("summary", "")
-    messages = state["messages"]
-    job_ctx = state.get("job_context", {})
-
-    company = job_ctx.get("company", "该公司")
-    title = job_ctx.get("title", "该岗位")
-    jd = job_ctx.get("detail", "")[:800]
-
-    # 收集完整对话素材
-    recent_dialogue = "\n".join(
-        [f"{'面试官' if isinstance(m, AIMessage) else '候选人'}: {m.content}"
-         for m in messages if isinstance(m, (HumanMessage, AIMessage)) and m.content]
-    )
-
-    full_context = ""
-    if summary:
-        full_context += f"【前期面试摘要】\n{summary}\n\n"
-    full_context += f"【近期对话记录】\n{recent_dialogue}"
+    job_context = state.get("job_context", {})
+    company = job_context.get("company", "目标公司")
+    title = job_context.get("title", "目标岗位")
+    jd = (job_context.get("detail", "") or "")[:1000]
+    scorecard = _normalize_scores(state.get("scorecard"))
+    evidence_log = state.get("evidence_log") or []
+    uncovered_topics = state.get("uncovered_topics") or []
+    risk_flags = state.get("risk_flags") or []
+    gap_hypotheses = state.get("gap_hypotheses") or []
+    avg_score = round(sum(scorecard.values()) / max(len(scorecard), 1) / 10, 1)
 
     report_prompt = f"""
-    你是一位资深的面试评估专家。候选人刚完成了【{company}】的【{title}】岗位面试。
+你是资深技术面试评审专家。请基于结构化状态输出一份专业 Markdown 报告。
 
-    【岗位 JD】：
-    {jd}
+岗位信息：
+- 公司: {company}
+- 岗位: {title}
+- JD 摘要: {jd}
 
-    【完整面试记录】：
-    {full_context}
+面试摘要：
+{state.get("summary", "暂无")}
 
-    请生成一份专业、深度、一针见血的面试评估报告。
+最近对话：
+{_format_dialogue(state.get("messages", []), limit=10)}
 
-    格式要求（严格遵循 Markdown）：
-    ## 📋 面试评估报告
-    **面试岗位**：{title} @ {company}
-    ### 📊 综合评分：X / 10 分
-    （一句话概括评分理由）
-    ### ✅ 表现亮点
-    （列出 2-3 个候选人回答出色的地方，必须具体引用其原话或回答要点）
-    ### ⚠️ 明显不足
-    （列出 2-3 个回答不好或暴露知识盲区的地方，必须指出哪里错了、正确答案是什么、为什么这很重要）
-    ### 📚 针对性学习建议
-    （针对上述每个不足，给出具体的学习方向和推荐资源，用编号列表）
-    ### 🎯 面试通过概率预估
-    （给出百分比 + 一句话理由 + 如果要达到通过线还需要多久的学习）
+结构化状态：
+- 轮次: {state.get("interview_round", 0)}
+- scorecard: {json.dumps(scorecard, ensure_ascii=False)}
+- evidence_log: {json.dumps(evidence_log, ensure_ascii=False)}
+- uncovered_topics: {json.dumps(uncovered_topics, ensure_ascii=False)}
+- gap_hypotheses: {json.dumps(gap_hypotheses, ensure_ascii=False)}
+- risk_flags: {json.dumps(risk_flags, ensure_ascii=False)}
+- stop_reason: {state.get("stop_reason", "用户主动结束")}
 
-    ---
-    注意：
-    - 评分和内容必须一致，如果表现很差就给低分，不要客气
-    - 直接输出报告内容即可，不要输出任何 JSON、代码块或额外格式
-    """
+请严格使用如下结构：
+## 面试评估报告
+**面试岗位**: {title} @ {company}
+**综合评分**: {avg_score} / 10
+### 亮点
+### 主要不足
+### 针对性建议
+### 通过概率预估
 
-    sys_logger.info(f"📝 [Report] 开始生成用户 {user_id} 在 {company} 的面试报告...")
+要求：
+1. 亮点和不足必须引用 evidence_log 中的具体证据。
+2. 建议要针对岗位和候选人差距，不要空话。
+3. 通过概率给出百分比，并说明依据。
+4. 输出报告正文，不要输出 JSON。
+"""
+    logger.info("generating interview report for user=%s", user_id)
     response = report_llm.invoke(report_prompt)
-    clean_report = response.content.strip()
-    sys_logger.info(f"📊 [Report] 报告生成完成，长度: {len(clean_report)}")
-
-    # 返回纯净的报告内容
     return {
-        "final_report": clean_report,
+        "final_report": response.content.strip(),
+        "phase": "finalizing",
+        "live_assessment_md": _render_live_assessment(
+            interview_round=state.get("interview_round", 0),
+            scorecard=scorecard,
+            recommended_next_focus=state.get("recommended_next_focus", "综合复盘"),
+            uncovered_topics=uncovered_topics,
+            risk_flags=risk_flags,
+        ),
     }
 
 
-# ================= 4. 构建图 =================
 workflow = StateGraph(InterviewState)
-
-workflow.add_node("interviewer_node", interviewer_node)
 workflow.add_node("summarize_node", summarize_node)
+workflow.add_node("assessment_node", assessment_node)
+workflow.add_node("interviewer_node", interviewer_node)
 workflow.add_node("tools", ToolNode(tools))
 workflow.add_node("report_node", report_node)
 
-checkpointer = MemorySaver()
-
 workflow.add_conditional_edges(
     START,
-    should_summarize,
+    route_from_start,
     {
         "summarize_node": "summarize_node",
+        "assessment_node": "assessment_node",
         "interviewer_node": "interviewer_node",
-        "report_node": "report_node"
-    }
+        "report_node": "report_node",
+    },
 )
-
-workflow.add_edge("summarize_node", "interviewer_node")
+workflow.add_conditional_edges(
+    "summarize_node",
+    route_after_summary,
+    {
+        "assessment_node": "assessment_node",
+        "interviewer_node": "interviewer_node",
+        "report_node": "report_node",
+    },
+)
+workflow.add_edge("assessment_node", "interviewer_node")
 workflow.add_conditional_edges("interviewer_node", tools_condition)
 workflow.add_edge("tools", "interviewer_node")
 workflow.add_edge("report_node", END)
 
-interview_graph = workflow.compile(checkpointer=checkpointer)
+interview_graph = workflow.compile(checkpointer=MemorySaver())

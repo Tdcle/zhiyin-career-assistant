@@ -4,6 +4,9 @@ import numpy as np
 import os
 import uuid
 from matplotlib import font_manager
+from utils.logger import get_logger
+
+logger = get_logger("plotter")
 
 
 # --- 解决 Matplotlib 中文乱码的核心逻辑 ---
@@ -26,7 +29,7 @@ def configure_chinese_font():
         # print(f"✅ Plotter 已加载中文字体: {selected_font}")
     else:
         # 如果实在找不到，就回退，或者你可以指定一个 ttf 文件的绝对路径
-        print("⚠️ Plotter 未检测到常见中文字体，雷达图中文可能显示为方框。")
+        logger.warning("no common Chinese font detected; radar chart labels may render incorrectly")
 
 
 # 初始化配置

@@ -1,9 +1,9 @@
 # utils/file_parser.py
 import os
 import fitz  # PyMuPDF
-import logging
 import numpy as np
 import cv2
+from utils.logger import get_logger
 
 # 尝试导入 PaddleOCR，如果没装则优雅降级
 try:
@@ -13,7 +13,7 @@ try:
 except ImportError:
     HAS_OCR = False
 
-logger = logging.getLogger("JobAgent")
+logger = get_logger("file_parser")
 
 
 class FileParser:

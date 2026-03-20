@@ -1,17 +1,18 @@
 # app.py
 import gradio as gr
 import os
-from utils.logger import sys_logger, current_log_path
+from utils.logger import current_log_path, get_logger
 from utils.database import DatabaseManager
 
-from logic.chat_flow import process_uploaded_resume, respond
+from logic.chat_flow import clear_user_chat_session, load_user_chat_session, process_uploaded_resume, respond
 from logic.interview_flow import (
     start_interview_logic,
     handle_interview_chat,
     end_interview_with_summary
 )
 
-sys_logger.info("🚀 系统启动中...")
+logger = get_logger("app")
+logger.info("application starting")
 os.makedirs("static", exist_ok=True)
 db = DatabaseManager()
 
@@ -103,7 +104,8 @@ with gr.Blocks(title="职小助") as demo:
                     chatbot = gr.Chatbot(
                         label="求职助手", height=520,
                         elem_classes="chatbot-container",
-                        avatar_images=("assets/user.png", "assets/bot.png")
+                        avatar_images=("assets/user.png", "assets/bot.png"),
+                        render_markdown=False,
                     )
                     with gr.Row(elem_id="chat-input-row"):
                         msg_input = gr.Textbox(
@@ -113,6 +115,7 @@ with gr.Blocks(title="职小助") as demo:
                             elem_id="chat-input"
                         )
                         send_btn = gr.Button("发送", variant="primary", scale=1, elem_id="send-btn")
+                        clear_chat_btn = gr.Button("清空", scale=1, elem_id="clear-chat-btn")
 
                 # --- 职位推荐卡片 ---
                 with gr.Column(elem_id="jobs-card"):
@@ -152,7 +155,8 @@ with gr.Blocks(title="职小助") as demo:
                         interview_chatbot = gr.Chatbot(
                             label="面试官", height=600,
                             elem_classes="chatbot-container",
-                            avatar_images=("assets/user.png", "assets/bot.png")
+                            avatar_images=("assets/user.png", "assets/bot.png"),
+                            render_markdown=False,
                         )
                         interview_input = gr.Textbox(
                             placeholder="回答面试官的问题...",
@@ -188,6 +192,9 @@ with gr.Blocks(title="职小助") as demo:
     ]
     msg_input.submit(respond, [msg_input, chatbot, user_dropdown], chat_outputs)
     send_btn.click(respond, [msg_input, chatbot, user_dropdown], chat_outputs)
+    clear_chat_btn.click(clear_user_chat_session, [user_dropdown], chat_outputs)
+    user_dropdown.change(load_user_chat_session, [user_dropdown], [chatbot, jobs_state, btn_job_0, btn_job_1, btn_job_2, btn_job_3, btn_job_4, btn_job_5])
+    demo.load(load_user_chat_session, [user_dropdown], [chatbot, jobs_state, btn_job_0, btn_job_1, btn_job_2, btn_job_3, btn_job_4, btn_job_5])
 
     interview_outputs = [
         main_group, interview_group,
@@ -207,13 +214,13 @@ with gr.Blocks(title="职小助") as demo:
     interview_input.submit(
         handle_interview_chat,
         inputs=[interview_input, interview_chatbot, interview_context_state, user_dropdown],
-        outputs=[interview_input, interview_chatbot]
+        outputs=[interview_input, interview_chatbot, analysis_text]
     )
 
     summary_btn.click(
         end_interview_with_summary,
         inputs=[interview_chatbot, interview_context_state, user_dropdown],
-        outputs=[interview_chatbot, summary_btn, back_btn]
+        outputs=[interview_chatbot, summary_btn, back_btn, analysis_text]
     )
 
     back_btn.click(return_to_lobby, None, [main_group, interview_group])

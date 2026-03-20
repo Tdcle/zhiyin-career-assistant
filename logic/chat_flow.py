@@ -1,134 +1,225 @@
-# logic/chat_flow.py
 import os
-import json
 import gradio as gr
-from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
+from langchain_core.messages import AIMessage, HumanMessage
+
 from models.chat_graph import app_graph
-from utils.logger import sys_logger
 from utils.database import DatabaseManager
 from utils.file_parser import FileParser
-
-# 【删除】不再需要 GlobalState
-# from utils.global_state import GlobalState
+from utils.logger import get_logger
 
 db = DatabaseManager()
+logger = get_logger("chat_flow")
+CHAT_THREAD_PREFIX = "chat_"
+MAX_RECENT_MESSAGES = 8
+
+
+def _parse_user_id(user_info) -> str:
+    try:
+        return str(user_info.split(" (")[0].strip())
+    except (AttributeError, IndexError):
+        return "guest"
+
+
+def _chat_thread_id(user_id: str) -> str:
+    return f"{CHAT_THREAD_PREFIX}{user_id}"
+
+
+def _serialize_recent_messages(messages) -> list[dict]:
+    serialized = []
+    for message in messages:
+        if isinstance(message, HumanMessage):
+            serialized.append({"role": "user", "content": message.content})
+        elif isinstance(message, AIMessage):
+            serialized.append({"role": "assistant", "content": message.content})
+    return serialized[-MAX_RECENT_MESSAGES:]
+
+
+def _deserialize_recent_messages(items) -> list:
+    messages = []
+    for item in items or []:
+        role = item.get("role")
+        content = item.get("content", "")
+        if not content:
+            continue
+        if role == "user":
+            messages.append(HumanMessage(content=content))
+        elif role == "assistant":
+            messages.append(AIMessage(content=content))
+    return messages
+
+
+def _build_chatbot_history(items) -> list[dict]:
+    return [{"role": item.get("role", "assistant"), "content": item.get("content", "")} for item in items or []]
+
+
+def _build_job_button_updates(search_results):
+    hidden = [gr.update(visible=False, value="") for _ in range(6)]
+    if not search_results:
+        return hidden
+
+    updates = []
+    for job in search_results[:6]:
+        tags_clean = (job.get("tags", "") or "").replace("|", "·")
+        btn_text = (
+            f"🏢 {job.get('company', '未知公司')}\n"
+            f"📌 {job.get('title', '未知职位')}\n"
+            f"💰 {job.get('salary', '未知')}   📍 {tags_clean}"
+        )
+        updates.append(gr.update(visible=True, value=btn_text))
+
+    while len(updates) < 6:
+        updates.append(gr.update(visible=False, value=""))
+
+    return updates
+
+
+def _safe_get_graph_state(graph_config):
+    try:
+        state = app_graph.get_state(graph_config)
+        return state.values if state and getattr(state, "values", None) else {}
+    except Exception:
+        return {}
+
+
+def _persist_chat_state(user_id: str, graph_values: dict):
+    recent_messages = _serialize_recent_messages(graph_values.get("messages", []))
+    db.upsert_conversation_state(
+        thread_id=_chat_thread_id(user_id),
+        user_id=user_id,
+        scene="chat",
+        summary=graph_values.get("summary", ""),
+        recent_messages=recent_messages,
+        extra_state={
+            "search_results": graph_values.get("search_results") or [],
+            "search_plan": graph_values.get("search_plan") or {},
+        },
+    )
 
 
 def process_uploaded_resume(file_path, user_info):
     if not file_path:
         return "无文件"
-    try:
-        user_id = user_info.split(" (")[0].strip()
-    except (AttributeError, IndexError):
+
+    user_id = _parse_user_id(user_info)
+    if user_id == "guest":
         return "⚠️ 请先选择有效的用户身份"
 
-    sys_logger.info(f"📄 [Resume] 用户[{user_id}] 上传文件: {file_path}")
+    logger.info("resume uploaded: user=%s path=%s", user_id, file_path)
     raw_content = FileParser.read_file(file_path)
     if not raw_content or len(raw_content) < 10:
         return "❌ 解析失败或内容过少"
+
     filename = os.path.basename(file_path)
     success, msg = db.save_resume(user_id, filename, raw_content)
-    if success:
-        return f"✅ 简历已入库！\n({filename})"
-    else:
-        return f"❌ 处理失败: {msg}"
+    return f"✅ {msg}\n({filename})" if success else f"❌ 处理失败: {msg}"
+
+
+def load_user_chat_session(user_info):
+    user_id = _parse_user_id(user_info)
+    session = db.get_conversation_state(_chat_thread_id(user_id))
+    recent_messages = (session or {}).get("recent_messages", [])
+    extra_state = (session or {}).get("extra_state", {}) or {}
+    search_results = extra_state.get("search_results", [])
+    return _build_chatbot_history(recent_messages), search_results, *_build_job_button_updates(search_results)
+
+
+def clear_user_chat_session(user_info):
+    user_id = _parse_user_id(user_info)
+    thread_id = _chat_thread_id(user_id)
+    db.delete_conversation_state(thread_id)
+
+    checkpointer = getattr(app_graph, "checkpointer", None)
+    if checkpointer and hasattr(checkpointer, "delete_thread"):
+        try:
+            checkpointer.delete_thread(thread_id)
+        except Exception:
+            logger.warning("clear in-memory chat state failed for thread=%s", thread_id, exc_info=True)
+
+    logger.info("chat session cleared: user=%s thread=%s", user_id, thread_id)
+    return [], "", [], *_build_job_button_updates([])
 
 
 def respond(message, chat_history, user_info):
-    """
-    主对话逻辑：
-    - 流式输出 LLM 回复
-    - 从 Graph State 中读取 search_results 更新按钮 (取代 GlobalState)
-    """
-
-    # --- 1. 初始化 ---
-    current_btn_updates = [gr.update(visible=False, value="")] * 6
+    current_btn_updates = [gr.update(visible=False, value="") for _ in range(6)]
     current_jobs_data = []
 
     if not message.strip():
         yield chat_history, "", current_jobs_data, *current_btn_updates
         return
 
-    try:
-        user_id = str(user_info.split(" (")[0].strip())
-    except (AttributeError, IndexError):
-        user_id = "guest"
+    user_id = _parse_user_id(user_info)
+    thread_id = _chat_thread_id(user_id)
+    graph_config = {"configurable": {"thread_id": thread_id}}
 
-    sys_logger.info(f"\n📨 [Chat] 用户[{user_id}]: {message}")
+    logger.info("chat message received: user=%s", user_id)
 
-    # --- 2. 用户消息上屏 ---
     chat_history.append({"role": "user", "content": message})
     yield chat_history, "", current_jobs_data, *current_btn_updates
 
-    # --- 3. 构造输入 ---
-    input_message = HumanMessage(content=message)
-    system_prompt = SystemMessage(
-        content=f"当前服务的用户ID是: {user_id}。如果用户要求根据简历推荐工作，请调用 get_user_resume_tool。在调用搜索工具时，请务必传入正确的 user_id。"
-    )
+    graph_values = _safe_get_graph_state(graph_config)
+    has_live_state = bool(graph_values.get("messages"))
 
-    inputs = {"messages": [system_prompt, input_message], "user_id": user_id}
-    graph_config = {"configurable": {"thread_id": user_id}}
+    if has_live_state:
+        inputs = {
+            "messages": [HumanMessage(content=message)],
+            "user_id": user_id,
+        }
+    else:
+        persisted = db.get_conversation_state(thread_id) or {}
+        inputs = {
+            "messages": _deserialize_recent_messages(persisted.get("recent_messages")) + [HumanMessage(content=message)],
+            "user_id": user_id,
+            "summary": persisted.get("summary", ""),
+            "search_results": (persisted.get("extra_state") or {}).get("search_results", []),
+            "search_plan": (persisted.get("extra_state") or {}).get("search_plan", {}),
+        }
 
-    chat_history.append({"role": "assistant", "content": "🤔 正在思考..."})
+    chat_history.append({"role": "assistant", "content": "🤖 正在思考..."})
     full_response = ""
 
     try:
-        # --- 4. 流式调用 Graph ---
-        event_stream = app_graph.stream(
-            inputs, config=graph_config, stream_mode="messages"
-        )
+        event_stream = app_graph.stream(inputs, config=graph_config, stream_mode="messages")
+        hidden_nodes = {
+            "summarize_node",
+            "extract_search_results",
+            "intent_parse_node",
+            "result_judge_node",
+        }
 
         for msg, metadata in event_stream:
-            node_name = metadata.get('langgraph_node', '')
-
-            # 跳过总结节点和提取节点的中间输出
-            if node_name in ("summarize_node", "extract_search_results"):
+            node_name = metadata.get("langgraph_node", "")
+            if node_name in hidden_nodes:
                 continue
 
             if isinstance(msg, AIMessage):
-                # 处理工具调用提示
                 if msg.tool_calls:
                     for tool_call in msg.tool_calls:
-                        if tool_call['name'] == 'search_jobs_tool':
-                            full_response += "\n> 🔍 *正在检索职位数据库...*\n\n"
+                        if tool_call["name"] == "search_jobs_tool":
+                            full_response += "\n正在检索职位数据库...\n\n"
+                        elif tool_call["name"] == "analyze_job_match_by_query_tool":
+                            full_response += "\n正在分析你与目标岗位的匹配度...\n\n"
                     chat_history[-1]["content"] = full_response
                     yield chat_history, "", current_jobs_data, *current_btn_updates
 
-                # 处理文本内容
                 if msg.content:
                     full_response += msg.content
                     chat_history[-1]["content"] = full_response
                     yield chat_history, "", current_jobs_data, *current_btn_updates
 
-        # --- 5.【关键改动】流结束后，从 Graph State 中读取搜索结果 ---
-        final_state = app_graph.get_state(graph_config)
-        search_results = final_state.values.get("search_results")
+        final_values = _safe_get_graph_state(graph_config)
+        if final_values:
+            _persist_chat_state(user_id, final_values)
+            search_results = final_values.get("search_results") or []
+        else:
+            search_results = []
 
-        if search_results and isinstance(search_results, list) and len(search_results) > 0:
-            sys_logger.info(f"✅ [UI] 从 Graph State 读取到 {len(search_results)} 条职位数据")
-
+        if search_results:
             current_jobs_data = search_results
-            new_updates = []
+            current_btn_updates = _build_job_button_updates(search_results)
 
-            for i in range(len(search_results)):
-                if i < len(search_results):
-                    job = search_results[i]
-                    tags_clean = job.get('tags', '').replace('|', '·')
-                    btn_text = (
-                        f"🏢 {job['company']}\n"
-                        f"💼 {job['title']}\n"
-                        f"💰 {job['salary']}   📍 {tags_clean}"
-                    )
-                    new_updates.append(gr.update(visible=True, value=btn_text))
-                else:
-                    new_updates.append(gr.update(visible=False, value=""))
-
-            current_btn_updates = new_updates
-
-        # 最终 yield
         yield chat_history, "", current_jobs_data, *current_btn_updates
 
-    except Exception as e:
-        sys_logger.error(str(e), exc_info=True)
-        chat_history[-1]["content"] += f"\n\n❌ 系统错误: {str(e)}"
+    except Exception as exc:
+        logger.error("chat flow failed: %s", exc, exc_info=True)
+        chat_history[-1]["content"] = f"{chat_history[-1]['content']}\n\n❌ 系统错误: {exc}"
         yield chat_history, "", current_jobs_data, *current_btn_updates
