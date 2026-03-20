@@ -1,244 +1,225 @@
-import time
 import random
-import dashscope
-from urllib.parse import quote  # 新增：用于URL编码
-from http import HTTPStatus
+import time
+from urllib.parse import quote
+
 from DrissionPage import ChromiumPage
-from utils.database import DatabaseManager
+from langchain_core.messages import HumanMessage
+
 from config.config import config
+from utils.database import DatabaseManager
 from utils.logger import get_logger
 
-# ================= 配置区域 =================
 logger = get_logger("fetch_data")
-SUMMARY_MODEL = config.CHAT_MODELS.data_summary
+db = DatabaseManager()
+summary_llm = config.create_tongyi(config.CHAT_MODELS.data_summary)
 
 
-# ================= 工具函数 (保持不变) =================
-def generate_summary(detail_text):
-    """
-    调用通义千问 API 生成摘要
-    """
-    if not detail_text or len(detail_text) < 50:
-        return detail_text
+def generate_summary(detail_text: str) -> str:
+    """生成与当前检索系统一致的职位摘要。"""
+    if not detail_text:
+        return ""
+    if len(detail_text.strip()) < 50:
+        return detail_text.strip()[:150]
 
     short_text = detail_text[:3000]
-
     prompt = f"""
-    请阅读以下职位描述，提炼核心信息。
-    要求：
-    1. 提炼核心技术栈(python/前端/java)、硬性要求（学历/年限）、岗位职责。
-    2. 去除废话。
-    3. 控制在 100 字以内。
-    4. 直接输出摘要。
+请阅读以下职位描述，提炼核心信息。
+要求：
+1. 提炼核心技术栈、硬性要求、岗位职责。
+2. 去除废话和重复描述。
+3. 控制在 100 字以内。
+4. 直接输出摘要正文，不要输出 JSON。
 
-    职位描述：
-    {short_text}
-    """
-
+职位描述：
+{short_text}
+"""
     try:
-        dashscope.api_key = config.DASHSCOPE_API_KEY
-        response = dashscope.Generation.call(
-            model=SUMMARY_MODEL,
-            messages=[{'role': 'user', 'content': prompt}]
-        )
-        if response.status_code == HTTPStatus.OK:
-            return response.output.text
-        return detail_text[:100]
-    except Exception as e:
-        logger.error("summary generation failed: %s", e, exc_info=True)
-        return detail_text[:100]
+        response = summary_llm.invoke([HumanMessage(content=prompt)])
+        summary = (response.content or "").strip()
+        return summary or detail_text.strip()[:150]
+    except Exception as exc:
+        logger.error("summary generation failed: %s", exc, exc_info=True)
+        return detail_text.strip()[:150]
 
 
-# ================= 模块一：极速爬虫 (修改版) =================
+def build_job_data_from_list_item(job: dict) -> dict:
+    labels = job.get("jobLabels") or []
+    return {
+        "job_id": job["encryptJobId"],
+        "title": job.get("jobName", ""),
+        "salary": job.get("salaryDesc", ""),
+        "company": job.get("brandName", ""),
+        "industry": job.get("brandIndustry", ""),
+        "city": job.get("cityName", ""),
+        "district": job.get("areaDistrict", ""),
+        "experience": labels[0] if len(labels) > 0 else "",
+        "degree": labels[1] if len(labels) > 1 else "",
+        "welfare": ",".join(job.get("welfareList", [])),
+        "detail_url": f"https://www.zhipin.com/job_detail/{job['encryptJobId']}.html",
+        "detail": "",
+        "summary": "",
+    }
+
+
+def persist_job_record(job_data: dict) -> str:
+    detail_text = (job_data.get("detail") or "").strip()
+    if not detail_text:
+        logger.warning("skip job without detail: %s", job_data.get("job_id"))
+        return "missing_detail"
+
+    summary = generate_summary(detail_text)
+    job_data["summary"] = summary
+
+    embedding_text = db.build_job_embedding_text(job_data, summary=summary)
+    try:
+        vector = db.embed_model.embed_query(embedding_text)
+    except Exception as exc:
+        logger.error("embedding generation failed for job=%s: %s", job_data.get("job_id"), exc, exc_info=True)
+        return "embedding_failed"
+
+    if not vector or len(vector) != config.VECTOR_DIM:
+        logger.error("invalid embedding vector for job=%s", job_data.get("job_id"))
+        return "embedding_failed"
+
+    return db.save_job_with_analysis(job_data, summary=summary, vector=vector)
+
+
+def crawl_job_detail(page: ChromiumPage, detail_url: str) -> str:
+    tab = page.new_tab(detail_url)
+    try:
+        if not tab.ele(".job-sec-text", timeout=6):
+            return ""
+        tab.scroll.down(random.randint(200, 500))
+        detail_ele = tab.ele(".job-sec-text")
+        return detail_ele.text if detail_ele else ""
+    finally:
+        try:
+            tab.close()
+        except Exception:
+            pass
+
+
 def run_crawler():
-    print("\n=== 启动极速爬虫模式 ===")
+    print("\n=== 启动抓取并直接入库模式 ===")
 
-    # 1. 获取用户输入
-    keyword = input("请输入搜索关键词 (例如 java): ").strip()
-    if not keyword: keyword = "java"  # 默认值
-
-    target_count_str = input("请输入计划爬取的数量 (例如 100): ").strip()
+    keyword = input("请输入搜索关键词（例如 java）: ").strip() or "java"
+    target_count_str = input("请输入计划抓取数量（例如 100）: ").strip()
     target_count = int(target_count_str) if target_count_str.isdigit() else 100
 
     print(f"\n>>> 任务配置: 搜索 [{keyword}] | 目标数量 [{target_count}]")
 
-    db = DatabaseManager()
-    dp = ChromiumPage()
+    page = ChromiumPage()
+    page.listen.start("wapi/zpgeek/search/joblist.json")
 
-    # 监听数据包
-    dp.listen.start('wapi/zpgeek/search/joblist.json')
-
-    # 构造URL (处理中文编码)
     safe_keyword = quote(keyword)
-    target_url = f'https://www.zhipin.com/web/geek/job?query={safe_keyword}&city=101010100'
-
-    dp.get(target_url)
-    print(f">>> 浏览器已打开，开始工作...")
+    # target_url = f"https://www.zhipin.com/web/geek/job?query={safe_keyword}&city=101020100"
+    target_url = f"https://www.zhipin.com/web/geek/jobs?city=101210100&jobType=1902&query={safe_keyword}"
+    page.get(target_url)
+    print(">>> 浏览器已打开，开始抓取并直接完成摘要、向量、TSV 入库...")
 
     current_count = 0
 
-    # 循环直到达到目标数量
     while current_count < target_count:
-        # 设置等待时间，如果5秒没刷出新数据包，说明需要滚动或者到底了
-        res = dp.listen.wait(timeout=5)
-
-        # === 情况A: 还没有捕获到数据包 (超时) ===
+        res = page.listen.wait(timeout=5)
         if not res:
-            print("⌛ 等待数据中，尝试自动下滑加载更多...")
-            dp.scroll.to_bottom()  # 滚到底部触发加载
-            time.sleep(random.uniform(1.5, 2.5))  # 给页面一点反应时间
+            print("⌛ 等待数据中，自动下滑加载更多...")
+            page.scroll.to_bottom()
+            time.sleep(random.uniform(1.5, 2.5))
             continue
 
-        # === 情况B: 捕获到数据包 ===
-        if not res.response.body: continue
-
-        json_data = res.response.body
-        if not isinstance(json_data, dict) or 'zpData' not in json_data:
+        body = res.response.body
+        if not isinstance(body, dict) or "zpData" not in body:
             continue
 
-        job_list = json_data['zpData'].get('jobList', [])
+        job_list = body["zpData"].get("jobList", [])
         if not job_list:
-            print("⚠️ 未获取到职位列表，可能已到达底部或触发验证码。")
-            # 可以在这里加一个检查验证码的逻辑，或者多试几次滚动
-            dp.scroll.to_bottom()
+            print("⚠️ 未获取到职位列表，尝试继续滚动。")
+            page.scroll.to_bottom()
             time.sleep(2)
             continue
 
-        print(f"\n--- 本页捕获 {len(job_list)} 条数据 (当前进度: {current_count}/{target_count}) ---")
+        print(f"\n--- 本页捕获 {len(job_list)} 条数据（当前进度: {current_count}/{target_count}）---")
 
-        for i, job in enumerate(job_list):
-            # 如果已经达到目标数量，停止处理
+        for job in job_list:
             if current_count >= target_count:
-                print(f"\n🎉 已达到目标数量 {target_count}，停止抓取。")
                 break
 
             try:
-                # 1. 基础数据提取
-                job_id = job['encryptJobId']
-
-                # 检查是否已存在 (可选优化：防止重复打开详情页)
-                # if db.check_exists(job_id): continue
-
-                job_data = {
-                    'job_id': job_id,
-                    'title': job['jobName'],
-                    'salary': job['salaryDesc'],
-                    'company': job['brandName'],
-                    'industry': job['brandIndustry'],
-                    'city': job['cityName'],
-                    'district': job['areaDistrict'],
-                    'experience': job['jobLabels'][0] if job.get('jobLabels') else '',
-                    'degree': job['jobLabels'][1] if len(job.get('jobLabels', [])) > 1 else '',
-                    'welfare': ','.join(job.get('welfareList', [])),
-                    'detail_url': f"https://www.zhipin.com/job_detail/{job_id}.html",
-                    'detail': '',
-                    'summary': ''
-                }
-
+                job_data = build_job_data_from_list_item(job)
                 current_count += 1
-                print(f"[{current_count}/{target_count}] 抓取: {job_data['title']}", end=" ")
+                print(f"[{current_count}/{target_count}] 处理: {job_data['title']}", end=" ")
 
-                # 2. 详情页抓取
-                tab = dp.new_tab(job_data['detail_url'])
+                detail = crawl_job_detail(page, job_data["detail_url"])
+                if not detail:
+                    print("⚠️ 详情页加载失败")
+                    time.sleep(random.uniform(1.0, 2.0))
+                    continue
 
-                # 等待详情元素加载
-                if tab.ele('.job-sec-text', timeout=6):
-                    # 详情页内小幅滚动，模拟真人阅读
-                    tab.scroll.down(random.randint(200, 500))
-                    job_data['detail'] = tab.ele('.job-sec-text').text
+                job_data["detail"] = detail
+                status = persist_job_record(job_data)
 
-                    if db.insert_job(job_data):
-                        print("✅")
-                    else:
-                        print("♻️ 重复")
+                if status == "inserted":
+                    print("✅ 新增并完成分析")
+                elif status == "updated":
+                    print("♻️ 更新并完成分析")
+                elif status == "embedding_failed":
+                    print("❌ 向量生成失败")
                 else:
-                    print("⚠️ 详情页加载超时")
+                    print("❌ 入库失败")
 
-                tab.close()
-                # 详情页抓取间隔
                 time.sleep(random.uniform(1.5, 3.0))
+            except Exception as exc:
+                logger.error("crawler item failed: %s", exc, exc_info=True)
+                print(f"❌ 单条错误: {exc}")
 
-            except Exception as e:
-                print(f"❌ 单条错误: {e}")
-                try:
-                    tab.close()
-                except:
-                    pass
-
-        # === 批次处理完毕，准备加载下一页 ===
         if current_count < target_count:
             print(">>> 本批数据处理完毕，自动下滑加载更多...")
-            dp.scroll.to_bottom()
-            # 随机休眠，模拟翻页阅读停顿
+            page.scroll.to_bottom()
             time.sleep(random.uniform(2.0, 4.0))
 
-    print(f"\n🏁 爬虫任务结束，共抓取 {current_count} 条数据。")
+    print(f"\n🎉 抓取结束，共处理 {current_count} 条职位。")
 
 
-# ================= 模块二：数据工厂 (保持不变) =================
 def run_processor():
-    print("\n=== 启动数据处理模式 (Qwen摘要 + Ollama向量) ===")
-    print("正在扫描未处理的数据 (Embedding 为空的记录)...")
-
-    db = DatabaseManager()
+    print("\n=== 启动数据补处理模式 ===")
+    print("将扫描 summary 为空或 embedding 为空的职位，并按当前项目规则补全。")
 
     while True:
-        jobs = db.fetch_jobs_without_embedding(limit=10)
+        jobs = db.fetch_jobs_pending_analysis(limit=10)
         if not jobs:
-            print("🎉 所有数据处理完毕！")
+            print("🎉 所有待补全职位已处理完成。")
             break
 
-        print(f"\n⚡ 本批次处理 {len(jobs)} 条数据...")
+        print(f"\n⚙️ 本批次处理 {len(jobs)} 条职位...")
 
         for job in jobs:
-            job_id, title, company, salary, welfare, detail, city, district, experience, degree = job
-
-            print(f"正在处理: {title[:10]}...", end="")
+            job_data = dict(job)
+            title = job_data.get("title", "")
+            print(f"处理中: {title[:20]}...", end="")
             start_t = time.time()
 
-            summary = generate_summary(detail)
+            status = persist_job_record(job_data)
+            elapsed = time.time() - start_t
 
-            text_to_embed = (
-                f"职位: {title} | "
-                f"地点: {city} {district} | "
-                f"公司: {company} | "
-                f"薪资: {salary} | "
-                f"经验要求: {experience} | "
-                f"学历要求: {degree} | "
-                f"福利: {welfare} | "
-                f"介绍: {summary}"
-            )
-
-            vector = db.embed_model.embed_query(text_to_embed)
-
-            if not vector:
-                print(" ❌ 向量生成失败")
-                continue
-
-            if db.update_job_analysis(job_id, summary, vector):
-                cost = time.time() - start_t
-                print(f" ✅ 完成 (耗时 {cost:.2f}s)")
+            if status in {"inserted", "updated"}:
+                print(f" ✅ 完成 ({status}, {elapsed:.2f}s)")
             else:
-                print(" ❌ 数据库更新失败")
+                print(f" ❌ 失败 ({status})")
 
         print("--- 休息 1 秒 ---")
         time.sleep(1)
 
-    db.close()
 
-
-# ================= 主程序入口 =================
 if __name__ == "__main__":
     print("================ Job RAG System ================")
-    print("1. 极速爬虫 (自动翻页 + 指定数量)")
-    print("2. 数据工厂 (后台生成摘要 + 向量化)")
+    print("1. 抓取并直接入库（摘要 + 向量 + TSV）")
+    print("2. 补处理历史数据（summary / embedding 缺失）")
     print("================================================")
 
-    choice = input("请输入功能序号 (1/2): ")
-
-    if choice == '1':
+    choice = input("请输入功能序号 (1/2): ").strip()
+    if choice == "1":
         run_crawler()
-    elif choice == '2':
+    elif choice == "2":
         run_processor()
     else:
         print("无效输入")

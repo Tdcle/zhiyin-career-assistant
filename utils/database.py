@@ -664,6 +664,65 @@ class DatabaseManager:
             logger.error(f"❌ 插入职位失败: {e}")
             return False
 
+    def build_job_embedding_text(self, data: dict, summary: str = "") -> str:
+        summary_text = summary or data.get("summary", "") or ""
+        return (
+            f"职位: {data.get('title', '')} | "
+            f"地点: {data.get('city', '')} {data.get('district', '')} | "
+            f"公司: {data.get('company', '')} | "
+            f"薪资: {data.get('salary', '')} | "
+            f"经验要求: {data.get('experience', '')} | "
+            f"学历要求: {data.get('degree', '')} | "
+            f"福利: {data.get('welfare', '')} | "
+            f"介绍: {summary_text}"
+        )
+
+    def save_job_with_analysis(self, data: dict, summary: str, vector) -> str:
+        try:
+            with self.get_cursor() as cur:
+                cur.execute("SELECT 1 FROM jobs WHERE job_id = %s", (data["job_id"],))
+                existed = cur.fetchone() is not None
+
+                cur.execute("""
+                    INSERT INTO jobs
+                    (job_id, title, salary, company, industry, city, district,
+                     experience, degree, welfare, detail, summary, detail_url, embedding)
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                    ON CONFLICT (job_id) DO UPDATE SET
+                        title = EXCLUDED.title,
+                        salary = EXCLUDED.salary,
+                        company = EXCLUDED.company,
+                        industry = EXCLUDED.industry,
+                        city = EXCLUDED.city,
+                        district = EXCLUDED.district,
+                        experience = EXCLUDED.experience,
+                        degree = EXCLUDED.degree,
+                        welfare = EXCLUDED.welfare,
+                        detail = EXCLUDED.detail,
+                        summary = EXCLUDED.summary,
+                        detail_url = EXCLUDED.detail_url,
+                        embedding = EXCLUDED.embedding
+                """, (
+                    data["job_id"], data["title"], data["salary"], data["company"],
+                    data["industry"], data["city"], data["district"],
+                    data["experience"], data["degree"], data["welfare"],
+                    data["detail"], summary, data["detail_url"], vector,
+                ))
+
+                self._update_tsv_for_job(
+                    cur,
+                    data["job_id"],
+                    data.get("title"),
+                    data.get("company"),
+                    data.get("welfare"),
+                    summary,
+                    data.get("detail"),
+                )
+                return "updated" if existed else "inserted"
+        except Exception as e:
+            logger.error(f"❌ 保存职位分析结果失败: {e}", exc_info=True)
+            return "failed"
+
     def fetch_jobs_without_embedding(self, limit=100):
         try:
             with self.get_cursor() as cur:
@@ -675,6 +734,24 @@ class DatabaseManager:
                 return cur.fetchall()
         except Exception as e:
             logger.error(f"❌ 获取未向量化职位失败: {e}")
+            return []
+
+    def fetch_jobs_pending_analysis(self, limit=100):
+        try:
+            with self.get_cursor(dict_cursor=True) as cur:
+                cur.execute("""
+                    SELECT job_id, title, salary, company, industry, city, district,
+                           experience, degree, welfare, detail, summary, detail_url
+                    FROM jobs
+                    WHERE embedding IS NULL
+                       OR summary IS NULL
+                       OR summary = ''
+                    ORDER BY create_time DESC
+                    LIMIT %s
+                """, (limit,))
+                return cur.fetchall()
+        except Exception as e:
+            logger.error(f"❌ 获取待补全分析的职位失败: {e}", exc_info=True)
             return []
 
     def update_job_analysis(self, job_id: str, summary: str, vector) -> bool:
