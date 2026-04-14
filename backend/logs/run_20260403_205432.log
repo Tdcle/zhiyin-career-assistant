@@ -1,0 +1,19 @@
+2026-04-03 20:54:32,902 | INFO | JobAgent.database | ✅ 数据库连接池创建成功: boss_zhipin
+2026-04-03 20:54:32,902 | INFO | JobAgent.database | loading embedding model: nomic-embed-text-v2-moe
+2026-04-03 20:54:33,621 | INFO | JobAgent.database | embedding model loaded: nomic-embed-text-v2-moe
+2026-04-03 20:54:33,650 | INFO | JobAgent.database | database schema and indexes ready
+2026-04-03 20:54:37,891 | INFO | JobAgent.tools | loading reranker model from ./models/bge-reranker-v2-m3
+2026-04-03 20:54:39,521 | INFO | JobAgent.tools | reranker model loaded
+2026-04-03 20:54:41,732 | INFO | JobAgent.main | application starting
+2026-04-03 20:54:46,809 | INFO | JobAgent.redis_client | redis connected: redis://localhost:6379/0
+2026-04-03 20:54:49,960 | INFO | JobAgent.user_router | resume task created: task_id=4c46501e41544fe6901f9852baa56a31 user=00004 file=王来晨-大模型应用开发.pdf
+2026-04-03 20:54:51,422 | WARNING | JobAgent.file_parser | resume stage1 llm parse failed, fallback to heuristic parser: request_id: c9796d36-2447-993c-8b9d-645dbd9bbf9f 
+ status_code: 400 
+ code: InvalidParameter 
+ message: url error, please check url！ For details, see: https://help.aliyun.com/zh/model-studio/error-code#error-url
+2026-04-03 20:54:52,391 | WARNING | JobAgent.file_parser | resume stage2 llm parse failed, fallback to heuristic parser: request_id: df6252bb-471e-922d-97dc-532f2f8b6a84 
+ status_code: 400 
+ code: InvalidParameter 
+ message: url error, please check url！ For details, see: https://help.aliyun.com/zh/model-studio/error-code#error-url
+2026-04-03 20:54:54,832 | INFO | JobAgent.user_router | resume task completed: task_id=4c46501e41544fe6901f9852baa56a31 user=00004
+2026-04-03 20:57:44,405 | INFO | JobAgent.main | application shutting down

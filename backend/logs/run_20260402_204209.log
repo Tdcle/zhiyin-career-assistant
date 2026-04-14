@@ -1,0 +1,8 @@
+2026-04-02 20:42:09,618 | INFO | JobAgent.database | ✅ 数据库连接池创建成功: boss_zhipin
+2026-04-02 20:42:09,618 | INFO | JobAgent.database | loading embedding model: nomic-embed-text-v2-moe
+2026-04-02 20:42:10,651 | INFO | JobAgent.database | embedding model loaded: nomic-embed-text-v2-moe
+2026-04-02 20:42:10,682 | INFO | JobAgent.database | database schema and indexes ready
+2026-04-02 20:42:14,142 | INFO | JobAgent.tools | loading reranker model from ./models/bge-reranker-v2-m3
+2026-04-02 20:42:16,088 | INFO | JobAgent.tools | reranker model loaded
+2026-04-02 20:42:19,189 | INFO | JobAgent.main | application starting
+2026-04-02 20:47:01,460 | INFO | JobAgent.main | application shutting down

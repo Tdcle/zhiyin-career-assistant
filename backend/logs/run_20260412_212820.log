@@ -1,0 +1,654 @@
+2026-04-12 21:28:20,925 | INFO | JobAgent.database | ✅ 数据库连接池创建成功: boss_zhipin
+2026-04-12 21:28:20,925 | INFO | JobAgent.database | loading embedding model: nomic-embed-text-v2-moe
+2026-04-12 21:28:21,657 | INFO | JobAgent.database | embedding model loaded: nomic-embed-text-v2-moe
+2026-04-12 21:28:22,708 | INFO | JobAgent.database | memory extractor model loaded: qwen-max-2025-01-25
+2026-04-12 21:28:22,792 | INFO | JobAgent.database | database schema and indexes ready
+2026-04-12 21:28:30,090 | INFO | JobAgent.tools | loading reranker model from ./models/bge-reranker-v2-m3
+2026-04-12 21:28:32,421 | INFO | JobAgent.tools | reranker model loaded
+2026-04-12 21:28:37,209 | INFO | JobAgent.main | application starting
+2026-04-12 21:28:37,211 | INFO | JobAgent.resume_task_queue | resume task worker started: consumer=resume_worker:27504:6053b00f
+2026-04-12 21:28:37,239 | INFO | JobAgent.redis_client | redis connected: redis://localhost:6379/0
+2026-04-12 21:28:50,417 | WARNING | JobAgent.resume_task_queue | resume worker redis stream consume failed, fallback to local queue
+Traceback (most recent call last):
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 111, in read_from_socket
+    bufflen = self._sock.recv_into(self._buffer)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 1342, in read_response
+    response = self._parser.read_response(disable_decoding=disable_decoding)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 164, in read_response
+    self.read_from_socket()
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 120, in read_from_socket
+    raise TimeoutError("Timeout reading from socket")
+TimeoutError: Timeout reading from socket
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\PythonProject\find_a_good_job\backend\utils\resume_task_queue.py", line 270, in _pop_task
+    rows = client.xreadgroup(
+           ^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\commands\core.py", line 4531, in xreadgroup
+    response = self.execute_command("XREADGROUP", *pieces, **options)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 716, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 736, in _execute_command
+    result = conn.retry.call_with_retry(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\retry.py", line 132, in call_with_retry
+    raise error
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\retry.py", line 120, in call_with_retry
+    return do()
+           ^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 737, in <lambda>
+    lambda: self._send_command_parse_response(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 682, in _send_command_parse_response
+    return self.parse_response(conn, command_name, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 780, in parse_response
+    response = connection.read_response()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 1346, in read_response
+    raise TimeoutError(f"Timeout reading from {host_error}")
+redis.exceptions.TimeoutError: Timeout reading from localhost:6379
+2026-04-12 21:29:11,345 | INFO | JobAgent.auth_router | user login success: user_id=00004 username=小帅
+2026-04-12 21:29:19,239 | WARNING | JobAgent.resume_task_queue | resume worker redis stream consume failed, fallback to local queue
+Traceback (most recent call last):
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 111, in read_from_socket
+    bufflen = self._sock.recv_into(self._buffer)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 1342, in read_response
+    response = self._parser.read_response(disable_decoding=disable_decoding)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 164, in read_response
+    self.read_from_socket()
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 120, in read_from_socket
+    raise TimeoutError("Timeout reading from socket")
+TimeoutError: Timeout reading from socket
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\PythonProject\find_a_good_job\backend\utils\resume_task_queue.py", line 270, in _pop_task
+    rows = client.xreadgroup(
+           ^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\commands\core.py", line 4531, in xreadgroup
+    response = self.execute_command("XREADGROUP", *pieces, **options)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 716, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 736, in _execute_command
+    result = conn.retry.call_with_retry(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\retry.py", line 132, in call_with_retry
+    raise error
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\retry.py", line 120, in call_with_retry
+    return do()
+           ^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 737, in <lambda>
+    lambda: self._send_command_parse_response(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 682, in _send_command_parse_response
+    return self.parse_response(conn, command_name, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 780, in parse_response
+    response = connection.read_response()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 1346, in read_response
+    raise TimeoutError(f"Timeout reading from {host_error}")
+redis.exceptions.TimeoutError: Timeout reading from localhost:6379
+2026-04-12 21:29:48,035 | WARNING | JobAgent.resume_task_queue | resume worker redis stream consume failed, fallback to local queue
+Traceback (most recent call last):
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 111, in read_from_socket
+    bufflen = self._sock.recv_into(self._buffer)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 1342, in read_response
+    response = self._parser.read_response(disable_decoding=disable_decoding)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 164, in read_response
+    self.read_from_socket()
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 120, in read_from_socket
+    raise TimeoutError("Timeout reading from socket")
+TimeoutError: Timeout reading from socket
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\PythonProject\find_a_good_job\backend\utils\resume_task_queue.py", line 270, in _pop_task
+    rows = client.xreadgroup(
+           ^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\commands\core.py", line 4531, in xreadgroup
+    response = self.execute_command("XREADGROUP", *pieces, **options)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 716, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 736, in _execute_command
+    result = conn.retry.call_with_retry(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\retry.py", line 132, in call_with_retry
+    raise error
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\retry.py", line 120, in call_with_retry
+    return do()
+           ^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 737, in <lambda>
+    lambda: self._send_command_parse_response(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 682, in _send_command_parse_response
+    return self.parse_response(conn, command_name, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 780, in parse_response
+    response = connection.read_response()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 1346, in read_response
+    raise TimeoutError(f"Timeout reading from {host_error}")
+redis.exceptions.TimeoutError: Timeout reading from localhost:6379
+2026-04-12 21:30:18,870 | WARNING | JobAgent.resume_task_queue | resume worker redis stream consume failed, fallback to local queue
+Traceback (most recent call last):
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 111, in read_from_socket
+    bufflen = self._sock.recv_into(self._buffer)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 1342, in read_response
+    response = self._parser.read_response(disable_decoding=disable_decoding)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 164, in read_response
+    self.read_from_socket()
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 120, in read_from_socket
+    raise TimeoutError("Timeout reading from socket")
+TimeoutError: Timeout reading from socket
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\PythonProject\find_a_good_job\backend\utils\resume_task_queue.py", line 270, in _pop_task
+    rows = client.xreadgroup(
+           ^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\commands\core.py", line 4531, in xreadgroup
+    response = self.execute_command("XREADGROUP", *pieces, **options)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 716, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 736, in _execute_command
+    result = conn.retry.call_with_retry(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\retry.py", line 132, in call_with_retry
+    raise error
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\retry.py", line 120, in call_with_retry
+    return do()
+           ^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 737, in <lambda>
+    lambda: self._send_command_parse_response(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 682, in _send_command_parse_response
+    return self.parse_response(conn, command_name, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 780, in parse_response
+    response = connection.read_response()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 1346, in read_response
+    raise TimeoutError(f"Timeout reading from {host_error}")
+redis.exceptions.TimeoutError: Timeout reading from localhost:6379
+2026-04-12 21:31:14,729 | WARNING | JobAgent.resume_task_queue | resume worker redis stream consume failed, fallback to local queue
+Traceback (most recent call last):
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 111, in read_from_socket
+    bufflen = self._sock.recv_into(self._buffer)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 1342, in read_response
+    response = self._parser.read_response(disable_decoding=disable_decoding)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 164, in read_response
+    self.read_from_socket()
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 120, in read_from_socket
+    raise TimeoutError("Timeout reading from socket")
+TimeoutError: Timeout reading from socket
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\PythonProject\find_a_good_job\backend\utils\resume_task_queue.py", line 270, in _pop_task
+    rows = client.xreadgroup(
+           ^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\commands\core.py", line 4531, in xreadgroup
+    response = self.execute_command("XREADGROUP", *pieces, **options)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 716, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 736, in _execute_command
+    result = conn.retry.call_with_retry(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\retry.py", line 132, in call_with_retry
+    raise error
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\retry.py", line 120, in call_with_retry
+    return do()
+           ^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 737, in <lambda>
+    lambda: self._send_command_parse_response(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 682, in _send_command_parse_response
+    return self.parse_response(conn, command_name, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 780, in parse_response
+    response = connection.read_response()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 1346, in read_response
+    raise TimeoutError(f"Timeout reading from {host_error}")
+redis.exceptions.TimeoutError: Timeout reading from localhost:6379
+2026-04-12 21:31:43,563 | WARNING | JobAgent.resume_task_queue | resume worker redis stream consume failed, fallback to local queue
+Traceback (most recent call last):
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 111, in read_from_socket
+    bufflen = self._sock.recv_into(self._buffer)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 1342, in read_response
+    response = self._parser.read_response(disable_decoding=disable_decoding)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 164, in read_response
+    self.read_from_socket()
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 120, in read_from_socket
+    raise TimeoutError("Timeout reading from socket")
+TimeoutError: Timeout reading from socket
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\PythonProject\find_a_good_job\backend\utils\resume_task_queue.py", line 270, in _pop_task
+    rows = client.xreadgroup(
+           ^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\commands\core.py", line 4531, in xreadgroup
+    response = self.execute_command("XREADGROUP", *pieces, **options)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 716, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 736, in _execute_command
+    result = conn.retry.call_with_retry(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\retry.py", line 132, in call_with_retry
+    raise error
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\retry.py", line 120, in call_with_retry
+    return do()
+           ^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 737, in <lambda>
+    lambda: self._send_command_parse_response(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 682, in _send_command_parse_response
+    return self.parse_response(conn, command_name, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 780, in parse_response
+    response = connection.read_response()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 1346, in read_response
+    raise TimeoutError(f"Timeout reading from {host_error}")
+redis.exceptions.TimeoutError: Timeout reading from localhost:6379
+2026-04-12 21:32:12,470 | WARNING | JobAgent.resume_task_queue | resume worker redis stream consume failed, fallback to local queue
+Traceback (most recent call last):
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 111, in read_from_socket
+    bufflen = self._sock.recv_into(self._buffer)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 1342, in read_response
+    response = self._parser.read_response(disable_decoding=disable_decoding)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 164, in read_response
+    self.read_from_socket()
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 120, in read_from_socket
+    raise TimeoutError("Timeout reading from socket")
+TimeoutError: Timeout reading from socket
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\PythonProject\find_a_good_job\backend\utils\resume_task_queue.py", line 270, in _pop_task
+    rows = client.xreadgroup(
+           ^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\commands\core.py", line 4531, in xreadgroup
+    response = self.execute_command("XREADGROUP", *pieces, **options)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 716, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 736, in _execute_command
+    result = conn.retry.call_with_retry(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\retry.py", line 132, in call_with_retry
+    raise error
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\retry.py", line 120, in call_with_retry
+    return do()
+           ^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 737, in <lambda>
+    lambda: self._send_command_parse_response(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 682, in _send_command_parse_response
+    return self.parse_response(conn, command_name, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 780, in parse_response
+    response = connection.read_response()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 1346, in read_response
+    raise TimeoutError(f"Timeout reading from {host_error}")
+redis.exceptions.TimeoutError: Timeout reading from localhost:6379
+2026-04-12 21:32:41,451 | WARNING | JobAgent.resume_task_queue | resume worker redis stream consume failed, fallback to local queue
+Traceback (most recent call last):
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 111, in read_from_socket
+    bufflen = self._sock.recv_into(self._buffer)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 1342, in read_response
+    response = self._parser.read_response(disable_decoding=disable_decoding)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 164, in read_response
+    self.read_from_socket()
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 120, in read_from_socket
+    raise TimeoutError("Timeout reading from socket")
+TimeoutError: Timeout reading from socket
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\PythonProject\find_a_good_job\backend\utils\resume_task_queue.py", line 270, in _pop_task
+    rows = client.xreadgroup(
+           ^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\commands\core.py", line 4531, in xreadgroup
+    response = self.execute_command("XREADGROUP", *pieces, **options)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 716, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 736, in _execute_command
+    result = conn.retry.call_with_retry(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\retry.py", line 132, in call_with_retry
+    raise error
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\retry.py", line 120, in call_with_retry
+    return do()
+           ^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 737, in <lambda>
+    lambda: self._send_command_parse_response(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 682, in _send_command_parse_response
+    return self.parse_response(conn, command_name, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 780, in parse_response
+    response = connection.read_response()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 1346, in read_response
+    raise TimeoutError(f"Timeout reading from {host_error}")
+redis.exceptions.TimeoutError: Timeout reading from localhost:6379
+2026-04-12 21:33:10,358 | WARNING | JobAgent.resume_task_queue | resume worker redis stream consume failed, fallback to local queue
+Traceback (most recent call last):
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 111, in read_from_socket
+    bufflen = self._sock.recv_into(self._buffer)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 1342, in read_response
+    response = self._parser.read_response(disable_decoding=disable_decoding)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 164, in read_response
+    self.read_from_socket()
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 120, in read_from_socket
+    raise TimeoutError("Timeout reading from socket")
+TimeoutError: Timeout reading from socket
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\PythonProject\find_a_good_job\backend\utils\resume_task_queue.py", line 270, in _pop_task
+    rows = client.xreadgroup(
+           ^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\commands\core.py", line 4531, in xreadgroup
+    response = self.execute_command("XREADGROUP", *pieces, **options)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 716, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 736, in _execute_command
+    result = conn.retry.call_with_retry(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\retry.py", line 132, in call_with_retry
+    raise error
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\retry.py", line 120, in call_with_retry
+    return do()
+           ^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 737, in <lambda>
+    lambda: self._send_command_parse_response(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 682, in _send_command_parse_response
+    return self.parse_response(conn, command_name, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 780, in parse_response
+    response = connection.read_response()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 1346, in read_response
+    raise TimeoutError(f"Timeout reading from {host_error}")
+redis.exceptions.TimeoutError: Timeout reading from localhost:6379
+2026-04-12 21:33:31,698 | WARNING | JobAgent.resume_task_queue | resume worker redis stream consume failed, fallback to local queue
+Traceback (most recent call last):
+  File "D:\PythonProject\find_a_good_job\backend\utils\resume_task_queue.py", line 270, in _pop_task
+    rows = client.xreadgroup(
+           ^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\commands\core.py", line 4531, in xreadgroup
+    response = self.execute_command("XREADGROUP", *pieces, **options)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 716, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 722, in _execute_command
+    conn = self.connection or pool.get_connection()
+                              ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\utils.py", line 236, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 3041, in get_connection
+    connection.connect()
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 976, in connect
+    self.retry.call_with_retry(
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\retry.py", line 132, in call_with_retry
+    raise error
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\retry.py", line 120, in call_with_retry
+    return do()
+           ^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 977, in <lambda>
+    lambda: self.connect_check_health(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 1031, in connect_check_health
+    self.on_connect_check_health(check_health=check_health)
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 1156, in on_connect_check_health
+    self.read_response()
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 1342, in read_response
+    response = self._parser.read_response(disable_decoding=disable_decoding)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 164, in read_response
+    self.read_from_socket()
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 113, in read_from_socket
+    raise ConnectionError(SERVER_CLOSED_CONNECTION_ERROR)
+redis.exceptions.ConnectionError: Connection closed by server.
+2026-04-12 21:33:32,145 | WARNING | JobAgent.resume_task_queue | resume worker redis stream consume failed, fallback to local queue
+Traceback (most recent call last):
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 1342, in read_response
+    response = self._parser.read_response(disable_decoding=disable_decoding)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 164, in read_response
+    self.read_from_socket()
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 111, in read_from_socket
+    bufflen = self._sock.recv_into(self._buffer)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ConnectionAbortedError: [WinError 10053] 你的主机中的软件中止了一个已建立的连接。
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\PythonProject\find_a_good_job\backend\utils\resume_task_queue.py", line 270, in _pop_task
+    rows = client.xreadgroup(
+           ^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\commands\core.py", line 4531, in xreadgroup
+    response = self.execute_command("XREADGROUP", *pieces, **options)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 716, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 722, in _execute_command
+    conn = self.connection or pool.get_connection()
+                              ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\utils.py", line 236, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 3041, in get_connection
+    connection.connect()
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 976, in connect
+    self.retry.call_with_retry(
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\retry.py", line 132, in call_with_retry
+    raise error
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\retry.py", line 120, in call_with_retry
+    return do()
+           ^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 977, in <lambda>
+    lambda: self.connect_check_health(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 1031, in connect_check_health
+    self.on_connect_check_health(check_health=check_health)
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 1156, in on_connect_check_health
+    self.read_response()
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 1350, in read_response
+    raise ConnectionError(f"Error while reading from {host_error} : {e.args}")
+redis.exceptions.ConnectionError: Error while reading from localhost:6379 : (10053, '你的主机中的软件中止了一个已建立的连接。', None, 10053, None)
+2026-04-12 21:33:32,580 | WARNING | JobAgent.resume_task_queue | resume worker redis stream consume failed, fallback to local queue
+Traceback (most recent call last):
+  File "D:\PythonProject\find_a_good_job\backend\utils\resume_task_queue.py", line 270, in _pop_task
+    rows = client.xreadgroup(
+           ^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\commands\core.py", line 4531, in xreadgroup
+    response = self.execute_command("XREADGROUP", *pieces, **options)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 716, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 722, in _execute_command
+    conn = self.connection or pool.get_connection()
+                              ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\utils.py", line 236, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 3041, in get_connection
+    connection.connect()
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 976, in connect
+    self.retry.call_with_retry(
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\retry.py", line 132, in call_with_retry
+    raise error
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\retry.py", line 120, in call_with_retry
+    return do()
+           ^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 977, in <lambda>
+    lambda: self.connect_check_health(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 1031, in connect_check_health
+    self.on_connect_check_health(check_health=check_health)
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 1156, in on_connect_check_health
+    self.read_response()
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 1342, in read_response
+    response = self._parser.read_response(disable_decoding=disable_decoding)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 164, in read_response
+    self.read_from_socket()
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 113, in read_from_socket
+    raise ConnectionError(SERVER_CLOSED_CONNECTION_ERROR)
+redis.exceptions.ConnectionError: Connection closed by server.
+2026-04-12 21:33:39,247 | WARNING | JobAgent.resume_task_queue | resume worker redis stream consume failed, fallback to local queue
+Traceback (most recent call last):
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 111, in read_from_socket
+    bufflen = self._sock.recv_into(self._buffer)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 1342, in read_response
+    response = self._parser.read_response(disable_decoding=disable_decoding)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 164, in read_response
+    self.read_from_socket()
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\_parsers\hiredis.py", line 120, in read_from_socket
+    raise TimeoutError("Timeout reading from socket")
+TimeoutError: Timeout reading from socket
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\PythonProject\find_a_good_job\backend\utils\resume_task_queue.py", line 270, in _pop_task
+    rows = client.xreadgroup(
+           ^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\commands\core.py", line 4531, in xreadgroup
+    response = self.execute_command("XREADGROUP", *pieces, **options)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 716, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 736, in _execute_command
+    result = conn.retry.call_with_retry(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\retry.py", line 132, in call_with_retry
+    raise error
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\retry.py", line 120, in call_with_retry
+    return do()
+           ^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 737, in <lambda>
+    lambda: self._send_command_parse_response(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 682, in _send_command_parse_response
+    return self.parse_response(conn, command_name, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\client.py", line 780, in parse_response
+    response = connection.read_response()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\redis\connection.py", line 1346, in read_response
+    raise TimeoutError(f"Timeout reading from {host_error}")
+redis.exceptions.TimeoutError: Timeout reading from localhost:6379
+2026-04-12 21:33:45,286 | INFO | JobAgent.resume_task_queue | resume task worker stopped
+2026-04-12 21:33:45,287 | INFO | JobAgent.main | application shutting down

@@ -8,7 +8,7 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if project_root not in sys.path:
     sys.path.append(project_root)
 
-from utils.database import DatabaseManager
+from backend.db import DatabaseManager
 
 # 初始化数据库
 db = DatabaseManager()

@@ -1,0 +1,248 @@
+2026-04-04 14:09:31,396 | INFO | JobAgent.database | ✅ 数据库连接池创建成功: boss_zhipin
+2026-04-04 14:09:31,396 | INFO | JobAgent.database | loading embedding model: nomic-embed-text-v2-moe
+2026-04-04 14:09:32,222 | INFO | JobAgent.database | embedding model loaded: nomic-embed-text-v2-moe
+2026-04-04 14:09:32,253 | INFO | JobAgent.database | database schema and indexes ready
+2026-04-04 14:09:36,330 | INFO | JobAgent.tools | loading reranker model from ./models/bge-reranker-v2-m3
+2026-04-04 14:09:38,091 | INFO | JobAgent.tools | reranker model loaded
+2026-04-04 14:09:40,294 | INFO | JobAgent.main | application starting
+2026-04-04 14:09:40,296 | INFO | JobAgent.resume_task_queue | resume task worker started
+2026-04-04 14:09:40,308 | INFO | JobAgent.redis_client | redis connected: redis://localhost:6379/0
+2026-04-04 14:17:08,935 | INFO | JobAgent.chat_router | chat session deleted: user=00004 session=chat:00004:c4d782e5ae9d
+2026-04-04 14:17:12,892 | INFO | JobAgent.chat_router | chat session deleted: user=00004 session=chat:00004:2c9107248fb3
+2026-04-04 14:17:14,765 | INFO | JobAgent.chat_router | chat session deleted: user=00004 session=chat:00004:deb4d003c020
+2026-04-04 14:17:16,368 | INFO | JobAgent.chat_router | chat session deleted: user=00004 session=chat:00004:b562c148d003
+2026-04-04 14:17:17,098 | INFO | JobAgent.chat_router | chat session created: user=00004 session=chat:00004:4a3e56dbf11c
+2026-04-04 14:17:20,571 | INFO | JobAgent.chat_router | chat stream: user=00004 session=chat:00004:4a3e56dbf11c
+2026-04-04 14:17:27,241 | INFO | JobAgent.chat_graph | planner explicit constraint guard: experience_mentioned=False experience= salary_mentioned=False salary_min=0 salary_unit=
+2026-04-04 14:17:27,242 | INFO | JobAgent.chat_graph | planner normalized search plan: {"resolved_query": "在北京寻找前端开发相关岗位", "keyword_query": "前端", "city": "北京", "company": "", "experience": "", "salary_min": 0, "salary_unit": ""}
+2026-04-04 14:17:27,244 | INFO | JobAgent.chat_graph | search node running: query=前端 city=北京 experience= salary_min=0 salary_unit=
+2026-04-04 14:17:27,245 | INFO | JobAgent.tools | search tool invoked: query=在北京寻找前端开发相关岗位 effective_query=前端 city=北京->北京 company= experience=-> salary_min=0 salary_unit=
+2026-04-04 14:17:27,246 | INFO | JobAgent.tools | search role keywords=前端
+2026-04-04 14:17:27,247 | INFO | JobAgent.tools | search cache lookup: key=search:result:v1:7f09ed7185b2e5d80e752f659fecabea522f05cef84e54cf7092741b969227eb version=9 effective_query=前端 city=北京 company=<none> experience=<none> salary_min=0 salary_unit=<none> expanded=yes role_keywords=前端
+2026-04-04 14:17:27,248 | INFO | JobAgent.tools | search cache miss: key=search:result:v1:7f09ed7185b2e5d80e752f659fecabea522f05cef84e54cf7092741b969227eb data_version=9
+2026-04-04 14:17:27,249 | INFO | JobAgent.database | hybrid search: keywords=前端 city=北京 company= experience= salary_min=0 salary_unit=
+2026-04-04 14:17:32,389 | INFO | JobAgent.database | recall count: vec=200 bm25=112
+2026-04-04 14:17:32,390 | INFO | JobAgent.database | 🔀 [RRF] vec=200 bm25=112 merged=216 return=90
+  [前端] vec+bm25 v=3 b=2 rrf=0.03200
+  [前端] vec+bm25 v=2 b=4 rrf=0.03175
+  [前端研发工程师] vec+bm25 v=15 b=1 rrf=0.02973
+  [前端工程师] vec+bm25 v=9 b=8 rrf=0.02920
+  [前端工程师] vec+bm25 v=10 b=12 rrf=0.02817
+  [前端] vec+bm25 v=1 b=25 rrf=0.02816
+  [前端工程师] vec+bm25 v=8 b=16 rrf=0.02786
+  [web前端] vec+bm25 v=4 b=24 rrf=0.02753
+  [前端工程师] vec+bm25 v=6 b=22 rrf=0.02735
+  [前端网页开发工程师] vec+bm25 v=28 b=5 rrf=0.02675
+  [高级web前端工程师] vec+bm25 v=17 b=15 rrf=0.02632
+  [web前端高级工程师] vec+bm25 v=25 b=9 rrf=0.02626
+  [前端-web（证券 双休）] vec+bm25 v=5 b=32 rrf=0.02625
+  [web前端工程师] vec+bm25 v=14 b=20 rrf=0.02601
+  [中级web前端] vec+bm25 v=16 b=18 rrf=0.02598
+  ... truncated 75 more rows
+2026-04-04 14:17:32,391 | INFO | JobAgent.database | hybrid search: keywords=前端 前端开发 web前端 前端工程师 vue react typescript javascript uniapp next.js city=北京 company= experience= salary_min=0 salary_unit=
+2026-04-04 14:17:32,647 | INFO | JobAgent.database | recall count: vec=200 bm25=124
+2026-04-04 14:17:32,649 | INFO | JobAgent.database | 🔀 [RRF] vec=200 bm25=124 merged=208 return=90
+  [前端开发（react）] vec+bm25 v=5 b=2 rrf=0.03151
+  [uniapp前端开发] vec+bm25 v=2 b=7 rrf=0.03105
+  [react前端] vec+bm25 v=9 b=9 rrf=0.02899
+  [VUE前端工程师] vec+bm25 v=12 b=8 rrf=0.02859
+  [vue前端工程师] vec+bm25 v=19 b=4 rrf=0.02828
+  [前端] vec+bm25 v=15 b=10 rrf=0.02762
+  [react前端开发工程师] vec+bm25 v=23 b=5 rrf=0.02743
+  [vue前端] vec+bm25 v=7 b=20 rrf=0.02743
+  [vue前端工程师-知网] vec+bm25 v=13 b=13 rrf=0.02740
+  [前端工程师（中级｜React）] vec+bm25 v=27 b=6 rrf=0.02665
+  [前端开发工程师] vec+bm25 v=38 b=1 rrf=0.02660
+  [前端开发（Vue方向）] vec+bm25 v=16 b=15 rrf=0.02649
+  [前端] vec+bm25 v=3 b=37 rrf=0.02618
+  [web前端/测试] vec+bm25 v=11 b=23 rrf=0.02613
+  [前端工程师] vec+bm25 v=10 b=28 rrf=0.02565
+  ... truncated 75 more rows
+2026-04-04 14:17:32,649 | INFO | JobAgent.tools | search tool recalled strict=30 expanded=30 expanded_query=前端 前端开发 web前端 前端工程师 vue react typescript javascript uniapp next.js
+2026-04-04 14:17:32,650 | INFO | JobAgent.tools | search tool merged 48 unique candidates after weighted fusion
+2026-04-04 14:17:32,650 | INFO | JobAgent.tools | search tool kept 48 candidates after title filter
+2026-04-04 14:17:41,412 | INFO | JobAgent.tools | search rerank complete: max=0.9790 min=0.6170
+2026-04-04 14:17:41,415 | INFO | JobAgent.tools | search cache set: key=search:result:v1:7f09ed7185b2e5d80e752f659fecabea522f05cef84e54cf7092741b969227eb ttl=597s results=6
+2026-04-04 14:17:41,420 | INFO | JobAgent.chat_graph | search result summary: total=6 matched_role_count=5 mismatch_count=0 experience= experience_match_count=5 role_keywords=前端
+2026-04-04 14:17:41,420 | INFO | JobAgent.chat_graph | relevance filter rules: role_keywords=前端 required_experience=<none> role_rule=title must match at least one target role keyword; if mismatch roles > matched roles then drop experience_rule=skipped (no experience constraint)
+2026-04-04 14:17:41,421 | INFO | JobAgent.chat_graph | relevance filter dropped 0/6 candidates
+2026-04-04 14:17:41,421 | INFO | JobAgent.chat_graph | relevance filter kept 6/6 candidates: [1] 前端开发lm @ 华信正能 ; [2] web前端 @ 北京柯睿思信息技术 ; [3] 前端开发工程师 @ 拓保软件 ; [4] 前端工程师 @ 北京芯之力科技 ; [5] 前端研发工程师 @ 小全科技 ; [6] 前端 @ 紫航雾
+2026-04-04 14:17:41,424 | INFO | JobAgent.chat_graph | job alive check refresh: total=6 stale=1 fresh=5 threshold_hours=12
+2026-04-04 14:17:44,997 | INFO | JobAgent.chat_graph | job alive check summary: total=6 active=6 unknown=0 closed=0 kept=6 dropped=0
+2026-04-04 14:17:51,013 | INFO | JobAgent.chat_router | chat session created: user=00004 session=chat:00004:781076671b1e
+2026-04-04 14:17:54,746 | INFO | JobAgent.chat_router | chat stream: user=00004 session=chat:00004:781076671b1e
+2026-04-04 14:18:03,697 | INFO | JobAgent.chat_graph | planner explicit constraint guard: experience_mentioned=False experience= salary_mentioned=False salary_min=0 salary_unit=
+2026-04-04 14:18:03,697 | INFO | JobAgent.chat_graph | planner normalized search plan: {"resolved_query": "在北京寻找前端开发相关岗位", "keyword_query": "前端 北京", "city": "北京", "company": "", "experience": "", "salary_min": 0, "salary_unit": ""}
+2026-04-04 14:18:03,697 | INFO | JobAgent.chat_graph | search node running: query=前端 北京 city=北京 experience= salary_min=0 salary_unit=
+2026-04-04 14:18:03,698 | INFO | JobAgent.tools | search tool invoked: query=在北京寻找前端开发相关岗位 effective_query=前端 北京 city=北京->北京 company= experience=-> salary_min=0 salary_unit=
+2026-04-04 14:18:03,698 | INFO | JobAgent.tools | search role keywords=前端
+2026-04-04 14:18:03,699 | INFO | JobAgent.tools | search cache lookup: key=search:result:v1:f6e76d603bf06b58a2770756cbd25394d4cb87d6f9136b60b8960c64c3dfe838 version=9 effective_query=前端 北京 city=北京 company=<none> experience=<none> salary_min=0 salary_unit=<none> expanded=yes role_keywords=前端
+2026-04-04 14:18:03,700 | INFO | JobAgent.tools | search cache miss: key=search:result:v1:f6e76d603bf06b58a2770756cbd25394d4cb87d6f9136b60b8960c64c3dfe838 data_version=9
+2026-04-04 14:18:03,702 | INFO | JobAgent.database | hybrid search: keywords=前端 北京 city=北京 company= experience= salary_min=0 salary_unit=
+2026-04-04 14:18:05,921 | INFO | JobAgent.database | recall count: vec=200 bm25=200
+2026-04-04 14:18:05,924 | INFO | JobAgent.database | 🔀 [RRF] vec=200 bm25=200 merged=301 return=90
+  [前端] vec+bm25 v=1 b=2 rrf=0.03252
+  [前端] vec+bm25 v=2 b=8 rrf=0.03083
+  [前端技术经理（北京驻场）] vec+bm25 v=12 b=1 rrf=0.03028
+  [前端工程师] vec+bm25 v=3 b=10 rrf=0.03016
+  [前端工程师] vec+bm25 v=10 b=4 rrf=0.02991
+  [前端开发工程师（北京）] vec+bm25 v=4 b=13 rrf=0.02932
+  [前端工程师] vec+bm25 v=7 b=22 rrf=0.02712
+  [web前端高级工程师] vec+bm25 v=36 b=3 rrf=0.02629
+  [web前端] vec+bm25 v=5 b=32 rrf=0.02625
+  [前端高级开发工程师] vec+bm25 v=15 b=18 rrf=0.02615
+  [web前端] vec+bm25 v=19 b=15 rrf=0.02599
+  [前端] vec+bm25 v=6 b=34 rrf=0.02579
+  [web前端开发北京] vec+bm25 v=11 b=27 rrf=0.02558
+  [前端研发工程师] vec+bm25 v=27 b=11 rrf=0.02558
+  [中级前端工程师] vec+bm25 v=39 b=5 rrf=0.02549
+  ... truncated 75 more rows
+2026-04-04 14:18:05,925 | INFO | JobAgent.database | hybrid search: keywords=前端 北京 前端开发 web前端 前端工程师 vue react typescript javascript uniapp next.js city=北京 company= experience= salary_min=0 salary_unit=
+2026-04-04 14:18:06,148 | INFO | JobAgent.database | recall count: vec=200 bm25=200
+2026-04-04 14:18:06,150 | INFO | JobAgent.database | 🔀 [RRF] vec=200 bm25=200 merged=289 return=90
+  [uniapp前端开发] vec+bm25 v=2 b=3 rrf=0.03200
+  [前端开发（react）] vec+bm25 v=4 b=5 rrf=0.03101
+  [VUE前端工程师] vec+bm25 v=11 b=11 rrf=0.02817
+  [vue前端工程师] vec+bm25 v=17 b=6 rrf=0.02814
+  [前端] vec+bm25 v=1 b=27 rrf=0.02789
+  [react前端] vec+bm25 v=14 b=10 rrf=0.02780
+  [vue前端工程师-知网] vec+bm25 v=12 b=12 rrf=0.02778
+  [react前端开发（北京）] vec+bm25 v=30 b=2 rrf=0.02724
+  [前端] vec+bm25 v=13 b=14 rrf=0.02721
+  [web前端开发北京] vec+bm25 v=9 b=21 rrf=0.02684
+  [vue前端] vec+bm25 v=7 b=28 rrf=0.02629
+  [前端工程师（中级｜React）] vec+bm25 v=27 b=8 rrf=0.02620
+  [前端开发工程师] vec+bm25 v=42 b=1 rrf=0.02620
+  [前端开发（Vue方向）] vec+bm25 v=15 b=18 rrf=0.02615
+  [react前端开发工程师] vec+bm25 v=32 b=7 rrf=0.02579
+  ... truncated 75 more rows
+2026-04-04 14:18:06,151 | INFO | JobAgent.tools | search tool recalled strict=30 expanded=30 expanded_query=前端 北京 前端开发 web前端 前端工程师 vue react typescript javascript uniapp next.js
+2026-04-04 14:18:06,151 | INFO | JobAgent.tools | search tool merged 45 unique candidates after weighted fusion
+2026-04-04 14:18:06,151 | INFO | JobAgent.tools | search tool kept 45 candidates after title filter
+2026-04-04 14:18:14,137 | INFO | JobAgent.tools | search rerank complete: max=0.9858 min=0.7336
+2026-04-04 14:18:14,140 | INFO | JobAgent.tools | search cache set: key=search:result:v1:f6e76d603bf06b58a2770756cbd25394d4cb87d6f9136b60b8960c64c3dfe838 ttl=630s results=6
+2026-04-04 14:18:14,142 | INFO | JobAgent.chat_graph | search result summary: total=6 matched_role_count=5 mismatch_count=0 experience= experience_match_count=5 role_keywords=前端
+2026-04-04 14:18:14,142 | INFO | JobAgent.chat_graph | relevance filter rules: role_keywords=前端 required_experience=<none> role_rule=title must match at least one target role keyword; if mismatch roles > matched roles then drop experience_rule=skipped (no experience constraint)
+2026-04-04 14:18:14,142 | INFO | JobAgent.chat_graph | relevance filter dropped 0/6 candidates
+2026-04-04 14:18:14,143 | INFO | JobAgent.chat_graph | relevance filter kept 6/6 candidates: [1] web前端开发北京 @ 瑞友慧智 ; [2] web前端 @ 北京柯睿思信息技术 ; [3] 资深前端开发工程师 @ 北京创界科技发展 ; [4] 前端开发工程师 @ 拓保软件 ; [5] 前端工程师 @ 北京芯之力科技 ; [6] 前端开发工程师 @ 北京宜通
+2026-04-04 14:18:14,146 | INFO | JobAgent.chat_graph | job alive check refresh: total=6 stale=1 fresh=5 threshold_hours=12
+2026-04-04 14:18:16,355 | INFO | JobAgent.search_cache | search data version bumped: version=10 reason=job_status_visibility:unknown->closed
+2026-04-04 14:18:17,379 | INFO | JobAgent.chat_graph | job alive check summary: total=6 active=5 unknown=0 closed=1 kept=5 dropped=1
+2026-04-04 14:18:17,380 | INFO | JobAgent.chat_graph | job alive check dropped closed jobs: 前端开发工程师 @ 北京宜通
+2026-04-04 14:18:20,423 | INFO | JobAgent.chat_router | chat session created: user=00004 session=chat:00004:f69416e332fe
+2026-04-04 14:18:23,781 | INFO | JobAgent.chat_router | chat stream: user=00004 session=chat:00004:f69416e332fe
+2026-04-04 14:18:29,194 | INFO | JobAgent.chat_graph | planner explicit constraint guard: experience_mentioned=False experience= salary_mentioned=False salary_min=0 salary_unit=
+2026-04-04 14:18:29,194 | INFO | JobAgent.chat_graph | planner normalized search plan: {"resolved_query": "在北京寻找前端相关岗位", "keyword_query": "前端", "city": "北京", "company": "", "experience": "", "salary_min": 0, "salary_unit": ""}
+2026-04-04 14:18:29,196 | INFO | JobAgent.chat_graph | search node running: query=前端 city=北京 experience= salary_min=0 salary_unit=
+2026-04-04 14:18:29,196 | INFO | JobAgent.tools | search tool invoked: query=在北京寻找前端相关岗位 effective_query=前端 city=北京->北京 company= experience=-> salary_min=0 salary_unit=
+2026-04-04 14:18:29,196 | INFO | JobAgent.tools | search role keywords=前端
+2026-04-04 14:18:29,198 | INFO | JobAgent.tools | search cache lookup: key=search:result:v1:2c9439acbf2b7cfec717b8f9efc75e6dde635239947696ca2fec8ec93e4805df version=10 effective_query=前端 city=北京 company=<none> experience=<none> salary_min=0 salary_unit=<none> expanded=yes role_keywords=前端
+2026-04-04 14:18:29,199 | INFO | JobAgent.tools | search cache miss: key=search:result:v1:2c9439acbf2b7cfec717b8f9efc75e6dde635239947696ca2fec8ec93e4805df data_version=10
+2026-04-04 14:18:29,201 | INFO | JobAgent.database | hybrid search: keywords=前端 city=北京 company= experience= salary_min=0 salary_unit=
+2026-04-04 14:18:31,443 | INFO | JobAgent.database | recall count: vec=200 bm25=111
+2026-04-04 14:18:31,445 | INFO | JobAgent.database | 🔀 [RRF] vec=200 bm25=111 merged=216 return=90
+  [前端] vec+bm25 v=2 b=1 rrf=0.03252
+  [前端] vec+bm25 v=3 b=3 rrf=0.03175
+  [前端研发工程师] vec+bm25 v=15 b=2 rrf=0.02946
+  [前端工程师] vec+bm25 v=9 b=7 rrf=0.02942
+  [前端工程师] vec+bm25 v=8 b=13 rrf=0.02840
+  [前端] vec+bm25 v=1 b=26 rrf=0.02802
+  [前端工程师] vec+bm25 v=10 b=15 rrf=0.02762
+  [前端工程师] vec+bm25 v=6 b=23 rrf=0.02720
+  [web前端] vec+bm25 v=4 b=27 rrf=0.02712
+  [前端网页开发工程师] vec+bm25 v=28 b=5 rrf=0.02675
+  [web前端工程师] vec+bm25 v=14 b=17 rrf=0.02650
+  [高级web前端工程师] vec+bm25 v=17 b=16 rrf=0.02614
+  [前端-web（证券 双休）] vec+bm25 v=5 b=33 rrf=0.02614
+  [web前端高级工程师] vec+bm25 v=25 b=10 rrf=0.02605
+  [中级web前端] vec+bm25 v=16 b=18 rrf=0.02598
+  ... truncated 75 more rows
+2026-04-04 14:18:31,445 | INFO | JobAgent.database | hybrid search: keywords=前端 前端开发 web前端 前端工程师 vue react typescript javascript uniapp next.js city=北京 company= experience= salary_min=0 salary_unit=
+2026-04-04 14:18:31,611 | INFO | JobAgent.database | recall count: vec=200 bm25=123
+2026-04-04 14:18:31,612 | INFO | JobAgent.database | 🔀 [RRF] vec=200 bm25=123 merged=208 return=90
+  [前端开发（react）] vec+bm25 v=5 b=3 rrf=0.03126
+  [uniapp前端开发] vec+bm25 v=2 b=7 rrf=0.03105
+  [react前端] vec+bm25 v=9 b=9 rrf=0.02899
+  [VUE前端工程师] vec+bm25 v=12 b=8 rrf=0.02859
+  [vue前端工程师] vec+bm25 v=19 b=4 rrf=0.02828
+  [前端] vec+bm25 v=15 b=10 rrf=0.02762
+  [vue前端工程师-知网] vec+bm25 v=13 b=13 rrf=0.02740
+  [vue前端] vec+bm25 v=7 b=21 rrf=0.02727
+  [react前端开发工程师] vec+bm25 v=23 b=6 rrf=0.02720
+  [前端工程师（中级｜React）] vec+bm25 v=27 b=5 rrf=0.02688
+  [前端开发工程师] vec+bm25 v=37 b=1 rrf=0.02670
+  [前端开发（Vue方向）] vec+bm25 v=16 b=14 rrf=0.02667
+  [前端] vec+bm25 v=3 b=35 rrf=0.02640
+  [web前端/测试] vec+bm25 v=11 b=22 rrf=0.02628
+  [前端开发（vue）] vec+bm25 v=20 b=19 rrf=0.02516
+  ... truncated 75 more rows
+2026-04-04 14:18:31,613 | INFO | JobAgent.tools | search tool recalled strict=30 expanded=30 expanded_query=前端 前端开发 web前端 前端工程师 vue react typescript javascript uniapp next.js
+2026-04-04 14:18:31,613 | INFO | JobAgent.tools | search tool merged 47 unique candidates after weighted fusion
+2026-04-04 14:18:31,613 | INFO | JobAgent.tools | search tool kept 47 candidates after title filter
+2026-04-04 14:18:38,912 | INFO | JobAgent.tools | search rerank complete: max=0.9789 min=0.7927
+2026-04-04 14:18:38,914 | INFO | JobAgent.tools | search cache set: key=search:result:v1:2c9439acbf2b7cfec717b8f9efc75e6dde635239947696ca2fec8ec93e4805df ttl=563s results=6
+2026-04-04 14:18:38,919 | INFO | JobAgent.chat_graph | search result summary: total=6 matched_role_count=5 mismatch_count=0 experience= experience_match_count=5 role_keywords=前端
+2026-04-04 14:18:38,920 | INFO | JobAgent.chat_graph | relevance filter rules: role_keywords=前端 required_experience=<none> role_rule=title must match at least one target role keyword; if mismatch roles > matched roles then drop experience_rule=skipped (no experience constraint)
+2026-04-04 14:18:38,920 | INFO | JobAgent.chat_graph | relevance filter dropped 0/6 candidates
+2026-04-04 14:18:38,920 | INFO | JobAgent.chat_graph | relevance filter kept 6/6 candidates: [1] web前端 @ 北京柯睿思信息技术 ; [2] 前端 @ 北京纬创 ; [3] 前端工程师 @ 北京芯之力科技 ; [4] 前端开发lm @ 华信正能 ; [5] 前端工程师 @ sws ; [6] 前端 @ 紫航雾
+2026-04-04 14:18:38,924 | INFO | JobAgent.chat_graph | job alive check refresh: total=6 stale=1 fresh=5 threshold_hours=12
+2026-04-04 14:18:41,780 | INFO | JobAgent.chat_graph | job alive check summary: total=6 active=6 unknown=0 closed=0 kept=6 dropped=0
+2026-04-04 14:18:57,357 | INFO | JobAgent.chat_router | chat session created: user=00004 session=chat:00004:95565a0d6740
+2026-04-04 14:19:06,098 | INFO | JobAgent.chat_router | chat stream: user=00004 session=chat:00004:95565a0d6740
+2026-04-04 14:19:11,077 | INFO | JobAgent.chat_graph | planner explicit constraint guard: experience_mentioned=False experience= salary_mentioned=False salary_min=0 salary_unit=
+2026-04-04 14:19:11,077 | INFO | JobAgent.chat_graph | planner normalized search plan: {"resolved_query": "在北京寻找前端开发相关岗位", "keyword_query": "前端", "city": "北京", "company": "", "experience": "", "salary_min": 0, "salary_unit": ""}
+2026-04-04 14:19:11,078 | INFO | JobAgent.chat_graph | search node running: query=前端 city=北京 experience= salary_min=0 salary_unit=
+2026-04-04 14:19:11,079 | INFO | JobAgent.tools | search tool invoked: query=在北京寻找前端开发相关岗位 effective_query=前端 city=北京->北京 company= experience=-> salary_min=0 salary_unit=
+2026-04-04 14:19:11,079 | INFO | JobAgent.tools | search role keywords=前端
+2026-04-04 14:19:11,080 | INFO | JobAgent.tools | search cache lookup: key=search:result:v1:49abca43802bd05cbd4147ce12892b1b4f1e396f6b85d4b404686ef4161fd1c2 version=10 effective_query=前端 city=北京 company=<none> experience=<none> salary_min=0 salary_unit=<none> expanded=yes role_keywords=前端
+2026-04-04 14:19:11,080 | INFO | JobAgent.tools | search cache miss: key=search:result:v1:49abca43802bd05cbd4147ce12892b1b4f1e396f6b85d4b404686ef4161fd1c2 data_version=10
+2026-04-04 14:19:11,081 | INFO | JobAgent.database | hybrid search: keywords=前端 city=北京 company= experience= salary_min=0 salary_unit=
+2026-04-04 14:19:13,332 | INFO | JobAgent.database | recall count: vec=200 bm25=111
+2026-04-04 14:19:13,336 | INFO | JobAgent.database | 🔀 [RRF] vec=200 bm25=111 merged=216 return=90
+  [前端] vec+bm25 v=2 b=1 rrf=0.03252
+  [前端] vec+bm25 v=3 b=3 rrf=0.03175
+  [前端研发工程师] vec+bm25 v=15 b=2 rrf=0.02946
+  [前端工程师] vec+bm25 v=9 b=7 rrf=0.02942
+  [前端工程师] vec+bm25 v=8 b=13 rrf=0.02840
+  [前端] vec+bm25 v=1 b=26 rrf=0.02802
+  [前端工程师] vec+bm25 v=10 b=15 rrf=0.02762
+  [前端工程师] vec+bm25 v=6 b=23 rrf=0.02720
+  [web前端] vec+bm25 v=4 b=27 rrf=0.02712
+  [前端网页开发工程师] vec+bm25 v=28 b=5 rrf=0.02675
+  [web前端工程师] vec+bm25 v=14 b=17 rrf=0.02650
+  [高级web前端工程师] vec+bm25 v=17 b=16 rrf=0.02614
+  [前端-web（证券 双休）] vec+bm25 v=5 b=33 rrf=0.02614
+  [web前端高级工程师] vec+bm25 v=25 b=10 rrf=0.02605
+  [中级web前端] vec+bm25 v=16 b=18 rrf=0.02598
+  ... truncated 75 more rows
+2026-04-04 14:19:13,338 | INFO | JobAgent.database | hybrid search: keywords=前端 前端开发 web前端 前端工程师 vue react typescript javascript uniapp next.js city=北京 company= experience= salary_min=0 salary_unit=
+2026-04-04 14:19:13,514 | INFO | JobAgent.database | recall count: vec=200 bm25=123
+2026-04-04 14:19:13,518 | INFO | JobAgent.database | 🔀 [RRF] vec=200 bm25=123 merged=208 return=90
+  [前端开发（react）] vec+bm25 v=5 b=3 rrf=0.03126
+  [uniapp前端开发] vec+bm25 v=2 b=7 rrf=0.03105
+  [react前端] vec+bm25 v=9 b=9 rrf=0.02899
+  [VUE前端工程师] vec+bm25 v=12 b=8 rrf=0.02859
+  [vue前端工程师] vec+bm25 v=19 b=4 rrf=0.02828
+  [前端] vec+bm25 v=15 b=10 rrf=0.02762
+  [vue前端工程师-知网] vec+bm25 v=13 b=13 rrf=0.02740
+  [vue前端] vec+bm25 v=7 b=21 rrf=0.02727
+  [react前端开发工程师] vec+bm25 v=23 b=6 rrf=0.02720
+  [前端工程师（中级｜React）] vec+bm25 v=27 b=5 rrf=0.02688
+  [前端开发工程师] vec+bm25 v=37 b=1 rrf=0.02670
+  [前端开发（Vue方向）] vec+bm25 v=16 b=14 rrf=0.02667
+  [前端] vec+bm25 v=3 b=35 rrf=0.02640
+  [web前端/测试] vec+bm25 v=11 b=22 rrf=0.02628
+  [前端开发（vue）] vec+bm25 v=20 b=19 rrf=0.02516
+  ... truncated 75 more rows
+2026-04-04 14:19:13,518 | INFO | JobAgent.tools | search tool recalled strict=30 expanded=30 expanded_query=前端 前端开发 web前端 前端工程师 vue react typescript javascript uniapp next.js
+2026-04-04 14:19:13,519 | INFO | JobAgent.tools | search tool merged 47 unique candidates after weighted fusion
+2026-04-04 14:19:13,519 | INFO | JobAgent.tools | search tool kept 47 candidates after title filter
+2026-04-04 14:19:21,320 | INFO | JobAgent.tools | search rerank complete: max=0.9790 min=0.6170
+2026-04-04 14:19:21,322 | INFO | JobAgent.tools | search cache set: key=search:result:v1:49abca43802bd05cbd4147ce12892b1b4f1e396f6b85d4b404686ef4161fd1c2 ttl=606s results=6
+2026-04-04 14:19:21,328 | INFO | JobAgent.chat_graph | search result summary: total=6 matched_role_count=5 mismatch_count=0 experience= experience_match_count=5 role_keywords=前端
+2026-04-04 14:19:21,328 | INFO | JobAgent.chat_graph | relevance filter rules: role_keywords=前端 required_experience=<none> role_rule=title must match at least one target role keyword; if mismatch roles > matched roles then drop experience_rule=skipped (no experience constraint)
+2026-04-04 14:19:21,328 | INFO | JobAgent.chat_graph | relevance filter dropped 0/6 candidates
+2026-04-04 14:19:21,328 | INFO | JobAgent.chat_graph | relevance filter kept 6/6 candidates: [1] 前端开发lm @ 华信正能 ; [2] web前端 @ 北京柯睿思信息技术 ; [3] 前端开发工程师 @ 拓保软件 ; [4] 前端工程师 @ 北京芯之力科技 ; [5] 前端研发工程师 @ 小全科技 ; [6] 前端 @ 紫航雾
+2026-04-04 14:19:21,332 | INFO | JobAgent.chat_graph | job alive check summary: total=6 active=6 unknown=0 closed=0 kept=6 dropped=0
+2026-04-04 14:22:02,342 | INFO | JobAgent.resume_task_queue | resume task worker stopped
+2026-04-04 14:22:02,342 | INFO | JobAgent.main | application shutting down

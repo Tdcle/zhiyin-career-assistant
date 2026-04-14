@@ -1,0 +1,20 @@
+2026-04-03 21:46:06,604 | INFO | JobAgent.database | ✅ 数据库连接池创建成功: boss_zhipin
+2026-04-03 21:46:06,604 | INFO | JobAgent.database | loading embedding model: nomic-embed-text-v2-moe
+2026-04-03 21:46:07,344 | INFO | JobAgent.database | embedding model loaded: nomic-embed-text-v2-moe
+2026-04-03 21:46:07,380 | INFO | JobAgent.database | database schema and indexes ready
+2026-04-03 21:46:11,654 | INFO | JobAgent.tools | loading reranker model from ./models/bge-reranker-v2-m3
+2026-04-03 21:46:13,371 | INFO | JobAgent.tools | reranker model loaded
+2026-04-03 21:46:15,595 | INFO | JobAgent.main | application starting
+2026-04-03 21:46:35,173 | INFO | JobAgent.redis_client | redis connected: redis://localhost:6379/0
+2026-04-03 21:46:39,031 | INFO | JobAgent.interview_router | interview start: user=00004 job_id=5bdfe20997f6cf8703J73dS0F1FU
+2026-04-03 21:46:58,291 | INFO | JobAgent.tools | saving memory for user=00004 preference=候选人王来晨，江南大学计算机科学与技术硕士，2027年毕业。主导开发智能求职Agent系统（LangGraph+RAG混合检索，BM25+稠密向量双路召回，BGE-Reranker精排）和智能医疗影像判读系统（Qwen微调，QLoRA，DPO对齐）。技能：Python、PyTorch、大模型微调、LangGraph Agent编排、RAG混合检索。性格沉稳踏实，抗压能力强。
+2026-04-03 21:47:18,716 | INFO | JobAgent.interview_router | interview stream: user=00004 thread=interview_00004_5bdfe20997f6cf8703J73dS0F1FU_1775223999
+2026-04-03 21:48:51,256 | INFO | JobAgent.interview_router | interview stream: user=00004 thread=interview_00004_5bdfe20997f6cf8703J73dS0F1FU_1775223999
+2026-04-03 21:49:57,413 | INFO | JobAgent.interview_router | interview stream: user=00004 thread=interview_00004_5bdfe20997f6cf8703J73dS0F1FU_1775223999
+2026-04-03 21:51:12,821 | INFO | JobAgent.interview_router | interview stream: user=00004 thread=interview_00004_5bdfe20997f6cf8703J73dS0F1FU_1775223999
+2026-04-03 21:51:45,292 | INFO | JobAgent.interview_router | interview end: user=00004 thread=interview_00004_5bdfe20997f6cf8703J73dS0F1FU_1775223999
+2026-04-03 21:51:45,302 | INFO | JobAgent.interview_graph | generating interview report for user=00004
+2026-04-03 21:57:34,618 | INFO | JobAgent.interview_router | interview start: user=00004 job_id=f8253ed48403950c03R53927F1BR
+2026-04-03 21:57:55,098 | INFO | JobAgent.interview_router | interview start: user=00004 job_id=f8253ed48403950c03R53927F1BR
+2026-04-03 21:58:16,214 | INFO | JobAgent.auth_router | user login success: user_id=00004 username=小帅
+2026-04-03 21:58:29,715 | INFO | JobAgent.main | application shutting down

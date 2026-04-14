@@ -1,0 +1,36 @@
+2026-04-03 21:22:16,716 | INFO | JobAgent.database | ✅ 数据库连接池创建成功: boss_zhipin
+2026-04-03 21:22:16,716 | INFO | JobAgent.database | loading embedding model: nomic-embed-text-v2-moe
+2026-04-03 21:22:17,440 | INFO | JobAgent.database | embedding model loaded: nomic-embed-text-v2-moe
+2026-04-03 21:22:17,484 | INFO | JobAgent.database | database schema and indexes ready
+2026-04-03 21:22:21,684 | INFO | JobAgent.tools | loading reranker model from ./models/bge-reranker-v2-m3
+2026-04-03 21:22:23,309 | INFO | JobAgent.tools | reranker model loaded
+2026-04-03 21:22:25,488 | INFO | JobAgent.main | application starting
+2026-04-03 21:23:40,185 | INFO | JobAgent.auth_router | user login success: user_id=00004 username=小帅
+2026-04-03 21:23:40,247 | INFO | JobAgent.redis_client | redis connected: redis://localhost:6379/0
+2026-04-03 21:23:44,660 | INFO | JobAgent.user_router | resume task created: task_id=00a2677aadbf4ff3838743ac94fa693d user=00004 file=王来晨-大模型应用开发.pdf
+2026-04-03 21:24:35,183 | INFO | JobAgent.user_router | resume task completed: task_id=00a2677aadbf4ff3838743ac94fa693d user=00004
+2026-04-03 21:29:49,863 | INFO | JobAgent.chat_router | chat session deleted: user=00004 session=chat:00004:b271f1725fcc
+2026-04-03 21:30:05,480 | INFO | JobAgent.interview_router | interview start: user=00004 job_id=5bdfe20997f6cf8703J73dS0F1FU
+2026-04-03 21:30:05,497 | ERROR | JobAgent.tools | match analysis llm failed
+Traceback (most recent call last):
+  File "D:\PythonProject\find_a_good_job\backend\utils\tools.py", line 640, in analyze_job_match_tool
+    response = (prompt | llm).invoke({"resume": resume_text, "jd": job_description})
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\langchain_core\runnables\base.py", line 3151, in invoke
+    input_ = context.run(step.invoke, input_, config, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\langchain_core\prompts\base.py", line 223, in invoke
+    return self._call_with_config(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\langchain_core\runnables\base.py", line 2060, in _call_with_config
+    context.run(
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\langchain_core\runnables\config.py", line 452, in call_func_with_variable_args
+    return func(input, **kwargs)  # type: ignore[call-arg]
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\langchain_core\prompts\base.py", line 196, in _format_prompt_with_error_handling
+    inner_input_ = self._validate_input(inner_input)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\langchain_core\prompts\base.py", line 190, in _validate_input
+    raise KeyError(
+KeyError: 'Input to ChatPromptTemplate is missing variables {\'\\n  "scores"\'}.  Expected: [\'\\n  "scores"\', \'jd\', \'resume\'] Received: [\'resume\', \'jd\']\nNote: if you intended {\n  "scores"} to be part of the string and not a variable, please escape it with double curly braces like: \'{{\n  "scores"}}\'.\nFor troubleshooting, visit: https://docs.langchain.com/oss/python/langchain/errors/INVALID_PROMPT_INPUT '
+2026-04-03 21:31:11,177 | INFO | JobAgent.main | application shutting down

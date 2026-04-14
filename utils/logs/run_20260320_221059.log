@@ -1,4 +1,0 @@
-2026-03-20 22:11:00,308 | INFO | JobAgent.database | ✅ 数据库连接池创建成功: boss_zhipin
-2026-03-20 22:11:00,309 | INFO | JobAgent.database | loading embedding model: nomic-embed-text-v2-moe
-2026-03-20 22:11:01,282 | INFO | JobAgent.database | embedding model loaded: nomic-embed-text-v2-moe
-2026-03-20 22:11:01,321 | INFO | JobAgent.database | database schema and indexes ready

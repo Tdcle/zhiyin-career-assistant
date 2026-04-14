@@ -1,0 +1,21 @@
+{
+  "summary": {
+    "total": 1,
+    "active": 0,
+    "closed": 0,
+    "unknown": 1
+  },
+  "results": [
+    {
+      "input_url": "https://www.zhipin.com/job_detail/fd9f3c6481c2461a0nV53d-_E1FR.html",
+      "final_url": "https://www.zhipin.com/web/common/security-check.html?seed=1FA5Xw8MHy7Fuwx2QS7deGBH8J%2BIMhkdoDz2V4K5MTE%3D&name=2aece548&ts=1775199015551&callbackUrl=%2Fjob_detail%2Ffd9f3c6481c2461a0nV53d-_E1FR.html&srcReferer",
+      "status": "unknown",
+      "reason": "no_signal",
+      "matched_keyword": "",
+      "title": "请稍候",
+      "checked_at": "2026-04-03T14:50:17",
+      "text_length": 13,
+      "text_preview": "BOSS 正在加载中..."
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+2026-04-04 21:53:50,337 | INFO | JobAgent.database | ✅ 数据库连接池创建成功: boss_zhipin
+2026-04-04 21:53:50,337 | INFO | JobAgent.database | loading embedding model: nomic-embed-text-v2-moe
+2026-04-04 21:53:51,051 | INFO | JobAgent.database | embedding model loaded: nomic-embed-text-v2-moe
+2026-04-04 21:53:51,081 | INFO | JobAgent.database | database schema and indexes ready
+2026-04-04 21:53:54,728 | INFO | JobAgent.tools | loading reranker model from ./models/bge-reranker-v2-m3
+2026-04-04 21:53:56,429 | INFO | JobAgent.tools | reranker model loaded
+2026-04-04 21:53:58,458 | INFO | JobAgent.main | application starting
+2026-04-04 21:53:58,459 | INFO | JobAgent.resume_task_queue | resume task worker started
+2026-04-04 21:53:58,475 | INFO | JobAgent.redis_client | redis connected: redis://localhost:6379/0
+2026-04-04 21:58:17,964 | INFO | JobAgent.chat_router | chat session created: user=00004 session=chat:00004:dece93bfe4fb
+2026-04-04 21:58:21,159 | INFO | JobAgent.chat_router | chat stream: user=00004 session=chat:00004:dece93bfe4fb
+2026-04-04 21:59:52,050 | INFO | JobAgent.chat_router | chat stream: user=00004 session=chat:00004:dece93bfe4fb
+2026-04-04 21:59:52,071 | INFO | JobAgent.chat_graph | memory ingest updated: user=00004 profile_updated=True facts_added=2
+2026-04-04 21:59:59,619 | INFO | JobAgent.chat_graph | planner explicit constraint guard: experience_mentioned=True experience=实习 salary_mentioned=False salary_min=0 salary_unit=
+2026-04-04 21:59:59,620 | INFO | JobAgent.chat_graph | planner normalized search plan: {"resolved_query": "寻找大模型agent方向的实习岗位 目标城市为上海 预计2027年毕业 擅长Python和PyTorch", "keyword_query": "大模型 agent 实习 Python PyTorch", "city": "上海", "company": "", "experience": "实习", "salary_min": 0, "salary_unit": ""}
+2026-04-04 21:59:59,621 | INFO | JobAgent.chat_graph | search node running: query=大模型 agent 实习 Python PyTorch city=上海 experience=实习 salary_min=0 salary_unit=
+2026-04-04 21:59:59,622 | INFO | JobAgent.tools | search tool invoked: query=寻找大模型agent方向的实习岗位 目标城市为上海 预计2027年毕业 擅长Python和PyTorch effective_query=大模型 agent 实习 Python PyTorch 在校 city=上海->上海 company= experience=实习->实习 salary_min=0 salary_unit=
+2026-04-04 21:59:59,622 | INFO | JobAgent.tools | search role keywords=Python,AI
+2026-04-04 21:59:59,623 | INFO | JobAgent.tools | search cache lookup: key=search:result:v1:31c371d98af3591935873bd85f8fe5eb331bec922fcbde6351fb009a1382c2ca version=10 effective_query=大模型 agent 实习 Python PyTorch 在校 city=上海 company=<none> experience=实习 salary_min=0 salary_unit=<none> expanded=yes role_keywords=Python,AI
+2026-04-04 21:59:59,624 | INFO | JobAgent.tools | search cache miss: key=search:result:v1:31c371d98af3591935873bd85f8fe5eb331bec922fcbde6351fb009a1382c2ca data_version=10
+2026-04-04 21:59:59,625 | INFO | JobAgent.database | hybrid search: keywords=大模型 agent 实习 Python PyTorch 在校 city=上海 company= experience=实习 salary_min=0 salary_unit=
+2026-04-04 22:00:05,160 | INFO | JobAgent.database | recall count: vec=132 bm25=132
+2026-04-04 22:00:05,161 | INFO | JobAgent.database | 🔀 [RRF] vec=132 bm25=132 merged=132 return=90
+  [大模型应用算法实习生] vec+bm25 v=3 b=8 rrf=0.03058
+  [大模型实习（文生图、图生图、图生视频）] vec+bm25 v=4 b=7 rrf=0.03055
+  [碳中和领域垂直大模型+AI Agent项目实习生] vec+bm25 v=8 b=4 rrf=0.03033
+  [大模型 Agent 研究员（实习）] vec+bm25 v=16 b=2 rrf=0.02929
+  [大模型应用算法实习生] vec+bm25 v=2 b=19 rrf=0.02879
+  [大模型算法研究实习生] vec+bm25 v=12 b=9 rrf=0.02838
+  [大模型算法工程师] vec+bm25 v=23 b=3 rrf=0.02792
+  [大模型应用算法实习生J97464] vec+bm25 v=7 b=17 rrf=0.02791
+  [急招-大模型算法研究实习生] vec+bm25 v=15 b=10 rrf=0.02762
+  [大模型算法] vec+bm25 v=14 b=12 rrf=0.02740
+  [大模型算法] vec+bm25 v=1 b=38 rrf=0.02660
+  [大模型算法实习生] vec+bm25 v=11 b=21 rrf=0.02643
+  [AI大模型工程师] vec+bm25 v=29 b=6 rrf=0.02639
+  [大模型应用预研实习生] vec+bm25 v=17 b=15 rrf=0.02632
+  [AI大模型实习生] vec+bm25 v=9 b=40 rrf=0.02449
+  ... truncated 75 more rows
+2026-04-04 22:00:05,162 | INFO | JobAgent.database | hybrid search: keywords=大模型 agent 实习 Python PyTorch 在校 ai 人工智能 机器学习 深度学习 nlp 多模态 llm rag tensorflow city=上海 company= experience=实习 salary_min=0 salary_unit=
+2026-04-04 22:00:05,395 | INFO | JobAgent.database | recall count: vec=132 bm25=132
+2026-04-04 22:00:05,396 | INFO | JobAgent.database | 🔀 [RRF] vec=132 bm25=132 merged=132 return=90
+  [大模型算法研究实习生] vec+bm25 v=4 b=1 rrf=0.03202
+  [急招-大模型算法研究实习生] vec+bm25 v=5 b=2 rrf=0.03151
+  [大模型多模态算法专家] vec+bm25 v=1 b=14 rrf=0.02991
+  [AI大模型算法实习生] vec+bm25 v=3 b=15 rrf=0.02921
+  [AI大模型工程师] vec+bm25 v=11 b=8 rrf=0.02879
+  [多模态大模型算法工程师] vec+bm25 v=8 b=20 rrf=0.02721
+  [大模型 Agent 研究员（实习）] vec+bm25 v=24 b=9 rrf=0.02640
+  [【MLBB】AI大模型研究工程师实习生（27届）] vec+bm25 v=33 b=6 rrf=0.02590
+  [AI大模型实习生] vec+bm25 v=7 b=34 rrf=0.02556
+  [大模型算法] vec+bm25 v=2 b=48 rrf=0.02539
+  [碳中和领域垂直大模型+AI Agent项目实习生] vec+bm25 v=40 b=5 rrf=0.02538
+  [大模型应用算法实习生] vec+bm25 v=16 b=23 rrf=0.02521
+  [大模型应用算法实习生J97464] vec+bm25 v=12 b=31 rrf=0.02488
+  [AI大模型工程师] vec+bm25 v=42 b=7 rrf=0.02473
+  [大模型算法工程师] vec+bm25 v=31 b=13 rrf=0.02469
+  ... truncated 75 more rows
+2026-04-04 22:00:05,396 | INFO | JobAgent.tools | search tool recalled strict=30 expanded=30 expanded_query=大模型 agent 实习 Python PyTorch 在校 ai 人工智能 机器学习 深度学习 nlp 多模态 llm rag tensorflow
+2026-04-04 22:00:05,397 | INFO | JobAgent.tools | search tool merged 42 unique candidates after weighted fusion
+2026-04-04 22:00:05,397 | INFO | JobAgent.tools | search tool kept 42 candidates after title filter
+2026-04-04 22:00:18,811 | INFO | JobAgent.tools | search rerank complete: max=0.9954 min=0.6370
+2026-04-04 22:00:18,815 | INFO | JobAgent.tools | search cache set: key=search:result:v1:31c371d98af3591935873bd85f8fe5eb331bec922fcbde6351fb009a1382c2ca ttl=1199s results=6
+2026-04-04 22:00:18,821 | INFO | JobAgent.chat_graph | search result summary: total=6 matched_role_count=5 mismatch_count=1 experience=实习 experience_match_count=5 role_keywords=Python,AI
+2026-04-04 22:00:18,822 | INFO | JobAgent.chat_graph | relevance filter rules: role_keywords=Python,AI required_experience=实习 role_rule=title must match at least one target role keyword; if mismatch roles > matched roles then drop experience_rule=title/tags/experience text must match required experience '实习'
+2026-04-04 22:00:18,822 | INFO | JobAgent.chat_graph | relevance filter dropped 1/6 candidates:
+  [1] 大模型AI Agent产品实习生 (海外运营增长) @ 小马星河 | experience=4天/周 | tags=上海 | 4天/周 | reasons=role_mismatch:mismatch_dominates(matched=1,mismatch=2) | experience_matched=True | title_roles=产品,运营,AI | target_roles=AI,C#,C++,Golang,Java,NLP,PHP,Python,后端,多模态,大模型,数据分析,数据开发,机器学习,深度学习,算法 | matched_roles=AI | mismatch_roles=产品,运营
+2026-04-04 22:00:18,822 | INFO | JobAgent.chat_graph | relevance filter kept 5/6 candidates: [1] 大模型 Agent 研究员（实习） @ 寻序智能 ; [2] 碳中和领域垂直大模型+AI Agent项目实习生 @ 中碳普惠云科技 ; [3] 大模型应用算法实习生J97464 @ 百度 ; [4] 大模型智能体（Agent）开发实习生 @ 维智 ; [5] 大模型算法实习生 @ 携程集团
+2026-04-04 22:00:18,826 | INFO | JobAgent.chat_graph | job alive check refresh: total=6 stale=6 fresh=0 threshold_hours=12
+2026-04-04 22:00:24,799 | INFO | JobAgent.search_cache | search data version bumped: version=11 reason=job_status_visibility:unknown->closed
+2026-04-04 22:00:26,390 | INFO | JobAgent.search_cache | search data version bumped: version=12 reason=job_status_visibility:unknown->closed
+2026-04-04 22:00:27,459 | INFO | JobAgent.chat_graph | job alive check summary: total=6 active=4 unknown=0 closed=2 kept=4 dropped=2
+2026-04-04 22:00:27,460 | INFO | JobAgent.chat_graph | job alive check dropped closed jobs: 大模型应用算法实习生J97464 @ 百度 ; 大模型算法实习生 @ 携程集团
+2026-04-04 22:01:38,845 | INFO | JobAgent.chat_router | chat stream: user=00004 session=chat:00004:dece93bfe4fb
+2026-04-04 22:01:38,870 | INFO | JobAgent.chat_graph | memory ingest updated: user=00004 profile_updated=True facts_added=1
+2026-04-04 22:01:43,680 | INFO | JobAgent.chat_graph | planner explicit constraint guard: experience_mentioned=False experience= salary_mentioned=False salary_min=0 salary_unit=
+2026-04-04 22:01:43,680 | INFO | JobAgent.chat_graph | planner normalized search plan: {"resolved_query": "寻找大模型Agent方向的实习岗位 目标城市不限", "keyword_query": "大模型 Agent 实习 Python PyTorch", "city": "上海", "company": "", "experience": "", "salary_min": 0, "salary_unit": ""}
+2026-04-04 22:01:43,681 | INFO | JobAgent.chat_graph | search node running: query=大模型 Agent 实习 Python PyTorch city=上海 experience= salary_min=0 salary_unit=
+2026-04-04 22:01:43,682 | INFO | JobAgent.tools | search tool invoked: query=寻找大模型Agent方向的实习岗位 目标城市不限 effective_query=大模型 Agent 实习 Python PyTorch 在校 city=上海-> company= experience=->实习 salary_min=0 salary_unit=
+2026-04-04 22:01:43,682 | INFO | JobAgent.tools | search role keywords=Python,AI
+2026-04-04 22:01:43,683 | INFO | JobAgent.tools | search cache lookup: key=search:result:v1:22d25bb4334ccd69be7a9841d4ce2237cc02c7b8d5e83e983280139b560e5f41 version=12 effective_query=大模型 Agent 实习 Python PyTorch 在校 city=<none> company=<none> experience=实习 salary_min=0 salary_unit=<none> expanded=yes role_keywords=Python,AI
+2026-04-04 22:01:43,685 | INFO | JobAgent.tools | search cache miss: key=search:result:v1:22d25bb4334ccd69be7a9841d4ce2237cc02c7b8d5e83e983280139b560e5f41 data_version=12
+2026-04-04 22:01:43,686 | INFO | JobAgent.database | hybrid search: keywords=大模型 Agent 实习 Python PyTorch 在校 city= company= experience=实习 salary_min=0 salary_unit=
+2026-04-04 22:01:45,971 | INFO | JobAgent.database | recall count: vec=280 bm25=273
+2026-04-04 22:01:45,972 | INFO | JobAgent.database | 🔀 [RRF] vec=280 bm25=273 merged=336 return=90
+  [大模型 Agent 研究员（实习）] vec+bm25 v=8 b=4 rrf=0.03033
+  [碳中和领域垂直大模型+AI Agent项目实习生] vec+bm25 v=5 b=8 rrf=0.03009
+  [大模型应用算法实习生] vec+bm25 v=3 b=12 rrf=0.02976
+  [大模型实习（文生图、图生图、图生视频）] vec+bm25 v=4 b=11 rrf=0.02971
+  [大模型算法开发（线上实习）] vec+bm25 v=18 b=5 rrf=0.02821
+  [大模型应用算法实习生] vec+bm25 v=2 b=25 rrf=0.02789
+  [大模型算法工程师] vec+bm25 v=21 b=6 rrf=0.02750
+  [大模型算法研究实习生] vec+bm25 v=12 b=15 rrf=0.02722
+  [大模型算法] vec+bm25 v=10 b=18 rrf=0.02711
+  [急招-大模型算法研究实习生] vec+bm25 v=13 b=16 rrf=0.02686
+  [大模型实习生] vec+bm25 v=22 b=13 rrf=0.02589
+  [AI大模型开发实习生] vec+bm25 v=32 b=7 rrf=0.02579
+  [大模型应用预研实习生] vec+bm25 v=17 b=21 rrf=0.02533
+  [大模型算法] vec+bm25 v=1 b=55 rrf=0.02509
+  [AI大模型工程师] vec+bm25 v=33 b=10 rrf=0.02504
+  ... truncated 75 more rows
+2026-04-04 22:01:45,973 | INFO | JobAgent.database | hybrid search: keywords=大模型 Agent 实习 Python PyTorch 在校 ai 人工智能 机器学习 深度学习 nlp 多模态 llm rag tensorflow city= company= experience=实习 salary_min=0 salary_unit=
+2026-04-04 22:01:46,153 | INFO | JobAgent.database | recall count: vec=280 bm25=280
+2026-04-04 22:01:46,154 | INFO | JobAgent.database | 🔀 [RRF] vec=280 bm25=280 merged=339 return=90
+  [大模型算法研究实习生] vec+bm25 v=4 b=2 rrf=0.03175
+  [急招-大模型算法研究实习生] vec+bm25 v=5 b=4 rrf=0.03101
+  [大模型多模态算法专家] vec+bm25 v=1 b=26 rrf=0.02802
+  [AI大模型工程师] vec+bm25 v=10 b=15 rrf=0.02762
+  [AI大模型算法实习生] vec+bm25 v=3 b=27 rrf=0.02737
+  [大模型 Agent 研究员（实习）] vec+bm25 v=21 b=16 rrf=0.02550
+  [多模态大模型算法工程师] vec+bm25 v=8 b=33 rrf=0.02546
+  [大模型算法] vec+bm25 v=33 b=9 rrf=0.02525
+  [AI大模型开发实习生] vec+bm25 v=44 b=6 rrf=0.02477
+  [AI大模型实习生] vec+bm25 v=7 b=49 rrf=0.02410
+  [NLP/多模态/大模型 实习生] vec+bm25 v=29 b=19 rrf=0.02389
+  [【MLBB】AI大模型研究工程师实习生（27届）] vec+bm25 v=39 b=13 rrf=0.02380
+  [大模型算法] vec+bm25 v=2 b=71 rrf=0.02376
+  [大模型应用算法实习生] vec+bm25 v=15 b=38 rrf=0.02354
+  [大模型算法开发（线上实习）] vec+bm25 v=30 b=21 rrf=0.02346
+  ... truncated 75 more rows
+2026-04-04 22:01:46,156 | INFO | JobAgent.tools | search tool recalled strict=30 expanded=30 expanded_query=大模型 Agent 实习 Python PyTorch 在校 ai 人工智能 机器学习 深度学习 nlp 多模态 llm rag tensorflow
+2026-04-04 22:01:46,156 | INFO | JobAgent.tools | search tool merged 43 unique candidates after weighted fusion
+2026-04-04 22:01:46,158 | INFO | JobAgent.tools | search tool kept 43 candidates after title filter
+2026-04-04 22:01:56,568 | INFO | JobAgent.tools | search rerank complete: max=0.9790 min=0.3132
+2026-04-04 22:01:56,613 | INFO | JobAgent.tools | search cache set: key=search:result:v1:22d25bb4334ccd69be7a9841d4ce2237cc02c7b8d5e83e983280139b560e5f41 ttl=1206s results=6
+2026-04-04 22:01:56,617 | INFO | JobAgent.chat_graph | search result summary: total=6 matched_role_count=5 mismatch_count=0 experience= experience_match_count=5 role_keywords=Python,AI
+2026-04-04 22:01:56,617 | INFO | JobAgent.chat_graph | relevance filter rules: role_keywords=Python,AI required_experience=<none> role_rule=title must match at least one target role keyword; if mismatch roles > matched roles then drop experience_rule=skipped (no experience constraint)
+2026-04-04 22:01:56,617 | INFO | JobAgent.chat_graph | relevance filter dropped 0/6 candidates
+2026-04-04 22:01:56,617 | INFO | JobAgent.chat_graph | relevance filter kept 6/6 candidates: [1] 大模型 Agent 研究员（实习） @ 寻序智能 ; [2] 碳中和领域垂直大模型+AI Agent项目实习生 @ 中碳普惠云科技 ; [3] 多模态大模型实习生 @ A4x积加科技 ; [4] 大模型实习生 @ 医赋科技 ; [5] 大模型应用算法实习生 @ 上海人工智能创新中心 ; [6] 大模型实习（文生图、图生图、图生视频） @ 上海玉贲智能
+2026-04-04 22:01:56,621 | INFO | JobAgent.chat_graph | job alive check refresh: total=6 stale=4 fresh=2 threshold_hours=12
+2026-04-04 22:02:05,194 | INFO | JobAgent.chat_graph | job alive check summary: total=6 active=6 unknown=0 closed=0 kept=6 dropped=0

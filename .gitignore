@@ -1,8 +1,11 @@
 /logs/
-/models/bge-reranker-v2-m3/
+/backend/models/bge-reranker-v2-m3/
+models/bge-reranker-v2-m3/
 __pycache__/
 *.pyc
 /static/
 /eval/logs/
 /eval/results/
 /docs
+/doc
+frontend/node_modules/

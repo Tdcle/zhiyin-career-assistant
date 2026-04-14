@@ -1,0 +1,16 @@
+2026-04-12 23:16:57,212 | INFO | JobAgent.database | ✅ 数据库连接池创建成功: boss_zhipin
+2026-04-12 23:16:57,213 | INFO | JobAgent.database | loading embedding model: nomic-embed-text-v2-moe
+2026-04-12 23:16:58,872 | INFO | JobAgent.database | embedding model loaded: nomic-embed-text-v2-moe
+2026-04-12 23:16:59,011 | INFO | JobAgent.database | memory extractor model loaded: qwen-max-2025-01-25
+2026-04-12 23:16:59,084 | INFO | JobAgent.database | database schema and indexes ready
+2026-04-12 23:16:59,093 | ERROR | JobAgent.database | ❌ 数据库操作失败，已回滚: insert or update on table "memory_facts" violates foreign key constraint "memory_facts_user_id_fkey"
+DETAIL:  Key (user_id)=(lifecycle_test_tmp) is not present in table "users".
+
+2026-04-12 23:16:59,093 | ERROR | JobAgent.database | add memory fact failed: insert or update on table "memory_facts" violates foreign key constraint "memory_facts_user_id_fkey"
+DETAIL:  Key (user_id)=(lifecycle_test_tmp) is not present in table "users".
+Traceback (most recent call last):
+  File "D:\PythonProject\find_a_good_job\backend\utils\database.py", line 1901, in add_memory_fact
+    cur.execute(
+psycopg2.errors.ForeignKeyViolation: insert or update on table "memory_facts" violates foreign key constraint "memory_facts_user_id_fkey"
+DETAIL:  Key (user_id)=(lifecycle_test_tmp) is not present in table "users".
+

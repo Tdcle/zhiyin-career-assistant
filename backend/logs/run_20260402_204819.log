@@ -1,0 +1,86 @@
+2026-04-02 20:48:20,149 | INFO | JobAgent.database | ✅ 数据库连接池创建成功: boss_zhipin
+2026-04-02 20:48:20,149 | INFO | JobAgent.database | loading embedding model: nomic-embed-text-v2-moe
+2026-04-02 20:48:21,291 | INFO | JobAgent.database | embedding model loaded: nomic-embed-text-v2-moe
+2026-04-02 20:48:21,312 | INFO | JobAgent.database | database schema and indexes ready
+2026-04-02 20:48:24,613 | INFO | JobAgent.tools | loading reranker model from ./models/bge-reranker-v2-m3
+2026-04-02 20:48:26,638 | INFO | JobAgent.tools | reranker model loaded
+2026-04-02 20:48:29,320 | INFO | JobAgent.main | application starting
+2026-04-02 20:49:09,321 | INFO | JobAgent.redis_client | redis connected: redis://localhost:6379/0
+2026-04-02 20:49:09,351 | INFO | JobAgent.chat_router | chat session created: user=00004 session=chat:00004:be4730e63c91
+2026-04-02 20:49:18,336 | INFO | JobAgent.chat_router | chat stream: user=00004 session=chat:00004:be4730e63c91
+2026-04-02 20:49:22,330 | INFO | JobAgent.chat_graph | planner normalized search plan: {"resolved_query": "用户想找杭州地区与大模型相关的信息 但未明确表明是岗位搜索", "keyword_query": "大模型 杭州", "city": "杭州", "company": "", "experience": "", "salary_min": 0, "salary_unit": ""}
+2026-04-02 20:49:24,377 | INFO | JobAgent.tools | search tool invoked: query=找杭州的大模型相关岗位 effective_query=大模型 city=杭州->杭州 company= experience=-> salary_min=0 salary_unit=
+2026-04-02 20:49:24,377 | INFO | JobAgent.tools | search role keywords=AI
+2026-04-02 20:49:24,377 | INFO | JobAgent.database | hybrid search: keywords=大模型 city=杭州 company= experience= salary_min=0 salary_unit=
+2026-04-02 20:49:29,421 | INFO | JobAgent.database | recall count: vec=50 bm25=50
+2026-04-02 20:49:29,421 | INFO | JobAgent.database | 🔀 [RRF] vec=50 bm25=50 merged=50 return=50
+  [人工智能大模型] vec+bm25 v=2 b=6 rrf=0.03128
+  [AI大模型开发实习生] vec+bm25 v=9 b=2 rrf=0.03062
+  [大模型算法工程师] vec+bm25 v=14 b=1 rrf=0.02991
+  [大模型算法开发（线上实习）] vec+bm25 v=10 b=7 rrf=0.02921
+  [大模型量化应用（实习）] vec+bm25 v=16 b=3 rrf=0.02903
+  [大模型算法实习生] vec+bm25 v=7 b=12 rrf=0.02881
+  [大模型实习生] vec+bm25 v=1 b=21 rrf=0.02874
+  [大模型算法工程师] vec+bm25 v=17 b=4 rrf=0.02861
+  [大模型实习生] vec+bm25 v=4 b=20 rrf=0.02813
+  [AI大模型研发实习生] vec+bm25 v=12 b=11 rrf=0.02797
+  [多模态大模型实习生] vec+bm25 v=5 b=23 rrf=0.02743
+  [工业大模型算法实习生] vec+bm25 v=15 b=13 rrf=0.02703
+  [大模型应用Java实习生] vec+bm25 v=27 b=5 rrf=0.02688
+  [大模型应用研发实习生] vec+bm25 v=18 b=14 rrf=0.02633
+  [大模型应用工程师] vec+bm25 v=3 b=37 rrf=0.02618
+  [大模型算法] vec+bm25 v=6 b=31 rrf=0.02614
+  [大模型算法实习生] vec+bm25 v=11 b=24 rrf=0.02599
+  [大模型质量工程师-抖音] vec+bm25 v=29 b=8 rrf=0.02594
+  [大模型应用 Java 开发实习生（26年应届）] vec+bm25 v=28 b=10 rrf=0.02565
+  [大模型算法实习生（杭州）] vec+bm25 v=19 b=17 rrf=0.02565
+  [AI大模型训推系统实习生] vec+bm25 v=33 b=9 rrf=0.02525
+  [大模型算法] vec+bm25 v=8 b=36 rrf=0.02512
+  [大模型应用开发实习生（杭州）] vec+bm25 v=22 b=18 rrf=0.02502
+  [大模型算法] vec+bm25 v=24 b=19 rrf=0.02456
+  [AI大模型应用技术实习生3-5K双休] vec+bm25 v=31 b=15 rrf=0.02432
+  [千问/夸克-大模型数据工程实习生(多模态)] vec+bm25 v=32 b=16 rrf=0.02403
+  [AI大模型实习生] vec+bm25 v=13 b=42 rrf=0.02350
+  [NLP/多模态/大模型 实习生] vec+bm25 v=23 b=28 rrf=0.02341
+  [三一多模态大模型实习生] vec+bm25 v=20 b=34 rrf=0.02314
+  [软件产品-应用软件开发工程师-大模型-杭州] vec+bm25 v=26 b=29 rrf=0.02286
+  [通义实验室实习生-大模型语音交互系统] vec+bm25 v=34 b=22 rrf=0.02283
+  [大模型算法] vec+bm25 v=21 b=40 rrf=0.02235
+  [大模型标注实习生] vec+bm25 v=30 b=32 rrf=0.02198
+  [算法实习生（大模型与无人机智能调度方向）] vec+bm25 v=39 b=27 rrf=0.02160
+  [后端开发实习生-飞书低代码平台大模型应用] vec+bm25 v=42 b=25 rrf=0.02157
+  [AI产品经理实习生（大模型应用方向）] vec+bm25 v=36 b=30 rrf=0.02153
+  [AI模型实习生（远程）] vec+bm25 v=25 b=43 rrf=0.02147
+  [AI应用工程师] vec+bm25 v=45 b=26 rrf=0.02115
+  [视频大模型编辑标注] vec+bm25 v=37 b=33 rrf=0.02106
+  [AI产品开发实习生（医疗大模型）应届可转正] vec+bm25 v=40 b=35 rrf=0.02053
+  [大模型应用开发实习生(A120508)] vec+bm25 v=35 b=41 rrf=0.02043
+  [AIGC图像大模型算法实习生] vec+bm25 v=38 b=38 rrf=0.02041
+  [AI 产品体验实习生-通用大模型/智能体方向] vec+bm25 v=41 b=39 rrf=0.02000
+  [AI 算法实习生] vec+bm25 v=44 b=44 rrf=0.01923
+  [AI Agent工程师] vec+bm25 v=46 b=46 rrf=0.01887
+  [ai算法实习生（优先大三/研一/研二）] vec+bm25 v=43 b=50 rrf=0.01880
+  [ai研发工程师] vec+bm25 v=50 b=45 rrf=0.01861
+  [AI算法工程师] vec+bm25 v=48 b=47 rrf=0.01861
+  [AI工程师-应用方向] vec+bm25 v=47 b=49 rrf=0.01852
+  [AI 应用研发工程师] vec+bm25 v=49 b=48 rrf=0.01843
+2026-04-02 20:49:29,421 | INFO | JobAgent.tools | search tool recalled 20 candidates
+2026-04-02 20:49:29,421 | INFO | JobAgent.tools | search tool kept 20 candidates after title filter
+2026-04-02 20:49:39,252 | INFO | JobAgent.tools | search rerank complete: max=0.9923 min=0.9620
+2026-04-02 20:49:39,257 | INFO | JobAgent.chat_graph | search result summary: total=6 matched_role_count=5 mismatch_count=0 experience= experience_match_count=5 role_keywords=AI
+2026-04-02 20:49:39,258 | INFO | JobAgent.chat_graph | relevance filter rules: role_keywords=AI required_experience=<none> role_rule=title must match at least one target role keyword; if mismatch roles > matched roles then drop experience_rule=skipped (no experience constraint)
+2026-04-02 20:49:39,258 | INFO | JobAgent.chat_graph | relevance filter dropped 0/6 candidates
+2026-04-02 20:49:39,258 | INFO | JobAgent.chat_graph | relevance filter kept 6/6 candidates: [1] 大模型算法工程师 @ 杭州华为云计算 ; [2] 大模型实习生 @ 杭州浸幻科技有限公司 ; [3] 大模型算法实习生（杭州） @ 智谱华章 ; [4] 大模型实习生 @ 医赋科技 ; [5] 大模型算法工程师 @ 蚂蚁集团 ; [6] 大模型应用工程师 @ 中控技术
+2026-04-02 20:57:14,149 | INFO | JobAgent.chat_router | chat session deleted: user=00004 session=chat:00004:bef0fe1ab54b
+2026-04-02 20:57:15,790 | INFO | JobAgent.chat_router | chat session deleted: user=00004 session=chat:00004:e2c5e481c7dc
+2026-04-02 20:58:02,155 | INFO | JobAgent.chat_router | chat session created: user=00004 session=chat:00004:11551b4cb664
+2026-04-02 21:07:33,088 | INFO | JobAgent.chat_router | chat session created: user=00004 session=chat:00004:21d7173f6686
+2026-04-02 21:07:34,111 | INFO | JobAgent.chat_router | chat session created: user=00004 session=chat:00004:96d655b34c98
+2026-04-02 21:07:48,085 | INFO | JobAgent.chat_router | chat session deleted: user=00004 session=chat:00004:11551b4cb664
+2026-04-02 21:07:49,508 | INFO | JobAgent.chat_router | chat session deleted: user=00004 session=chat:00004:21d7173f6686
+2026-04-02 21:25:18,811 | INFO | JobAgent.chat_router | chat session created: user=00004 session=chat:00004:283a1e7c7fee
+2026-04-02 21:25:19,564 | INFO | JobAgent.chat_router | chat session created: user=00004 session=chat:00004:80aecf64a41a
+2026-04-02 21:25:27,610 | INFO | JobAgent.chat_router | chat session deleted: user=00004 session=chat:00004:80aecf64a41a
+2026-04-02 21:25:29,286 | INFO | JobAgent.chat_router | chat session deleted: user=00004 session=chat:00004:283a1e7c7fee
+2026-04-02 21:25:31,118 | INFO | JobAgent.chat_router | chat session deleted: user=00004 session=chat:00004:96d655b34c98
+2026-04-02 21:26:23,863 | INFO | JobAgent.interview_router | interview start: user=00004 job_id=f8253ed48403950c03R53927F1BR

@@ -1,0 +1,1230 @@
+2026-04-04 13:35:14,441 | INFO | JobAgent.database | ✅ 数据库连接池创建成功: boss_zhipin
+2026-04-04 13:35:14,442 | INFO | JobAgent.database | loading embedding model: nomic-embed-text-v2-moe
+2026-04-04 13:35:15,278 | INFO | JobAgent.database | embedding model loaded: nomic-embed-text-v2-moe
+2026-04-04 13:35:15,304 | INFO | JobAgent.database | database schema and indexes ready
+2026-04-04 13:35:19,414 | INFO | JobAgent.tools | loading reranker model from ./models/bge-reranker-v2-m3
+2026-04-04 13:35:21,506 | INFO | JobAgent.tools | reranker model loaded
+2026-04-04 13:35:23,706 | INFO | JobAgent.main | application starting
+2026-04-04 13:35:23,708 | INFO | JobAgent.resume_task_queue | resume task worker started
+2026-04-04 13:35:23,714 | INFO | JobAgent.redis_client | redis connected: redis://localhost:6379/0
+2026-04-04 13:40:37,422 | INFO | JobAgent.chat_router | chat session created: user=00004 session=chat:00004:2c9107248fb3
+2026-04-04 13:40:44,111 | INFO | JobAgent.chat_router | chat stream: user=00004 session=chat:00004:2c9107248fb3
+2026-04-04 13:40:48,730 | INFO | JobAgent.chat_graph | planner normalized search plan: {"resolved_query": "在北京寻找前端开发相关岗位", "keyword_query": "前端 北京", "city": "北京", "company": "", "experience": "", "salary_min": 0, "salary_unit": ""}
+2026-04-04 13:40:48,732 | INFO | JobAgent.chat_graph | search node running: query=前端 北京 city=北京 experience= salary_min=0 salary_unit=
+2026-04-04 13:40:48,733 | INFO | JobAgent.tools | search tool invoked: query=在北京寻找前端开发相关岗位 effective_query=前端 北京 city=北京->北京 company= experience=-> salary_min=0 salary_unit=
+2026-04-04 13:40:48,734 | INFO | JobAgent.tools | search role keywords=前端
+2026-04-04 13:40:48,737 | INFO | JobAgent.database | hybrid search: keywords=前端 北京 city=北京 company= experience= salary_min=0 salary_unit=
+2026-04-04 13:40:53,696 | INFO | JobAgent.database | recall count: vec=200 bm25=200
+2026-04-04 13:40:53,701 | INFO | JobAgent.database | 🔀 [RRF] vec=200 bm25=200 merged=299 return=90
+  [前端] vec+bm25 v=1 b=3 rrf=0.03227
+  [前端] vec+bm25 v=6 b=1 rrf=0.03154
+  [前端] vec+bm25 v=2 b=8 rrf=0.03083
+  [前端工程师] vec+bm25 v=3 b=13 rrf=0.02957
+  [前端工程师] vec+bm25 v=11 b=5 rrf=0.02947
+  [前端技术经理（北京驻场）] vec+bm25 v=16 b=2 rrf=0.02929
+  [前端开发工程师（北京）] vec+bm25 v=4 b=17 rrf=0.02861
+  [前端工程师] vec+bm25 v=8 b=20 rrf=0.02721
+  [web前端] vec+bm25 v=5 b=36 rrf=0.02580
+  [web前端高级工程师] vec+bm25 v=42 b=4 rrf=0.02543
+  [前端] vec+bm25 v=7 b=37 rrf=0.02523
+  [前端研发工程师] vec+bm25 v=33 b=10 rrf=0.02504
+  [前端工程师] vec+bm25 v=19 b=21 rrf=0.02500
+  [web前端] vec+bm25 v=24 b=18 rrf=0.02473
+  [中级前端工程师] vec+bm25 v=45 b=6 rrf=0.02468
+  [前端高级开发工程师] vec+bm25 v=20 b=23 rrf=0.02455
+  [web前端开发北京] vec+bm25 v=15 b=30 rrf=0.02444
+  [前端开发（Vue方向）] vec+bm25 v=12 b=35 rrf=0.02442
+  [react前端开发（北京）] vec+bm25 v=52 b=7 rrf=0.02385
+  [前端工程师] vec+bm25 v=23 b=25 rrf=0.02381
+  [前端-web（证券 双休）] vec+bm25 v=9 b=48 rrf=0.02375
+  [高级前端工程师] vec+bm25 v=43 b=14 rrf=0.02322
+  [中级web前端] vec+bm25 v=29 b=28 rrf=0.02260
+  [资深前端开发工程师] vec+bm25 v=21 b=39 rrf=0.02245
+  [VUE前端工程师] vec+bm25 v=57 b=15 rrf=0.02188
+  [web前端工程师] vec+bm25 v=35 b=29 rrf=0.02176
+  [vue前端工程师-知网] vec+bm25 v=79 b=9 rrf=0.02169
+  [前端网页开发工程师] vec+bm25 v=78 b=11 rrf=0.02133
+  [前端工程师（中级｜React）] vec+bm25 v=28 b=43 rrf=0.02107
+  [前端开发（Vue方向）] vec+bm25 v=17 b=65 rrf=0.02099
+  [前端开发工程师] vec+bm25 v=25 b=49 rrf=0.02094
+  [高级前端工程师] vec+bm25 v=85 b=12 rrf=0.02079
+  [前端开发工程师] vec+bm25 v=55 b=24 rrf=0.02060
+  [前端开发工程师] vec+bm25 v=41 b=45 rrf=0.01942
+  [web前端/测试] vec+bm25 v=46 b=44 rrf=0.01905
+  [高级web前端工程师] vec+bm25 v=86 b=22 rrf=0.01904
+  [Vue3前端（外包万达）] vec+bm25 v=98 b=19 rrf=0.01899
+  [前端开发工程师] vec+bm25 v=49 b=42 rrf=0.01898
+  [vue前端工程师] vec+bm25 v=66 b=31 rrf=0.01893
+  [前端开发工程师] vec+bm25 v=27 b=75 rrf=0.01890
+  [前端技术经理] vec+bm25 v=37 b=61 rrf=0.01857
+  [前端] vec+bm25 v=84 b=26 rrf=0.01857
+  [高级前端工程师] vec+bm25 v=71 b=33 rrf=0.01839
+  [前端开发工程师] vec+bm25 v=63 b=41 rrf=0.01803
+  [前端技术合伙人] vec+bm25 v=51 b=51 rrf=0.01802
+  [前端研发工程师] vec+bm25 v=48 b=56 rrf=0.01788
+  [vue前端] vec+bm25 v=67 b=40 rrf=0.01787
+  [react前端] vec+bm25 v=59 b=47 rrf=0.01775
+  [前端开发lm] vec+bm25 v=34 b=81 rrf=0.01773
+  [资深前端开发工程师] vec+bm25 v=101 b=27 rrf=0.01771
+  [前端开发工程师] vec+bm25 v=39 b=73 rrf=0.01762
+  [前端开发] vec+bm25 v=13 b=199 rrf=0.01756
+  [前端开发工程师] vec+bm25 v=47 b=66 rrf=0.01728
+  [高级前端开发] vec+bm25 v=36 b=87 rrf=0.01722
+  [前端开发工程师] vec+bm25 v=32 b=103 rrf=0.01700
+  [前端开发工程师] vec+bm25 v=38 b=92 rrf=0.01678
+  [react前端开发工程师] vec+bm25 v=95 b=38 rrf=0.01666
+  [Web前端工程师] vec+bm25 v=76 b=53 rrf=0.01620
+  [前端开发] vec+bm25 v=56 b=72 rrf=0.01620
+  [react前端开发工程师] vec+bm25 v=60 b=70 rrf=0.01603
+  [运维工程师（北京）] vec+bm25 v=145 b=32 rrf=0.01575
+  [react前端开发工程师] vec+bm25 v=102 b=50 rrf=0.01526
+  [前端开发工程师] vec+bm25 v=54 b=97 rrf=0.01514
+  [uniapp前端开发] vec+bm25 v=74 b=74 rrf=0.01493
+  [产品经理（军工方向北京）] vec+bm25 v=115 b=54 rrf=0.01449
+  [前端] vec+bm25 v=99 b=62 rrf=0.01449
+  [React前端开发工程师] vec+bm25 v=89 b=69 rrf=0.01446
+  [前端开发] vec v=10 b=- rrf=0.01429
+  [复制粘贴 客服岗] vec+bm25 v=87 b=76 rrf=0.01416
+  [无责6300+纯客服不含销售性质！！] vec+bm25 v=103 b=68 rrf=0.01395
+  [前端开发(J21381)] vec+bm25 v=73 b=96 rrf=0.01393
+  [[北京]产品经理] vec+bm25 v=140 b=52 rrf=0.01393
+  [react前端开发] vec+bm25 v=40 b=198 rrf=0.01388
+  [后端java] vec+bm25 v=81 b=88 rrf=0.01385
+  [中级前端开发工程师] vec+bm25 v=75 b=99 rrf=0.01370
+  [北京呼叫中心 全国客服岗 均薪8k] vec+bm25 v=144 b=55 rrf=0.01360
+  [前端开发] vec v=14 b=- rrf=0.01351
+  [北京-外包java] vec+bm25 v=155 b=57 rrf=0.01320
+  [咨询教务老师（北京销售岗）] bm25 v=- b=16 rrf=0.01316
+  [前端开发-ERP] vec+bm25 v=92 b=95 rrf=0.01303
+  [前端开发工程师] vec+bm25 v=50 b=200 rrf=0.01294
+  [前端开发（react）] vec v=18 b=- rrf=0.01282
+  [会开车的来(北京社保+销售岗）] vec+bm25 v=176 b=60 rrf=0.01257
+  [前端开发工程师] vec v=22 b=- rrf=0.01220
+  [年前面试/年前入职的销售岗] vec+bm25 v=133 b=91 rrf=0.01180
+  [高级java] vec+bm25 v=149 b=85 rrf=0.01168
+  [前端开发] vec v=26 b=- rrf=0.01163
+  [急！全职教师_初高学段] vec+bm25 v=179 b=77 rrf=0.01148
+  [前端开发工程师] vec v=30 b=- rrf=0.01111
+  [复制+粘贴 话术 无需动脑 客服岗] vec+bm25 v=121 b=120 rrf=0.01108
+2026-04-04 13:40:53,702 | INFO | JobAgent.database | hybrid search: keywords=前端 北京 前端开发 web前端 前端工程师 vue react typescript javascript uniapp next.js city=北京 company= experience= salary_min=0 salary_unit=
+2026-04-04 13:40:53,936 | INFO | JobAgent.database | recall count: vec=200 bm25=200
+2026-04-04 13:40:53,939 | INFO | JobAgent.database | 🔀 [RRF] vec=200 bm25=200 merged=281 return=90
+  [uniapp前端开发] vec+bm25 v=2 b=3 rrf=0.03200
+  [前端开发（react）] vec+bm25 v=4 b=4 rrf=0.03125
+  [vue前端工程师] vec+bm25 v=19 b=6 rrf=0.02781
+  [前端开发（Vue方向）] vec+bm25 v=14 b=10 rrf=0.02780
+  [VUE前端工程师] vec+bm25 v=12 b=12 rrf=0.02778
+  [前端] vec+bm25 v=1 b=32 rrf=0.02726
+  [react前端] vec+bm25 v=16 b=11 rrf=0.02724
+  [vue前端工程师-知网] vec+bm25 v=13 b=14 rrf=0.02721
+  [react前端开发（北京）] vec+bm25 v=34 b=2 rrf=0.02677
+  [web前端开发北京] vec+bm25 v=10 b=23 rrf=0.02633
+  [前端] vec+bm25 v=15 b=17 rrf=0.02632
+  [vue前端] vec+bm25 v=8 b=27 rrf=0.02620
+  [前端开发] vec+bm25 v=5 b=34 rrf=0.02602
+  [前端工程师（中级｜React）] vec+bm25 v=31 b=7 rrf=0.02591
+  [前端开发工程师] vec+bm25 v=49 b=1 rrf=0.02557
+  [前端开发（Vue方向）] vec+bm25 v=17 b=20 rrf=0.02549
+  [react前端开发工程师] vec+bm25 v=33 b=9 rrf=0.02525
+  [react前端开发工程师] vec+bm25 v=36 b=8 rrf=0.02512
+  [web前端/测试] vec+bm25 v=11 b=36 rrf=0.02450
+  [前端工程师] vec+bm25 v=9 b=43 rrf=0.02420
+  [前端开发工程师] vec+bm25 v=32 b=18 rrf=0.02369
+  [前端开发（vue）] vec+bm25 v=21 b=30 rrf=0.02346
+  [前端] vec+bm25 v=41 b=15 rrf=0.02323
+  [前端-web（证券 双休）] vec+bm25 v=3 b=77 rrf=0.02317
+  [react前端开发工程师] vec+bm25 v=42 b=16 rrf=0.02296
+  [前端网页开发工程师] vec+bm25 v=23 b=35 rrf=0.02257
+  [web前端] vec+bm25 v=7 b=72 rrf=0.02250
+  [web前端工程师] vec+bm25 v=6 b=78 rrf=0.02240
+  [前端开发工程师] vec+bm25 v=24 b=37 rrf=0.02221
+  [前端开发工程师] vec+bm25 v=58 b=13 rrf=0.02217
+  [前端开发] vec+bm25 v=22 b=41 rrf=0.02210
+  [vue前端开发] vec+bm25 v=18 b=52 rrf=0.02175
+  [前端工程师] vec+bm25 v=27 b=38 rrf=0.02170
+  [资深前端开发工程师] vec+bm25 v=100 b=5 rrf=0.02163
+  [react前端开发] vec+bm25 v=37 b=29 rrf=0.02155
+  [React前端开发工程师] vec+bm25 v=53 b=19 rrf=0.02151
+  [前端开发工程师] vec+bm25 v=38 b=31 rrf=0.02119
+  [前端开发工程师（北京）] vec+bm25 v=62 b=22 rrf=0.02039
+  [前端开发工程师] vec+bm25 v=44 b=33 rrf=0.02037
+  [前端开发] vec+bm25 v=28 b=53 rrf=0.02021
+  [前端开发工程师] vec+bm25 v=70 b=21 rrf=0.02004
+  [前端开发工程师] vec+bm25 v=26 b=61 rrf=0.01989
+  [前端开发工程师] vec+bm25 v=35 b=47 rrf=0.01987
+  [中级web前端] vec+bm25 v=29 b=59 rrf=0.01964
+  [高级web前端工程师] vec+bm25 v=20 b=88 rrf=0.01926
+  [前端开发(J21381)] vec+bm25 v=39 b=50 rrf=0.01919
+  [资深前端开发工程师] vec+bm25 v=68 b=28 rrf=0.01918
+  [前端开发工程师] vec+bm25 v=47 b=44 rrf=0.01896
+  [前端开发lm] vec+bm25 v=80 b=25 rrf=0.01891
+  [前端研发工程师] vec+bm25 v=46 b=46 rrf=0.01887
+  [前端工程师] vec+bm25 v=56 b=39 rrf=0.01872
+  [Web前端工程师] vec+bm25 v=25 b=85 rrf=0.01866
+  [前端开发] vec+bm25 v=30 b=75 rrf=0.01852
+  [web前端高级工程师] vec+bm25 v=40 b=58 rrf=0.01847
+  [高级前端工程师] vec+bm25 v=93 b=24 rrf=0.01844
+  [中级前端工程师] vec+bm25 v=88 b=26 rrf=0.01838
+  [前端开发工程师] vec+bm25 v=50 b=54 rrf=0.01786
+  [中级前端开发工程师] vec+bm25 v=74 b=40 rrf=0.01746
+  [前端工程师] vec+bm25 v=55 b=56 rrf=0.01732
+  [react前端开发] vec+bm25 v=66 b=48 rrf=0.01720
+  [前端开发工程师] vec+bm25 v=48 b=70 rrf=0.01695
+  [高级前端工程师] vec+bm25 v=83 b=42 rrf=0.01680
+  [前端技术经理（北京驻场）] vec+bm25 v=78 b=45 rrf=0.01677
+  [前端开发工程师（京东）] vec+bm25 v=65 b=55 rrf=0.01670
+  [前端开发] vec+bm25 v=45 b=80 rrf=0.01667
+  [前端开发工程师] vec+bm25 v=61 b=64 rrf=0.01633
+  [高级前端工程师] vec+bm25 v=82 b=49 rrf=0.01622
+  [web前端] vec+bm25 v=43 b=94 rrf=0.01620
+  [前端开发工程师] vec+bm25 v=71 b=57 rrf=0.01618
+  [前端开发工程师] vec+bm25 v=60 b=68 rrf=0.01615
+  [兼职前端开发工程师] vec+bm25 v=81 b=51 rrf=0.01610
+  [前端开发工程师] vec+bm25 v=63 b=66 rrf=0.01607
+  [前端开发工程师] vec+bm25 v=57 b=73 rrf=0.01607
+  [前端开发工程师] vec+bm25 v=52 b=83 rrf=0.01592
+  [前端高级开发工程师] vec+bm25 v=59 b=76 rrf=0.01576
+  [web前端开发] vec+bm25 v=51 b=89 rrf=0.01572
+  [高级前端开发] vec+bm25 v=72 b=63 rrf=0.01571
+  [前端开发工程师] vec+bm25 v=54 b=92 rrf=0.01535
+  [前端开发工程师] vec+bm25 v=73 b=69 rrf=0.01527
+  [前端] vec+bm25 v=86 b=60 rrf=0.01518
+  [前端开发工程师（安全）] vec+bm25 v=79 b=67 rrf=0.01507
+  [前端开发-ERP] vec+bm25 v=87 b=62 rrf=0.01500
+  [前端开发工程师] vec+bm25 v=69 b=79 rrf=0.01495
+  [前端工程师] vec+bm25 v=64 b=86 rrf=0.01491
+  [资深前端开发工程师] vec+bm25 v=76 b=74 rrf=0.01482
+  [Vue3前端（外包万达）] vec+bm25 v=89 b=65 rrf=0.01471
+  [前端开发工程师] vec+bm25 v=75 b=81 rrf=0.01450
+  [前端技术经理] vec+bm25 v=67 b=96 rrf=0.01428
+  [中级前端开发工程师] vec+bm25 v=92 b=71 rrf=0.01421
+  [前端技术合伙人] vec+bm25 v=84 b=91 rrf=0.01357
+2026-04-04 13:40:53,939 | INFO | JobAgent.tools | search tool recalled strict=30 expanded=30 expanded_query=前端 北京 前端开发 web前端 前端工程师 vue react typescript javascript uniapp next.js
+2026-04-04 13:40:53,940 | INFO | JobAgent.tools | search tool merged 45 unique candidates after weighted fusion
+2026-04-04 13:40:53,940 | INFO | JobAgent.tools | search tool kept 45 candidates after title filter
+2026-04-04 13:41:02,105 | INFO | JobAgent.tools | search rerank complete: max=0.9858 min=0.7336
+2026-04-04 13:41:02,109 | INFO | JobAgent.tools | search cache set: key=search:result:v1:dd80b4144ea61db88024e4bb4ce1c868be99334dd9ad6e0683e35f6da8c6c0b1 ttl=582s results=6
+2026-04-04 13:41:02,118 | INFO | JobAgent.chat_graph | search result summary: total=6 matched_role_count=5 mismatch_count=0 experience= experience_match_count=5 role_keywords=前端
+2026-04-04 13:41:02,118 | INFO | JobAgent.chat_graph | relevance filter rules: role_keywords=前端 required_experience=<none> role_rule=title must match at least one target role keyword; if mismatch roles > matched roles then drop experience_rule=skipped (no experience constraint)
+2026-04-04 13:41:02,119 | INFO | JobAgent.chat_graph | relevance filter dropped 0/6 candidates
+2026-04-04 13:41:02,119 | INFO | JobAgent.chat_graph | relevance filter kept 6/6 candidates: [1] web前端开发北京 @ 瑞友慧智 ; [2] web前端 @ 北京柯睿思信息技术 ; [3] 资深前端开发工程师 @ 北京创界科技发展 ; [4] 前端工程师 @ 北京芯之力科技 ; [5] 前端开发（Vue方向） @ 北京元恒信通科技 ; [6] 前端研发工程师 @ 小全科技
+2026-04-04 13:41:02,123 | INFO | JobAgent.chat_graph | job alive check refresh: total=6 stale=6 fresh=0 threshold_hours=12
+2026-04-04 13:41:12,860 | INFO | JobAgent.search_cache | search data version bumped: version=2 reason=job_status_visibility:unknown->closed
+2026-04-04 13:41:15,761 | INFO | JobAgent.chat_graph | job alive check summary: total=6 active=5 unknown=0 closed=1 kept=5 dropped=1
+2026-04-04 13:41:15,762 | INFO | JobAgent.chat_graph | job alive check dropped closed jobs: 前端开发（Vue方向） @ 北京元恒信通科技
+2026-04-04 13:41:25,093 | INFO | JobAgent.chat_router | chat session created: user=00004 session=chat:00004:deb4d003c020
+2026-04-04 13:41:29,066 | INFO | JobAgent.chat_router | chat stream: user=00004 session=chat:00004:deb4d003c020
+2026-04-04 13:41:33,214 | INFO | JobAgent.chat_graph | planner normalized search plan: {"resolved_query": "在北京寻找前端开发相关岗位", "keyword_query": "前端", "city": "北京", "company": "", "experience": "", "salary_min": 0, "salary_unit": ""}
+2026-04-04 13:41:33,216 | INFO | JobAgent.chat_graph | search node running: query=前端 city=北京 experience= salary_min=0 salary_unit=
+2026-04-04 13:41:33,217 | INFO | JobAgent.tools | search tool invoked: query=在北京寻找前端开发相关岗位 effective_query=前端 city=北京->北京 company= experience=-> salary_min=0 salary_unit=
+2026-04-04 13:41:33,217 | INFO | JobAgent.tools | search role keywords=前端
+2026-04-04 13:41:33,219 | INFO | JobAgent.database | hybrid search: keywords=前端 city=北京 company= experience= salary_min=0 salary_unit=
+2026-04-04 13:41:35,446 | INFO | JobAgent.database | recall count: vec=200 bm25=119
+2026-04-04 13:41:35,448 | INFO | JobAgent.database | 🔀 [RRF] vec=200 bm25=119 merged=217 return=90
+  [前端] vec+bm25 v=2 b=2 rrf=0.03226
+  [前端] vec+bm25 v=7 b=1 rrf=0.03132
+  [前端] vec+bm25 v=3 b=5 rrf=0.03126
+  [前端工程师] vec+bm25 v=5 b=15 rrf=0.02872
+  [前端研发工程师] vec+bm25 v=20 b=3 rrf=0.02837
+  [前端工程师] vec+bm25 v=13 b=10 rrf=0.02798
+  [前端] vec+bm25 v=1 b=28 rrf=0.02776
+  [web前端] vec+bm25 v=4 b=26 rrf=0.02725
+  [前端工程师] vec+bm25 v=12 b=16 rrf=0.02705
+  [前端工程师] vec+bm25 v=9 b=25 rrf=0.02626
+  [前端工程师] vec+bm25 v=15 b=18 rrf=0.02615
+  [前端网页开发工程师] vec+bm25 v=34 b=6 rrf=0.02579
+  [web前端高级工程师] vec+bm25 v=31 b=9 rrf=0.02548
+  [web前端工程师] vec+bm25 v=19 b=19 rrf=0.02532
+  [高级web前端工程师] vec+bm25 v=22 b=17 rrf=0.02518
+  [前端-web（证券 双休）] vec+bm25 v=8 b=36 rrf=0.02512
+  [高级前端工程师] vec+bm25 v=49 b=4 rrf=0.02480
+  [中级web前端] vec+bm25 v=21 b=21 rrf=0.02469
+  [高级前端工程师] vec+bm25 v=41 b=8 rrf=0.02461
+  [前端技术经理] vec+bm25 v=11 b=39 rrf=0.02419
+  [前端开发工程师] vec+bm25 v=14 b=34 rrf=0.02415
+  [中级前端工程师] vec+bm25 v=56 b=7 rrf=0.02355
+  [前端开发工程师] vec+bm25 v=48 b=12 rrf=0.02315
+  [前端开发] vec+bm25 v=6 b=69 rrf=0.02290
+  [前端高级开发工程师] vec+bm25 v=54 b=14 rrf=0.02229
+  [前端开发] vec+bm25 v=10 b=67 rrf=0.02216
+  [前端技术经理（北京驻场）] vec+bm25 v=42 b=23 rrf=0.02185
+  [web前端] vec+bm25 v=37 b=27 rrf=0.02180
+  [高级前端工程师] vec+bm25 v=36 b=29 rrf=0.02165
+  [前端工程师（中级｜React）] vec+bm25 v=33 b=33 rrf=0.02151
+  [前端开发工程师] vec+bm25 v=25 b=43 rrf=0.02147
+  [VUE前端工程师] vec+bm25 v=78 b=11 rrf=0.02133
+  [前端开发（Vue方向）] vec+bm25 v=23 b=49 rrf=0.02122
+  [Vue3前端（外包万达）] vec+bm25 v=76 b=13 rrf=0.02105
+  [react前端] vec+bm25 v=40 b=35 rrf=0.02053
+  [前端开发lm] vec+bm25 v=26 b=56 rrf=0.02025
+  [前端开发工程师] vec+bm25 v=29 b=52 rrf=0.02016
+  [前端研发工程师] vec+bm25 v=39 b=40 rrf=0.02010
+  [前端开发工程师] vec+bm25 v=18 b=80 rrf=0.01996
+  [前端技术合伙人] vec+bm25 v=44 b=37 rrf=0.01992
+  [前端开发工程师] vec+bm25 v=28 b=59 rrf=0.01977
+  [前端开发工程师（安全）] vec+bm25 v=17 b=90 rrf=0.01965
+  [前端开发工程师] vec+bm25 v=32 b=54 rrf=0.01964
+  [前端开发工程师] vec+bm25 v=35 b=50 rrf=0.01962
+  [前端开发工程师] vec+bm25 v=30 b=60 rrf=0.01944
+  [web前端/测试] vec+bm25 v=59 b=31 rrf=0.01939
+  [vue前端工程师] vec+bm25 v=79 b=24 rrf=0.01910
+  [资深前端开发工程师] vec+bm25 v=95 b=20 rrf=0.01895
+  [vue前端工程师-知网] vec+bm25 v=92 b=22 rrf=0.01877
+  [前端开发] vec+bm25 v=24 b=89 rrf=0.01862
+  [前端开发] vec+bm25 v=45 b=53 rrf=0.01837
+  [资深前端开发工程师] vec+bm25 v=52 b=47 rrf=0.01827
+  [Web前端工程师] vec+bm25 v=62 b=42 rrf=0.01800
+  [vue前端] vec+bm25 v=81 b=32 rrf=0.01796
+  [前端开发（react）] vec+bm25 v=27 b=99 rrf=0.01778
+  [前端开发工程师] vec+bm25 v=38 b=74 rrf=0.01767
+  [前端] vec+bm25 v=96 b=30 rrf=0.01752
+  [前端开发工程师] vec+bm25 v=68 b=46 rrf=0.01725
+  [前端开发工程师] vec+bm25 v=69 b=51 rrf=0.01676
+  [前端开发(J21381)] vec+bm25 v=65 b=57 rrf=0.01655
+  [react前端开发工程师] vec+bm25 v=98 b=38 rrf=0.01653
+  [前端开发工程师] vec+bm25 v=58 b=65 rrf=0.01647
+  [前端] vec+bm25 v=93 b=41 rrf=0.01644
+  [前端开发工程师] vec+bm25 v=57 b=68 rrf=0.01636
+  [前端开发工程师] vec+bm25 v=53 b=75 rrf=0.01626
+  [前端开发工程师] vec+bm25 v=46 b=88 rrf=0.01619
+  [react前端开发工程师] vec+bm25 v=91 b=45 rrf=0.01615
+  [中级前端开发工程师] vec+bm25 v=67 b=61 rrf=0.01614
+  [前端开发-ERP] vec+bm25 v=71 b=58 rrf=0.01611
+  [前端开发工程师] vec+bm25 v=51 b=83 rrf=0.01600
+  [高级前端开发] vec+bm25 v=66 b=64 rrf=0.01600
+  [react前端开发（北京）] vec+bm25 v=82 b=55 rrf=0.01574
+  [中级前端开发工程师] vec+bm25 v=63 b=72 rrf=0.01571
+  [React前端开发工程师] vec+bm25 v=97 b=48 rrf=0.01563
+  [web前端开发北京] vec+bm25 v=75 b=62 rrf=0.01560
+  [前端开发] vec+bm25 v=47 b=102 rrf=0.01552
+  [前端开发工程师中级] vec+bm25 v=43 b=118 rrf=0.01533
+  [前端开发工程师] vec+bm25 v=74 b=73 rrf=0.01498
+  [前端开发工程师] vec+bm25 v=64 b=85 rrf=0.01496
+  [前端开发工程师] vec+bm25 v=61 b=91 rrf=0.01489
+  [前端开发工程师] vec+bm25 v=55 b=103 rrf=0.01483
+  [中级前端开发] vec+bm25 v=70 b=81 rrf=0.01478
+  [react前端开发工程师] vec+bm25 v=83 b=70 rrf=0.01469
+  [web前端开发] vec+bm25 v=60 b=100 rrf=0.01458
+  [java研发] vec+bm25 v=148 b=44 rrf=0.01442
+  [前端开发工程师（北京）] vec+bm25 v=77 b=84 rrf=0.01424
+  [前端开发工程师] vec+bm25 v=72 b=92 rrf=0.01415
+  [前端开发工程师（京东）] vec+bm25 v=84 b=79 rrf=0.01414
+  [vue前端开发] vec+bm25 v=94 b=71 rrf=0.01413
+  [uniapp前端开发] vec+bm25 v=86 b=82 rrf=0.01389
+2026-04-04 13:41:35,449 | INFO | JobAgent.database | hybrid search: keywords=前端 前端开发 web前端 前端工程师 vue react typescript javascript uniapp next.js city=北京 company= experience= salary_min=0 salary_unit=
+2026-04-04 13:41:35,625 | INFO | JobAgent.database | recall count: vec=200 bm25=131
+2026-04-04 13:41:35,628 | INFO | JobAgent.database | 🔀 [RRF] vec=200 bm25=131 merged=208 return=90
+  [前端开发（react）] vec+bm25 v=6 b=3 rrf=0.03102
+  [uniapp前端开发] vec+bm25 v=2 b=8 rrf=0.03083
+  [VUE前端工程师] vec+bm25 v=13 b=7 rrf=0.02862
+  [react前端] vec+bm25 v=10 b=10 rrf=0.02857
+  [vue前端工程师] vec+bm25 v=21 b=4 rrf=0.02797
+  [前端] vec+bm25 v=16 b=11 rrf=0.02724
+  [vue前端工程师-知网] vec+bm25 v=14 b=14 rrf=0.02703
+  [前端开发] vec+bm25 v=5 b=26 rrf=0.02701
+  [react前端开发工程师] vec+bm25 v=25 b=6 rrf=0.02692
+  [vue前端] vec+bm25 v=8 b=22 rrf=0.02690
+  [前端工程师（中级｜React）] vec+bm25 v=30 b=5 rrf=0.02650
+  [前端开发（Vue方向）] vec+bm25 v=17 b=15 rrf=0.02632
+  [前端开发工程师] vec+bm25 v=42 b=1 rrf=0.02620
+  [web前端/测试] vec+bm25 v=12 b=28 rrf=0.02525
+  [前端] vec+bm25 v=3 b=47 rrf=0.02522
+  [前端工程师] vec+bm25 v=11 b=37 rrf=0.02439
+  [前端开发（vue）] vec+bm25 v=22 b=24 rrf=0.02410
+  [前端网页开发工程师] vec+bm25 v=20 b=27 rrf=0.02399
+  [react前端开发工程师] vec+bm25 v=38 b=13 rrf=0.02390
+  [前端-web（证券 双休）] vec+bm25 v=1 b=77 rrf=0.02369
+  [前端开发工程师] vec+bm25 v=49 b=9 rrf=0.02367
+  [前端开发工程师] vec+bm25 v=34 b=19 rrf=0.02330
+  [web前端工程师] vec+bm25 v=4 b=71 rrf=0.02326
+  [react前端开发（北京）] vec+bm25 v=39 b=17 rrf=0.02309
+  [前端开发工程师] vec+bm25 v=31 b=23 rrf=0.02304
+  [前端开发] vec+bm25 v=18 b=38 rrf=0.02302
+  [前端开发工程师] vec+bm25 v=24 b=31 rrf=0.02289
+  [vue前端开发] vec+bm25 v=15 b=45 rrf=0.02286
+  [前端工程师] vec+bm25 v=27 b=30 rrf=0.02261
+  [react前端开发工程师] vec+bm25 v=46 b=16 rrf=0.02259
+  [资深前端开发工程师] vec+bm25 v=99 b=2 rrf=0.02242
+  [React前端开发工程师] vec+bm25 v=58 b=12 rrf=0.02236
+  [web前端] vec+bm25 v=7 b=84 rrf=0.02187
+  [前端] vec+bm25 v=52 b=18 rrf=0.02175
+  [前端开发工程师] vec+bm25 v=32 b=32 rrf=0.02174
+  [高级web前端工程师] vec+bm25 v=9 b=82 rrf=0.02154
+  [web前端开发北京] vec+bm25 v=19 b=66 rrf=0.02059
+  [前端开发] vec+bm25 v=28 b=49 rrf=0.02054
+  [前端开发工程师] vec+bm25 v=26 b=53 rrf=0.02048
+  [前端研发工程师] vec+bm25 v=45 b=33 rrf=0.02028
+  [中级web前端] vec+bm25 v=29 b=51 rrf=0.02024
+  [前端开发(J21381)] vec+bm25 v=35 b=46 rrf=0.01996
+  [高级前端工程师] vec+bm25 v=81 b=20 rrf=0.01959
+  [前端开发lm] vec+bm25 v=80 b=21 rrf=0.01949
+  [Web前端工程师] vec+bm25 v=23 b=81 rrf=0.01914
+  [前端开发工程师] vec+bm25 v=79 b=25 rrf=0.01896
+  [中级前端开发工程师] vec+bm25 v=70 b=29 rrf=0.01893
+  [react前端开发] vec+bm25 v=54 b=41 rrf=0.01867
+  [前端开发工程师] vec+bm25 v=57 b=39 rrf=0.01865
+  [前端开发工程师] vec+bm25 v=51 b=44 rrf=0.01862
+  [前端开发] vec+bm25 v=33 b=68 rrf=0.01857
+  [前端开发工程师] vec+bm25 v=41 b=57 rrf=0.01845
+  [前端开发工程师] vec+bm25 v=50 b=48 rrf=0.01835
+  [前端工程师] vec+bm25 v=56 b=43 rrf=0.01833
+  [react前端开发] vec+bm25 v=72 b=34 rrf=0.01821
+  [web前端高级工程师] vec+bm25 v=36 b=69 rrf=0.01817
+  [前端开发工程师] vec+bm25 v=43 b=59 rrf=0.01811
+  [高级前端工程师] vec+bm25 v=71 b=36 rrf=0.01805
+  [高级前端工程师] vec+bm25 v=77 b=35 rrf=0.01783
+  [前端开发工程师] vec+bm25 v=47 b=63 rrf=0.01748
+  [前端开发工程师（京东）] vec+bm25 v=60 b=50 rrf=0.01742
+  [web前端开发] vec+bm25 v=37 b=86 rrf=0.01716
+  [前端工程师] vec+bm25 v=62 b=55 rrf=0.01689
+  [中级前端工程师] vec+bm25 v=86 b=40 rrf=0.01685
+  [资深前端开发工程师] vec+bm25 v=82 b=42 rrf=0.01685
+  [前端开发工程师] vec+bm25 v=53 b=67 rrf=0.01672
+  [前端开发工程师] vec+bm25 v=48 b=78 rrf=0.01651
+  [前端开发工程师] vec+bm25 v=73 b=52 rrf=0.01645
+  [web前端] vec+bm25 v=40 b=96 rrf=0.01641
+  [前端开发工程师（安全）] vec+bm25 v=64 b=60 rrf=0.01640
+  [前端开发工程师] vec+bm25 v=44 b=89 rrf=0.01633
+  [前端开发] vec+bm25 v=55 b=72 rrf=0.01627
+  [高级前端开发] vec+bm25 v=74 b=54 rrf=0.01623
+  [前端高级开发工程师] vec+bm25 v=61 b=75 rrf=0.01567
+  [前端开发-ERP] vec+bm25 v=83 b=56 rrf=0.01561
+  [前端开发工程师] vec+bm25 v=63 b=76 rrf=0.01548
+  [资深前端开发工程师] vec+bm25 v=76 b=65 rrf=0.01535
+  [前端开发工程师] vec+bm25 v=68 b=73 rrf=0.01533
+  [前端开发工程师] vec+bm25 v=78 b=64 rrf=0.01531
+  [Vue3前端（外包万达）] vec+bm25 v=87 b=58 rrf=0.01528
+  [前端开发工程师] vec+bm25 v=66 b=80 rrf=0.01508
+  [前端技术经理] vec+bm25 v=59 b=91 rrf=0.01503
+  [中级前端开发工程师] vec+bm25 v=92 b=61 rrf=0.01484
+  [兼职前端开发工程师] vec+bm25 v=91 b=62 rrf=0.01482
+  [前端工程师] vec+bm25 v=65 b=90 rrf=0.01467
+  [前端技术合伙人] vec+bm25 v=69 b=88 rrf=0.01451
+  [前端] vec+bm25 v=93 b=70 rrf=0.01423
+  [前端开发工程师中级] vec+bm25 v=75 b=92 rrf=0.01399
+  [前端开发工程师（北京）] vec+bm25 v=85 b=85 rrf=0.01379
+  [中级前端开发] vec+bm25 v=98 b=74 rrf=0.01379
+2026-04-04 13:41:35,630 | INFO | JobAgent.tools | search tool recalled strict=30 expanded=30 expanded_query=前端 前端开发 web前端 前端工程师 vue react typescript javascript uniapp next.js
+2026-04-04 13:41:35,630 | INFO | JobAgent.tools | search tool merged 48 unique candidates after weighted fusion
+2026-04-04 13:41:35,631 | INFO | JobAgent.tools | search tool kept 48 candidates after title filter
+2026-04-04 13:41:43,905 | INFO | JobAgent.tools | search rerank complete: max=0.9842 min=0.7336
+2026-04-04 13:41:43,908 | INFO | JobAgent.tools | search cache set: key=search:result:v1:c08e1320dd27b19628be196485098251f8c162bd0cc0a776c731d7c0be4c9daa ttl=623s results=6
+2026-04-04 13:41:43,912 | INFO | JobAgent.chat_graph | search result summary: total=6 matched_role_count=5 mismatch_count=0 experience= experience_match_count=5 role_keywords=前端
+2026-04-04 13:41:43,912 | INFO | JobAgent.chat_graph | relevance filter rules: role_keywords=前端 required_experience=<none> role_rule=title must match at least one target role keyword; if mismatch roles > matched roles then drop experience_rule=skipped (no experience constraint)
+2026-04-04 13:41:43,912 | INFO | JobAgent.chat_graph | relevance filter dropped 0/6 candidates
+2026-04-04 13:41:43,912 | INFO | JobAgent.chat_graph | relevance filter kept 6/6 candidates: [1] 前端开发 @ 虹潭岭 ; [2] 前端开发 @ 江苏灵维视界信息科技 ; [3] 前端开发工程师 @ 博彦科技 ; [4] web前端 @ 北京柯睿思信息技术 ; [5] 前端开发工程师 @ 拓保软件 ; [6] 前端工程师 @ 北京芯之力科技
+2026-04-04 13:41:43,918 | INFO | JobAgent.chat_graph | job alive check refresh: total=6 stale=4 fresh=2 threshold_hours=12
+2026-04-04 13:41:45,746 | INFO | JobAgent.search_cache | search data version bumped: version=3 reason=job_status_visibility:unknown->closed
+2026-04-04 13:41:47,318 | INFO | JobAgent.search_cache | search data version bumped: version=4 reason=job_status_visibility:unknown->closed
+2026-04-04 13:41:49,269 | INFO | JobAgent.search_cache | search data version bumped: version=5 reason=job_status_visibility:unknown->closed
+2026-04-04 13:41:51,150 | INFO | JobAgent.chat_graph | job alive check summary: total=6 active=3 unknown=0 closed=3 kept=3 dropped=3
+2026-04-04 13:41:51,150 | INFO | JobAgent.chat_graph | job alive check dropped closed jobs: 前端开发 @ 虹潭岭 ; 前端开发 @ 江苏灵维视界信息科技 ; 前端开发工程师 @ 博彦科技
+2026-04-04 13:46:14,681 | INFO | JobAgent.chat_router | chat stream: user=00004 session=chat:00004:deb4d003c020
+2026-04-04 13:46:19,466 | INFO | JobAgent.chat_graph | planner normalized search plan: {"resolved_query": "搜索北京地区的前端开发相关岗位", "keyword_query": "前端 北京", "city": "北京", "company": "", "experience": "", "salary_min": 0, "salary_unit": ""}
+2026-04-04 13:46:19,469 | INFO | JobAgent.chat_graph | search node running: query=前端 北京 city=北京 experience= salary_min=0 salary_unit=
+2026-04-04 13:46:19,469 | INFO | JobAgent.tools | search tool invoked: query=搜索北京地区的前端开发相关岗位 effective_query=前端 北京 city=北京->北京 company= experience=-> salary_min=0 salary_unit=
+2026-04-04 13:46:19,469 | INFO | JobAgent.tools | search role keywords=前端
+2026-04-04 13:46:19,471 | INFO | JobAgent.database | hybrid search: keywords=前端 北京 city=北京 company= experience= salary_min=0 salary_unit=
+2026-04-04 13:46:21,729 | INFO | JobAgent.database | recall count: vec=200 bm25=200
+2026-04-04 13:46:21,731 | INFO | JobAgent.database | 🔀 [RRF] vec=200 bm25=200 merged=299 return=90
+  [前端] vec+bm25 v=1 b=3 rrf=0.03227
+  [前端] vec+bm25 v=6 b=1 rrf=0.03154
+  [前端] vec+bm25 v=2 b=8 rrf=0.03083
+  [前端工程师] vec+bm25 v=3 b=10 rrf=0.03016
+  [前端技术经理（北京驻场）] vec+bm25 v=13 b=2 rrf=0.02983
+  [前端工程师] vec+bm25 v=11 b=4 rrf=0.02971
+  [前端开发工程师（北京）] vec+bm25 v=4 b=18 rrf=0.02845
+  [前端工程师] vec+bm25 v=8 b=24 rrf=0.02661
+  [web前端] vec+bm25 v=5 b=34 rrf=0.02602
+  [web前端] vec+bm25 v=21 b=16 rrf=0.02550
+  [前端] vec+bm25 v=7 b=35 rrf=0.02545
+  [前端高级开发工程师] vec+bm25 v=17 b=21 rrf=0.02533
+  [web前端高级工程师] vec+bm25 v=39 b=6 rrf=0.02525
+  [web前端开发北京] vec+bm25 v=12 b=28 rrf=0.02525
+  [中级前端工程师] vec+bm25 v=42 b=5 rrf=0.02519
+  [前端研发工程师] vec+bm25 v=30 b=12 rrf=0.02500
+  [前端工程师] vec+bm25 v=16 b=26 rrf=0.02479
+  [前端工程师] vec+bm25 v=20 b=22 rrf=0.02470
+  [react前端开发（北京）] vec+bm25 v=49 b=7 rrf=0.02410
+  [前端-web（证券 双休）] vec+bm25 v=9 b=49 rrf=0.02367
+  [高级前端工程师] vec+bm25 v=40 b=14 rrf=0.02351
+  [中级web前端] vec+bm25 v=26 b=27 rrf=0.02312
+  [资深前端开发工程师] vec+bm25 v=18 b=38 rrf=0.02302
+  [VUE前端工程师] vec+bm25 v=54 b=15 rrf=0.02211
+  [web前端工程师] vec+bm25 v=32 b=30 rrf=0.02198
+  [vue前端工程师-知网] vec+bm25 v=75 b=9 rrf=0.02190
+  [前端开发工程师] vec+bm25 v=22 b=44 rrf=0.02181
+  [前端工程师（中级｜React）] vec+bm25 v=25 b=40 rrf=0.02176
+  [前端开发（Vue方向）] vec+bm25 v=14 b=64 rrf=0.02158
+  [高级前端工程师] vec+bm25 v=81 b=11 rrf=0.02118
+  [前端网页开发工程师] vec+bm25 v=74 b=13 rrf=0.02116
+  [前端开发工程师] vec+bm25 v=52 b=25 rrf=0.02069
+  [web前端/测试] vec+bm25 v=43 b=37 rrf=0.02002
+  [前端] vec+bm25 v=80 b=19 rrf=0.01980
+  [高级web前端工程师] vec+bm25 v=82 b=20 rrf=0.01954
+  [前端开发工程师] vec+bm25 v=38 b=48 rrf=0.01946
+  [前端开发工程师] vec+bm25 v=24 b=74 rrf=0.01937
+  [前端开发工程师] vec+bm25 v=46 b=42 rrf=0.01924
+  [vue前端工程师] vec+bm25 v=62 b=31 rrf=0.01919
+  [前端技术合伙人] vec+bm25 v=48 b=43 rrf=0.01897
+  [前端技术经理] vec+bm25 v=34 b=62 rrf=0.01884
+  [高级前端工程师] vec+bm25 v=67 b=33 rrf=0.01863
+  [Vue3前端（外包万达）] vec+bm25 v=94 b=23 rrf=0.01854
+  [前端开发lm] vec+bm25 v=31 b=81 rrf=0.01808
+  [vue前端] vec+bm25 v=63 b=41 rrf=0.01803
+  [react前端] vec+bm25 v=56 b=47 rrf=0.01797
+  [前端开发工程师] vec+bm25 v=36 b=73 rrf=0.01794
+  [前端开发工程师] vec+bm25 v=29 b=91 rrf=0.01786
+  [前端研发工程师] vec+bm25 v=45 b=60 rrf=0.01786
+  [前端开发工程师] vec+bm25 v=44 b=63 rrf=0.01775
+  [资深前端开发工程师] vec+bm25 v=97 b=29 rrf=0.01761
+  [前端开发工程师] vec+bm25 v=35 b=89 rrf=0.01724
+  [高级前端开发] vec+bm25 v=33 b=98 rrf=0.01708
+  [react前端开发工程师] vec+bm25 v=91 b=39 rrf=0.01672
+  [前端开发] vec+bm25 v=53 b=71 rrf=0.01648
+  [react前端开发工程师] vec+bm25 v=57 b=69 rrf=0.01630
+  [Web前端工程师] vec+bm25 v=72 b=58 rrf=0.01605
+  [react前端开发工程师] vec+bm25 v=98 b=45 rrf=0.01585
+  [运维工程师（北京）] vec+bm25 v=141 b=32 rrf=0.01584
+  [前端] vec+bm25 v=95 b=54 rrf=0.01522
+  [前端开发工程师] vec+bm25 v=51 b=101 rrf=0.01522
+  [uniapp前端开发] vec+bm25 v=70 b=75 rrf=0.01510
+  [React前端开发工程师] vec+bm25 v=85 b=68 rrf=0.01471
+  [产品经理（军工方向北京）] vec+bm25 v=111 b=55 rrf=0.01454
+  [复制粘贴 客服岗] vec+bm25 v=83 b=76 rrf=0.01435
+  [前端开发(J21381)] vec+bm25 v=69 b=92 rrf=0.01433
+  [前端开发] vec v=10 b=- rrf=0.01429
+  [react前端开发] vec+bm25 v=37 b=196 rrf=0.01422
+  [无责6300+纯客服不含销售性质！！] vec+bm25 v=99 b=67 rrf=0.01416
+  [后端java] vec+bm25 v=77 b=86 rrf=0.01415
+  [[北京]产品经理] vec+bm25 v=136 b=51 rrf=0.01411
+  [中级前端开发工程师] vec+bm25 v=71 b=95 rrf=0.01409
+  [前端开发-ERP] vec+bm25 v=88 b=85 rrf=0.01365
+  [北京-外包java] vec+bm25 v=151 b=53 rrf=0.01359
+  [前端开发（react）] vec v=15 b=- rrf=0.01333
+  [北京呼叫中心 全国客服岗 均薪8k] vec+bm25 v=140 b=61 rrf=0.01326
+  [前端开发工程师] vec+bm25 v=47 b=197 rrf=0.01324
+  [咨询教务老师（北京销售岗）] bm25 v=- b=17 rrf=0.01299
+  [会开车的来(北京社保+销售岗）] vec+bm25 v=172 b=56 rrf=0.01293
+  [前端开发工程师] vec v=19 b=- rrf=0.01266
+  [中级前端开发工程师] vec+bm25 v=59 b=200 rrf=0.01225
+  [高级java] vec+bm25 v=145 b=78 rrf=0.01212
+  [前端开发] vec v=23 b=- rrf=0.01205
+  [年前面试/年前入职的销售岗] vec+bm25 v=129 b=90 rrf=0.01196
+  [急！全职教师_初高学段] vec+bm25 v=175 b=72 rrf=0.01183
+  [兼职前端开发工程师] vec+bm25 v=66 b=198 rrf=0.01181
+  [前端开发工程师] vec v=27 b=- rrf=0.01149
+  [前端开发工程师] vec v=28 b=- rrf=0.01136
+  [复制+粘贴 话术 无需动脑 客服岗] vec+bm25 v=117 b=118 rrf=0.01127
+  [售前客服] vec+bm25 v=119 b=124 rrf=0.01102
+2026-04-04 13:46:21,732 | INFO | JobAgent.database | hybrid search: keywords=前端 北京 前端开发 web前端 前端工程师 vue react typescript javascript uniapp next.js city=北京 company= experience= salary_min=0 salary_unit=
+2026-04-04 13:46:21,930 | INFO | JobAgent.database | recall count: vec=200 bm25=200
+2026-04-04 13:46:21,931 | INFO | JobAgent.database | 🔀 [RRF] vec=200 bm25=200 merged=285 return=90
+  [uniapp前端开发] vec+bm25 v=2 b=4 rrf=0.03175
+  [前端开发（react）] vec+bm25 v=4 b=5 rrf=0.03101
+  [VUE前端工程师] vec+bm25 v=11 b=11 rrf=0.02817
+  [vue前端工程师] vec+bm25 v=17 b=6 rrf=0.02814
+  [react前端] vec+bm25 v=14 b=10 rrf=0.02780
+  [vue前端工程师-知网] vec+bm25 v=12 b=12 rrf=0.02778
+  [前端] vec+bm25 v=1 b=31 rrf=0.02738
+  [react前端开发（北京）] vec+bm25 v=31 b=2 rrf=0.02712
+  [前端] vec+bm25 v=13 b=15 rrf=0.02703
+  [vue前端] vec+bm25 v=7 b=25 rrf=0.02669
+  [web前端开发北京] vec+bm25 v=9 b=23 rrf=0.02654
+  [前端开发（Vue方向）] vec+bm25 v=15 b=18 rrf=0.02615
+  [前端工程师（中级｜React）] vec+bm25 v=28 b=8 rrf=0.02607
+  [react前端开发工程师] vec+bm25 v=30 b=7 rrf=0.02604
+  [前端开发工程师] vec+bm25 v=46 b=1 rrf=0.02583
+  [react前端开发工程师] vec+bm25 v=33 b=9 rrf=0.02525
+  [web前端/测试] vec+bm25 v=10 b=33 rrf=0.02504
+  [前端开发工程师] vec+bm25 v=29 b=16 rrf=0.02439
+  [前端工程师] vec+bm25 v=8 b=44 rrf=0.02432
+  [前端开发（vue）] vec+bm25 v=19 b=26 rrf=0.02429
+  [前端] vec+bm25 v=38 b=13 rrf=0.02390
+  [react前端开发工程师] vec+bm25 v=39 b=14 rrf=0.02361
+  [前端网页开发工程师] vec+bm25 v=20 b=32 rrf=0.02337
+  [前端-web（证券 双休）] vec+bm25 v=3 b=77 rrf=0.02317
+  [前端开发工程师] vec+bm25 v=21 b=35 rrf=0.02287
+  [web前端工程师] vec+bm25 v=5 b=75 rrf=0.02279
+  [web前端] vec+bm25 v=6 b=71 rrf=0.02279
+  [vue前端开发] vec+bm25 v=16 b=49 rrf=0.02233
+  [资深前端开发工程师] vec+bm25 v=96 b=3 rrf=0.02228
+  [前端工程师] vec+bm25 v=24 b=37 rrf=0.02221
+  [react前端开发] vec+bm25 v=34 b=27 rrf=0.02213
+  [React前端开发工程师] vec+bm25 v=50 b=17 rrf=0.02208
+  [前端开发工程师] vec+bm25 v=35 b=28 rrf=0.02189
+  [前端开发工程师] vec+bm25 v=41 b=29 rrf=0.02114
+  [前端开发工程师（北京）] vec+bm25 v=58 b=21 rrf=0.02082
+  [前端开发工程师] vec+bm25 v=32 b=41 rrf=0.02077
+  [前端开发] vec+bm25 v=25 b=52 rrf=0.02069
+  [前端开发工程师] vec+bm25 v=66 b=19 rrf=0.02059
+  [中级web前端] vec+bm25 v=26 b=53 rrf=0.02048
+  [前端开发工程师] vec+bm25 v=23 b=59 rrf=0.02045
+  [前端开发lm] vec+bm25 v=76 b=20 rrf=0.01985
+  [高级web前端工程师] vec+bm25 v=18 b=83 rrf=0.01981
+  [前端开发(J21381)] vec+bm25 v=36 b=47 rrf=0.01976
+  [前端开发工程师] vec+bm25 v=44 b=42 rrf=0.01942
+  [前端开发] vec+bm25 v=27 b=68 rrf=0.01931
+  [Web前端工程师] vec+bm25 v=22 b=81 rrf=0.01929
+  [前端工程师] vec+bm25 v=53 b=36 rrf=0.01927
+  [前端研发工程师] vec+bm25 v=43 b=45 rrf=0.01923
+  [资深前端开发工程师] vec+bm25 v=64 b=30 rrf=0.01918
+  [中级前端工程师] vec+bm25 v=84 b=22 rrf=0.01914
+  [web前端高级工程师] vec+bm25 v=37 b=54 rrf=0.01908
+  [高级前端工程师] vec+bm25 v=89 b=24 rrf=0.01862
+  [前端开发工程师] vec+bm25 v=47 b=51 rrf=0.01835
+  [中级前端开发工程师] vec+bm25 v=70 b=34 rrf=0.01833
+  [前端工程师] vec+bm25 v=52 b=50 rrf=0.01802
+  [react前端开发] vec+bm25 v=62 b=43 rrf=0.01791
+  [前端开发工程师（京东）] vec+bm25 v=61 b=46 rrf=0.01770
+  [前端技术经理（北京驻场）] vec+bm25 v=74 b=38 rrf=0.01767
+  [前端开发工程师] vec+bm25 v=45 b=65 rrf=0.01752
+  [高级前端工程师] vec+bm25 v=78 b=39 rrf=0.01735
+  [前端开发] vec+bm25 v=42 b=73 rrf=0.01732
+  [高级前端工程师] vec+bm25 v=79 b=40 rrf=0.01719
+  [前端开发工程师] vec+bm25 v=56 b=61 rrf=0.01689
+  [前端开发工程师] vec+bm25 v=57 b=63 rrf=0.01668
+  [兼职前端开发工程师] vec+bm25 v=77 b=48 rrf=0.01656
+  [web前端] vec+bm25 v=40 b=93 rrf=0.01654
+  [前端开发工程师] vec+bm25 v=67 b=56 rrf=0.01649
+  [前端开发工程师] vec+bm25 v=59 b=64 rrf=0.01647
+  [前端开发工程师] vec+bm25 v=54 b=70 rrf=0.01646
+  [前端开发工程师] vec+bm25 v=49 b=79 rrf=0.01637
+  [高级前端开发] vec+bm25 v=68 b=57 rrf=0.01636
+  [前端高级开发工程师] vec+bm25 v=55 b=74 rrf=0.01616
+  [web前端开发] vec+bm25 v=48 b=85 rrf=0.01616
+  [前端开发工程师] vec+bm25 v=51 b=87 rrf=0.01581
+  [前端开发工程师（安全）] vec+bm25 v=75 b=60 rrf=0.01574
+  [前端] vec+bm25 v=82 b=55 rrf=0.01574
+  [前端开发工程师] vec+bm25 v=69 b=66 rrf=0.01569
+  [前端工程师] vec+bm25 v=60 b=80 rrf=0.01548
+  [前端开发-ERP] vec+bm25 v=83 b=58 rrf=0.01547
+  [前端开发工程师] vec+bm25 v=65 b=76 rrf=0.01535
+  [资深前端开发工程师] vec+bm25 v=72 b=69 rrf=0.01533
+  [Vue3前端（外包万达）] vec+bm25 v=85 b=62 rrf=0.01509
+  [前端开发工程师] vec+bm25 v=71 b=78 rrf=0.01488
+  [中级前端开发工程师] vec+bm25 v=88 b=67 rrf=0.01463
+  [前端技术经理] vec+bm25 v=63 b=96 rrf=0.01454
+  [中级前端开发] vec+bm25 v=91 b=72 rrf=0.01420
+  [前端技术合伙人] vec+bm25 v=80 b=88 rrf=0.01390
+  [前端开发工程师中级] vec+bm25 v=81 b=90 rrf=0.01376
+  [前端] vec+bm25 v=86 b=94 rrf=0.01334
+  [java研发] vec+bm25 v=102 b=82 rrf=0.01322
+2026-04-04 13:46:21,932 | INFO | JobAgent.tools | search tool recalled strict=30 expanded=30 expanded_query=前端 北京 前端开发 web前端 前端工程师 vue react typescript javascript uniapp next.js
+2026-04-04 13:46:21,932 | INFO | JobAgent.tools | search tool merged 46 unique candidates after weighted fusion
+2026-04-04 13:46:21,932 | INFO | JobAgent.tools | search tool kept 46 candidates after title filter
+2026-04-04 13:46:28,125 | INFO | JobAgent.tools | search rerank complete: max=0.9705 min=0.6249
+2026-04-04 13:46:28,126 | INFO | JobAgent.tools | search cache set: key=search:result:v1:577bbfac250c8fded1838d43ac1c3c5e27f47233d80eab38f75bc817ff42c718 ttl=635s results=6
+2026-04-04 13:46:28,131 | INFO | JobAgent.chat_graph | search result summary: total=6 matched_role_count=5 mismatch_count=0 experience= experience_match_count=5 role_keywords=前端
+2026-04-04 13:46:28,132 | INFO | JobAgent.chat_graph | relevance filter rules: role_keywords=前端 required_experience=<none> role_rule=title must match at least one target role keyword; if mismatch roles > matched roles then drop experience_rule=skipped (no experience constraint)
+2026-04-04 13:46:28,132 | INFO | JobAgent.chat_graph | relevance filter dropped 0/6 candidates
+2026-04-04 13:46:28,132 | INFO | JobAgent.chat_graph | relevance filter kept 6/6 candidates: [1] web前端开发北京 @ 瑞友慧智 ; [2] 前端开发工程师 @ 北京创芯汇富信息技术 ; [3] 前端研发工程师 @ 小全科技 ; [4] web前端 @ 北京柯睿思信息技术 ; [5] 前端 @ 紫航雾 ; [6] 资深前端开发工程师 @ 北京创界科技发展
+2026-04-04 13:46:28,135 | INFO | JobAgent.chat_graph | job alive check refresh: total=6 stale=2 fresh=4 threshold_hours=12
+2026-04-04 13:46:29,450 | INFO | JobAgent.search_cache | search data version bumped: version=6 reason=job_status_visibility:unknown->closed
+2026-04-04 13:46:31,665 | INFO | JobAgent.chat_graph | job alive check summary: total=6 active=5 unknown=0 closed=1 kept=5 dropped=1
+2026-04-04 13:46:31,665 | INFO | JobAgent.chat_graph | job alive check dropped closed jobs: 前端开发工程师 @ 北京创芯汇富信息技术
+2026-04-04 13:47:02,756 | INFO | JobAgent.chat_router | chat stream: user=00004 session=chat:00004:deb4d003c020
+2026-04-04 13:47:08,035 | INFO | JobAgent.chat_graph | planner normalized search plan: {"resolved_query": "查询北京地区的前端开发相关岗位", "keyword_query": "前端 北京", "city": "北京", "company": "", "experience": "", "salary_min": 0, "salary_unit": ""}
+2026-04-04 13:47:08,036 | INFO | JobAgent.chat_graph | search node running: query=前端 北京 city=北京 experience= salary_min=0 salary_unit=
+2026-04-04 13:47:08,036 | INFO | JobAgent.tools | search tool invoked: query=查询北京地区的前端开发相关岗位 effective_query=前端 北京 city=北京->北京 company= experience=-> salary_min=0 salary_unit=
+2026-04-04 13:47:08,036 | INFO | JobAgent.tools | search role keywords=前端
+2026-04-04 13:47:08,037 | INFO | JobAgent.database | hybrid search: keywords=前端 北京 city=北京 company= experience= salary_min=0 salary_unit=
+2026-04-04 13:47:10,293 | INFO | JobAgent.database | recall count: vec=200 bm25=200
+2026-04-04 13:47:10,295 | INFO | JobAgent.database | 🔀 [RRF] vec=200 bm25=200 merged=299 return=90
+  [前端] vec+bm25 v=1 b=3 rrf=0.03227
+  [前端] vec+bm25 v=6 b=1 rrf=0.03154
+  [前端] vec+bm25 v=2 b=8 rrf=0.03083
+  [前端技术经理（北京驻场）] vec+bm25 v=13 b=2 rrf=0.02983
+  [前端工程师] vec+bm25 v=11 b=4 rrf=0.02971
+  [前端工程师] vec+bm25 v=3 b=13 rrf=0.02957
+  [前端开发工程师（北京）] vec+bm25 v=4 b=18 rrf=0.02845
+  [前端工程师] vec+bm25 v=8 b=22 rrf=0.02690
+  [web前端] vec+bm25 v=21 b=14 rrf=0.02586
+  [web前端] vec+bm25 v=5 b=36 rrf=0.02580
+  [web前端高级工程师] vec+bm25 v=38 b=5 rrf=0.02559
+  [前端] vec+bm25 v=7 b=34 rrf=0.02556
+  [前端研发工程师] vec+bm25 v=29 b=10 rrf=0.02552
+  [前端高级开发工程师] vec+bm25 v=17 b=20 rrf=0.02549
+  [前端工程师] vec+bm25 v=16 b=24 rrf=0.02506
+  [中级前端工程师] vec+bm25 v=41 b=6 rrf=0.02505
+  [web前端开发北京] vec+bm25 v=12 b=30 rrf=0.02500
+  [前端工程师] vec+bm25 v=20 b=21 rrf=0.02485
+  [react前端开发（北京）] vec+bm25 v=48 b=7 rrf=0.02418
+  [前端-web（证券 双休）] vec+bm25 v=9 b=47 rrf=0.02384
+  [中级web前端] vec+bm25 v=25 b=27 rrf=0.02326
+  [高级前端工程师] vec+bm25 v=39 b=16 rrf=0.02326
+  [资深前端开发工程师] vec+bm25 v=18 b=37 rrf=0.02313
+  [web前端工程师] vec+bm25 v=31 b=28 rrf=0.02235
+  [前端工程师（中级｜React）] vec+bm25 v=24 b=39 rrf=0.02201
+  [vue前端工程师-知网] vec+bm25 v=74 b=9 rrf=0.02196
+  [VUE前端工程师] vec+bm25 v=53 b=17 rrf=0.02184
+  [前端开发（Vue方向）] vec+bm25 v=14 b=62 rrf=0.02171
+  [前端网页开发工程师] vec+bm25 v=73 b=11 rrf=0.02160
+  [前端开发工程师] vec+bm25 v=51 b=23 rrf=0.02106
+  [高级前端工程师] vec+bm25 v=80 b=12 rrf=0.02103
+  [前端技术经理] vec+bm25 v=33 b=49 rrf=0.01993
+  [前端开发工程师] vec+bm25 v=37 b=45 rrf=0.01983
+  [前端开发工程师] vec+bm25 v=23 b=70 rrf=0.01974
+  [web前端/测试] vec+bm25 v=42 b=42 rrf=0.01961
+  [前端开发工程师] vec+bm25 v=45 b=41 rrf=0.01942
+  [vue前端工程师] vec+bm25 v=61 b=31 rrf=0.01925
+  [Vue3前端（外包万达）] vec+bm25 v=93 b=19 rrf=0.01919
+  [高级web前端工程师] vec+bm25 v=81 b=25 rrf=0.01886
+  [前端] vec+bm25 v=79 b=26 rrf=0.01882
+  [高级前端工程师] vec+bm25 v=66 b=33 rrf=0.01869
+  [前端技术合伙人] vec+bm25 v=47 b=48 rrf=0.01861
+  [react前端] vec+bm25 v=55 b=43 rrf=0.01840
+  [前端开发lm] vec+bm25 v=30 b=81 rrf=0.01820
+  [vue前端] vec+bm25 v=62 b=40 rrf=0.01820
+  [前端开发工程师] vec+bm25 v=28 b=89 rrf=0.01808
+  [前端开发工程师] vec+bm25 v=35 b=75 rrf=0.01793
+  [前端研发工程师] vec+bm25 v=44 b=61 rrf=0.01788
+  [前端开发工程师] vec+bm25 v=43 b=63 rrf=0.01784
+  [资深前端开发工程师] vec+bm25 v=96 b=29 rrf=0.01765
+  [前端开发工程师] vec+bm25 v=34 b=87 rrf=0.01744
+  [高级前端开发] vec+bm25 v=32 b=101 rrf=0.01708
+  [react前端开发工程师] vec+bm25 v=90 b=38 rrf=0.01687
+  [react前端开发工程师] vec+bm25 v=56 b=64 rrf=0.01669
+  [Web前端工程师] vec+bm25 v=71 b=54 rrf=0.01641
+  [前端开发] vec+bm25 v=52 b=74 rrf=0.01639
+  [前端开发工程师] vec+bm25 v=50 b=84 rrf=0.01604
+  [运维工程师（北京）] vec+bm25 v=140 b=32 rrf=0.01587
+  [react前端开发工程师] vec+bm25 v=97 b=46 rrf=0.01580
+  [前端] vec+bm25 v=94 b=50 rrf=0.01558
+  [uniapp前端开发] vec+bm25 v=69 b=72 rrf=0.01533
+  [React前端开发工程师] vec+bm25 v=84 b=66 rrf=0.01488
+  [复制粘贴 客服岗] vec+bm25 v=82 b=71 rrf=0.01468
+  [前端开发(J21381)] vec+bm25 v=68 b=90 rrf=0.01448
+  [react前端开发] vec+bm25 v=36 b=195 rrf=0.01434
+  [前端开发] vec v=10 b=- rrf=0.01429
+  [产品经理（军工方向北京）] vec+bm25 v=110 b=59 rrf=0.01429
+  [中级前端开发工程师] vec+bm25 v=70 b=94 rrf=0.01419
+  [无责6300+纯客服不含销售性质！！] vec+bm25 v=98 b=68 rrf=0.01414
+  [北京呼叫中心 全国客服岗 均薪8k] vec+bm25 v=139 b=55 rrf=0.01372
+  [后端java] vec+bm25 v=76 b=99 rrf=0.01364
+  [[北京]产品经理] vec+bm25 v=135 b=58 rrf=0.01360
+  [北京-外包java] vec+bm25 v=150 b=56 rrf=0.01338
+  [前端开发工程师] vec+bm25 v=46 b=196 rrf=0.01334
+  [前端开发（react）] vec v=15 b=- rrf=0.01333
+  [咨询教务老师（北京销售岗）] bm25 v=- b=15 rrf=0.01333
+  [会开车的来(北京社保+销售岗）] vec+bm25 v=171 b=52 rrf=0.01326
+  [前端开发-ERP] vec+bm25 v=87 b=95 rrf=0.01325
+  [前端开发工程师] vec v=19 b=- rrf=0.01266
+  [中级前端开发工程师] vec+bm25 v=58 b=199 rrf=0.01234
+  [前端开发] vec v=22 b=- rrf=0.01220
+  [高级java] vec+bm25 v=144 b=79 rrf=0.01210
+  [年前面试/年前入职的销售岗] vec+bm25 v=128 b=88 rrf=0.01208
+  [兼职前端开发工程师] vec+bm25 v=65 b=197 rrf=0.01189
+  [java研发] vec+bm25 v=200 b=65 rrf=0.01185
+  [急！全职教师_初高学段] vec+bm25 v=174 b=73 rrf=0.01179
+  [前端开发工程师] vec v=26 b=- rrf=0.01163
+  [前端开发工程师] vec v=27 b=- rrf=0.01149
+  [复制+粘贴 话术 无需动脑 客服岗] vec+bm25 v=116 b=117 rrf=0.01133
+  [售前客服] vec+bm25 v=118 b=123 rrf=0.01108
+2026-04-04 13:47:10,296 | INFO | JobAgent.database | hybrid search: keywords=前端 北京 前端开发 web前端 前端工程师 vue react typescript javascript uniapp next.js city=北京 company= experience= salary_min=0 salary_unit=
+2026-04-04 13:47:10,482 | INFO | JobAgent.database | recall count: vec=200 bm25=200
+2026-04-04 13:47:10,483 | INFO | JobAgent.database | 🔀 [RRF] vec=200 bm25=200 merged=286 return=90
+  [uniapp前端开发] vec+bm25 v=2 b=5 rrf=0.03151
+  [前端开发（react）] vec+bm25 v=4 b=3 rrf=0.03150
+  [vue前端工程师-知网] vec+bm25 v=12 b=10 rrf=0.02817
+  [VUE前端工程师] vec+bm25 v=11 b=11 rrf=0.02817
+  [vue前端工程师] vec+bm25 v=17 b=6 rrf=0.02814
+  [前端] vec+bm25 v=1 b=27 rrf=0.02789
+  [react前端] vec+bm25 v=14 b=12 rrf=0.02740
+  [前端] vec+bm25 v=13 b=13 rrf=0.02740
+  [react前端开发（北京）] vec+bm25 v=31 b=2 rrf=0.02712
+  [web前端开发北京] vec+bm25 v=9 b=22 rrf=0.02669
+  [前端工程师（中级｜React）] vec+bm25 v=28 b=7 rrf=0.02629
+  [vue前端] vec+bm25 v=7 b=29 rrf=0.02616
+  [前端开发（Vue方向）] vec+bm25 v=15 b=19 rrf=0.02599
+  [前端开发工程师] vec+bm25 v=45 b=1 rrf=0.02592
+  [react前端开发工程师] vec+bm25 v=30 b=8 rrf=0.02582
+  [react前端开发工程师] vec+bm25 v=33 b=9 rrf=0.02525
+  [web前端/测试] vec+bm25 v=10 b=32 rrf=0.02516
+  [前端开发工程师] vec+bm25 v=29 b=16 rrf=0.02439
+  [前端工程师] vec+bm25 v=8 b=44 rrf=0.02432
+  [前端开发（vue）] vec+bm25 v=19 b=28 rrf=0.02402
+  [前端] vec+bm25 v=38 b=14 rrf=0.02372
+  [前端-web（证券 双休）] vec+bm25 v=3 b=71 rrf=0.02351
+  [前端网页开发工程师] vec+bm25 v=20 b=31 rrf=0.02349
+  [react前端开发工程师] vec+bm25 v=39 b=15 rrf=0.02343
+  [web前端] vec+bm25 v=6 b=67 rrf=0.02303
+  [前端开发工程师] vec+bm25 v=21 b=35 rrf=0.02287
+  [web前端工程师] vec+bm25 v=5 b=77 rrf=0.02268
+  [前端工程师] vec+bm25 v=24 b=33 rrf=0.02266
+  [vue前端开发] vec+bm25 v=16 b=49 rrf=0.02233
+  [前端开发工程师] vec+bm25 v=35 b=25 rrf=0.02229
+  [React前端开发工程师] vec+bm25 v=49 b=17 rrf=0.02216
+  [资深前端开发工程师] vec+bm25 v=95 b=4 rrf=0.02208
+  [react前端开发] vec+bm25 v=34 b=30 rrf=0.02175
+  [前端开发工程师] vec+bm25 v=32 b=38 rrf=0.02107
+  [前端开发工程师（北京）] vec+bm25 v=57 b=21 rrf=0.02089
+  [前端开发] vec+bm25 v=25 b=50 rrf=0.02086
+  [前端开发工程师] vec+bm25 v=65 b=18 rrf=0.02082
+  [前端开发工程师] vec+bm25 v=23 b=57 rrf=0.02060
+  [中级web前端] vec+bm25 v=26 b=52 rrf=0.02056
+  [前端开发(J21381)] vec+bm25 v=36 b=45 rrf=0.01994
+  [高级web前端工程师] vec+bm25 v=18 b=83 rrf=0.01981
+  [前端开发工程师] vec+bm25 v=43 b=39 rrf=0.01981
+  [资深前端开发工程师] vec+bm25 v=63 b=26 rrf=0.01976
+  [前端研发工程师] vec+bm25 v=42 b=42 rrf=0.01961
+  [前端工程师] vec+bm25 v=52 b=34 rrf=0.01957
+  [Web前端工程师] vec+bm25 v=22 b=79 rrf=0.01939
+  [前端开发lm] vec+bm25 v=75 b=24 rrf=0.01931
+  [前端开发] vec+bm25 v=27 b=68 rrf=0.01931
+  [高级前端工程师] vec+bm25 v=88 b=20 rrf=0.01926
+  [中级前端工程师] vec+bm25 v=83 b=23 rrf=0.01904
+  [web前端高级工程师] vec+bm25 v=37 b=55 rrf=0.01900
+  [前端开发工程师] vec+bm25 v=46 b=51 rrf=0.01844
+  [前端工程师] vec+bm25 v=51 b=48 rrf=0.01827
+  [中级前端开发工程师] vec+bm25 v=69 b=36 rrf=0.01817
+  [react前端开发] vec+bm25 v=61 b=41 rrf=0.01817
+  [前端开发工程师（京东）] vec+bm25 v=60 b=46 rrf=0.01777
+  [前端开发工程师] vec+bm25 v=44 b=65 rrf=0.01762
+  [高级前端工程师] vec+bm25 v=77 b=37 rrf=0.01761
+  [前端技术经理（北京驻场）] vec+bm25 v=73 b=40 rrf=0.01752
+  [前端开发] vec+bm25 v=41 b=75 rrf=0.01731
+  [前端开发工程师] vec+bm25 v=55 b=59 rrf=0.01710
+  [高级前端工程师] vec+bm25 v=78 b=43 rrf=0.01696
+  [前端开发工程师] vec+bm25 v=56 b=62 rrf=0.01682
+  [前端开发工程师] vec+bm25 v=66 b=53 rrf=0.01679
+  [前端开发工程师] vec+bm25 v=58 b=61 rrf=0.01674
+  [兼职前端开发工程师] vec+bm25 v=76 b=47 rrf=0.01670
+  [前端开发工程师] vec+bm25 v=53 b=70 rrf=0.01654
+  [高级前端开发] vec+bm25 v=67 b=56 rrf=0.01649
+  [web前端] vec+bm25 v=40 b=96 rrf=0.01641
+  [前端开发工程师] vec+bm25 v=48 b=80 rrf=0.01640
+  [前端高级开发工程师] vec+bm25 v=54 b=73 rrf=0.01629
+  [web前端开发] vec+bm25 v=47 b=84 rrf=0.01629
+  [前端] vec+bm25 v=81 b=54 rrf=0.01586
+  [前端开发工程师] vec+bm25 v=50 b=88 rrf=0.01585
+  [前端开发工程师（安全）] vec+bm25 v=74 b=60 rrf=0.01580
+  [前端开发工程师] vec+bm25 v=68 b=66 rrf=0.01575
+  [前端工程师] vec+bm25 v=59 b=78 rrf=0.01565
+  [前端开发工程师] vec+bm25 v=64 b=72 rrf=0.01564
+  [前端开发-ERP] vec+bm25 v=82 b=58 rrf=0.01552
+  [资深前端开发工程师] vec+bm25 v=71 b=69 rrf=0.01539
+  [前端开发工程师] vec+bm25 v=70 b=74 rrf=0.01515
+  [Vue3前端（外包万达）] vec+bm25 v=84 b=63 rrf=0.01507
+  [中级前端开发工程师] vec+bm25 v=87 b=64 rrf=0.01487
+  [前端技术经理] vec+bm25 v=62 b=92 rrf=0.01478
+  [前端技术合伙人] vec+bm25 v=79 b=85 rrf=0.01409
+  [中级前端开发] vec+bm25 v=90 b=76 rrf=0.01402
+  [前端开发工程师中级] vec+bm25 v=80 b=93 rrf=0.01368
+  [前端] vec+bm25 v=85 b=91 rrf=0.01352
+  [java研发] vec+bm25 v=101 b=81 rrf=0.01330
+  [初级前端开发工程师] vec+bm25 v=86 b=98 rrf=0.01318
+2026-04-04 13:47:10,484 | INFO | JobAgent.tools | search tool recalled strict=30 expanded=30 expanded_query=前端 北京 前端开发 web前端 前端工程师 vue react typescript javascript uniapp next.js
+2026-04-04 13:47:10,484 | INFO | JobAgent.tools | search tool merged 44 unique candidates after weighted fusion
+2026-04-04 13:47:10,484 | INFO | JobAgent.tools | search tool kept 44 candidates after title filter
+2026-04-04 13:47:18,683 | INFO | JobAgent.tools | search rerank complete: max=0.9355 min=0.4701
+2026-04-04 13:47:18,727 | INFO | JobAgent.tools | search cache set: key=search:result:v1:59aa4a970d244b8fe8c5d541188120f7de3ae4a4b1b6231eb4659f3db213e580 ttl=594s results=6
+2026-04-04 13:47:18,731 | INFO | JobAgent.chat_graph | search result summary: total=6 matched_role_count=5 mismatch_count=0 experience= experience_match_count=5 role_keywords=前端
+2026-04-04 13:47:18,731 | INFO | JobAgent.chat_graph | relevance filter rules: role_keywords=前端 required_experience=<none> role_rule=title must match at least one target role keyword; if mismatch roles > matched roles then drop experience_rule=skipped (no experience constraint)
+2026-04-04 13:47:18,731 | INFO | JobAgent.chat_graph | relevance filter dropped 0/6 candidates
+2026-04-04 13:47:18,731 | INFO | JobAgent.chat_graph | relevance filter kept 6/6 candidates: [1] web前端开发北京 @ 瑞友慧智 ; [2] 前端开发工程师 @ 拓保软件 ; [3] 前端研发工程师 @ 小全科技 ; [4] 前端工程师 @ 北京芯之力科技 ; [5] 前端 @ 紫航雾 ; [6] 资深前端开发工程师 @ 北京创界科技发展
+2026-04-04 13:47:18,735 | INFO | JobAgent.chat_graph | job alive check summary: total=6 active=6 unknown=0 closed=0 kept=6 dropped=0
+2026-04-04 13:47:39,093 | INFO | JobAgent.chat_router | chat stream: user=00004 session=chat:00004:deb4d003c020
+2026-04-04 13:47:45,616 | INFO | JobAgent.chat_graph | planner normalized search plan: {"resolved_query": "搜索北京地区的前端开发相关岗位", "keyword_query": "前端 北京", "city": "北京", "company": "", "experience": "", "salary_min": 0, "salary_unit": ""}
+2026-04-04 13:47:45,617 | INFO | JobAgent.chat_graph | search node running: query=前端 北京 city=北京 experience= salary_min=0 salary_unit=
+2026-04-04 13:47:45,618 | INFO | JobAgent.tools | search tool invoked: query=搜索北京地区的前端开发相关岗位 effective_query=前端 北京 city=北京->北京 company= experience=-> salary_min=0 salary_unit=
+2026-04-04 13:47:45,618 | INFO | JobAgent.tools | search role keywords=前端
+2026-04-04 13:47:45,620 | INFO | JobAgent.database | hybrid search: keywords=前端 北京 city=北京 company= experience= salary_min=0 salary_unit=
+2026-04-04 13:47:47,836 | INFO | JobAgent.database | recall count: vec=200 bm25=200
+2026-04-04 13:47:47,838 | INFO | JobAgent.database | 🔀 [RRF] vec=200 bm25=200 merged=299 return=90
+  [前端] vec+bm25 v=1 b=3 rrf=0.03227
+  [前端] vec+bm25 v=6 b=1 rrf=0.03154
+  [前端] vec+bm25 v=2 b=8 rrf=0.03083
+  [前端技术经理（北京驻场）] vec+bm25 v=13 b=2 rrf=0.02983
+  [前端工程师] vec+bm25 v=11 b=4 rrf=0.02971
+  [前端工程师] vec+bm25 v=3 b=13 rrf=0.02957
+  [前端开发工程师（北京）] vec+bm25 v=4 b=18 rrf=0.02845
+  [前端工程师] vec+bm25 v=8 b=22 rrf=0.02690
+  [web前端] vec+bm25 v=21 b=14 rrf=0.02586
+  [web前端] vec+bm25 v=5 b=36 rrf=0.02580
+  [web前端高级工程师] vec+bm25 v=38 b=5 rrf=0.02559
+  [前端] vec+bm25 v=7 b=34 rrf=0.02556
+  [前端研发工程师] vec+bm25 v=29 b=10 rrf=0.02552
+  [前端高级开发工程师] vec+bm25 v=17 b=20 rrf=0.02549
+  [前端工程师] vec+bm25 v=16 b=24 rrf=0.02506
+  [中级前端工程师] vec+bm25 v=41 b=6 rrf=0.02505
+  [web前端开发北京] vec+bm25 v=12 b=30 rrf=0.02500
+  [前端工程师] vec+bm25 v=20 b=21 rrf=0.02485
+  [react前端开发（北京）] vec+bm25 v=48 b=7 rrf=0.02418
+  [前端-web（证券 双休）] vec+bm25 v=9 b=47 rrf=0.02384
+  [中级web前端] vec+bm25 v=25 b=27 rrf=0.02326
+  [高级前端工程师] vec+bm25 v=39 b=16 rrf=0.02326
+  [资深前端开发工程师] vec+bm25 v=18 b=37 rrf=0.02313
+  [web前端工程师] vec+bm25 v=31 b=28 rrf=0.02235
+  [前端工程师（中级｜React）] vec+bm25 v=24 b=39 rrf=0.02201
+  [vue前端工程师-知网] vec+bm25 v=74 b=9 rrf=0.02196
+  [VUE前端工程师] vec+bm25 v=53 b=17 rrf=0.02184
+  [前端开发（Vue方向）] vec+bm25 v=14 b=62 rrf=0.02171
+  [前端网页开发工程师] vec+bm25 v=73 b=11 rrf=0.02160
+  [前端开发工程师] vec+bm25 v=51 b=23 rrf=0.02106
+  [高级前端工程师] vec+bm25 v=80 b=12 rrf=0.02103
+  [前端技术经理] vec+bm25 v=33 b=49 rrf=0.01993
+  [前端开发工程师] vec+bm25 v=37 b=45 rrf=0.01983
+  [前端开发工程师] vec+bm25 v=23 b=70 rrf=0.01974
+  [web前端/测试] vec+bm25 v=42 b=42 rrf=0.01961
+  [前端开发工程师] vec+bm25 v=45 b=41 rrf=0.01942
+  [vue前端工程师] vec+bm25 v=61 b=31 rrf=0.01925
+  [Vue3前端（外包万达）] vec+bm25 v=93 b=19 rrf=0.01919
+  [高级web前端工程师] vec+bm25 v=81 b=25 rrf=0.01886
+  [前端] vec+bm25 v=79 b=26 rrf=0.01882
+  [高级前端工程师] vec+bm25 v=66 b=33 rrf=0.01869
+  [前端技术合伙人] vec+bm25 v=47 b=48 rrf=0.01861
+  [react前端] vec+bm25 v=55 b=43 rrf=0.01840
+  [前端开发lm] vec+bm25 v=30 b=81 rrf=0.01820
+  [vue前端] vec+bm25 v=62 b=40 rrf=0.01820
+  [前端开发工程师] vec+bm25 v=28 b=89 rrf=0.01808
+  [前端开发工程师] vec+bm25 v=35 b=75 rrf=0.01793
+  [前端研发工程师] vec+bm25 v=44 b=61 rrf=0.01788
+  [前端开发工程师] vec+bm25 v=43 b=63 rrf=0.01784
+  [资深前端开发工程师] vec+bm25 v=96 b=29 rrf=0.01765
+  [前端开发工程师] vec+bm25 v=34 b=87 rrf=0.01744
+  [高级前端开发] vec+bm25 v=32 b=101 rrf=0.01708
+  [react前端开发工程师] vec+bm25 v=90 b=38 rrf=0.01687
+  [react前端开发工程师] vec+bm25 v=56 b=64 rrf=0.01669
+  [Web前端工程师] vec+bm25 v=71 b=54 rrf=0.01641
+  [前端开发] vec+bm25 v=52 b=74 rrf=0.01639
+  [前端开发工程师] vec+bm25 v=50 b=84 rrf=0.01604
+  [运维工程师（北京）] vec+bm25 v=140 b=32 rrf=0.01587
+  [react前端开发工程师] vec+bm25 v=97 b=46 rrf=0.01580
+  [前端] vec+bm25 v=94 b=50 rrf=0.01558
+  [uniapp前端开发] vec+bm25 v=69 b=72 rrf=0.01533
+  [React前端开发工程师] vec+bm25 v=84 b=66 rrf=0.01488
+  [复制粘贴 客服岗] vec+bm25 v=82 b=71 rrf=0.01468
+  [前端开发(J21381)] vec+bm25 v=68 b=90 rrf=0.01448
+  [react前端开发] vec+bm25 v=36 b=195 rrf=0.01434
+  [前端开发] vec v=10 b=- rrf=0.01429
+  [产品经理（军工方向北京）] vec+bm25 v=110 b=59 rrf=0.01429
+  [中级前端开发工程师] vec+bm25 v=70 b=94 rrf=0.01419
+  [无责6300+纯客服不含销售性质！！] vec+bm25 v=98 b=68 rrf=0.01414
+  [北京呼叫中心 全国客服岗 均薪8k] vec+bm25 v=139 b=55 rrf=0.01372
+  [后端java] vec+bm25 v=76 b=99 rrf=0.01364
+  [[北京]产品经理] vec+bm25 v=135 b=58 rrf=0.01360
+  [北京-外包java] vec+bm25 v=150 b=56 rrf=0.01338
+  [前端开发工程师] vec+bm25 v=46 b=196 rrf=0.01334
+  [前端开发（react）] vec v=15 b=- rrf=0.01333
+  [咨询教务老师（北京销售岗）] bm25 v=- b=15 rrf=0.01333
+  [会开车的来(北京社保+销售岗）] vec+bm25 v=171 b=52 rrf=0.01326
+  [前端开发-ERP] vec+bm25 v=87 b=95 rrf=0.01325
+  [前端开发工程师] vec v=19 b=- rrf=0.01266
+  [中级前端开发工程师] vec+bm25 v=58 b=199 rrf=0.01234
+  [前端开发] vec v=22 b=- rrf=0.01220
+  [高级java] vec+bm25 v=144 b=79 rrf=0.01210
+  [年前面试/年前入职的销售岗] vec+bm25 v=128 b=88 rrf=0.01208
+  [兼职前端开发工程师] vec+bm25 v=65 b=197 rrf=0.01189
+  [java研发] vec+bm25 v=200 b=65 rrf=0.01185
+  [急！全职教师_初高学段] vec+bm25 v=174 b=73 rrf=0.01179
+  [前端开发工程师] vec v=26 b=- rrf=0.01163
+  [前端开发工程师] vec v=27 b=- rrf=0.01149
+  [复制+粘贴 话术 无需动脑 客服岗] vec+bm25 v=116 b=117 rrf=0.01133
+  [售前客服] vec+bm25 v=118 b=123 rrf=0.01108
+2026-04-04 13:47:47,838 | INFO | JobAgent.database | hybrid search: keywords=前端 北京 前端开发 web前端 前端工程师 vue react typescript javascript uniapp next.js city=北京 company= experience= salary_min=0 salary_unit=
+2026-04-04 13:47:48,025 | INFO | JobAgent.database | recall count: vec=200 bm25=200
+2026-04-04 13:47:48,029 | INFO | JobAgent.database | 🔀 [RRF] vec=200 bm25=200 merged=286 return=90
+  [uniapp前端开发] vec+bm25 v=2 b=5 rrf=0.03151
+  [前端开发（react）] vec+bm25 v=4 b=3 rrf=0.03150
+  [vue前端工程师-知网] vec+bm25 v=12 b=10 rrf=0.02817
+  [VUE前端工程师] vec+bm25 v=11 b=11 rrf=0.02817
+  [vue前端工程师] vec+bm25 v=17 b=6 rrf=0.02814
+  [前端] vec+bm25 v=1 b=27 rrf=0.02789
+  [react前端] vec+bm25 v=14 b=12 rrf=0.02740
+  [前端] vec+bm25 v=13 b=13 rrf=0.02740
+  [react前端开发（北京）] vec+bm25 v=31 b=2 rrf=0.02712
+  [web前端开发北京] vec+bm25 v=9 b=22 rrf=0.02669
+  [前端工程师（中级｜React）] vec+bm25 v=28 b=7 rrf=0.02629
+  [vue前端] vec+bm25 v=7 b=29 rrf=0.02616
+  [前端开发（Vue方向）] vec+bm25 v=15 b=19 rrf=0.02599
+  [前端开发工程师] vec+bm25 v=45 b=1 rrf=0.02592
+  [react前端开发工程师] vec+bm25 v=30 b=8 rrf=0.02582
+  [react前端开发工程师] vec+bm25 v=33 b=9 rrf=0.02525
+  [web前端/测试] vec+bm25 v=10 b=32 rrf=0.02516
+  [前端开发工程师] vec+bm25 v=29 b=16 rrf=0.02439
+  [前端工程师] vec+bm25 v=8 b=44 rrf=0.02432
+  [前端开发（vue）] vec+bm25 v=19 b=28 rrf=0.02402
+  [前端] vec+bm25 v=38 b=14 rrf=0.02372
+  [前端-web（证券 双休）] vec+bm25 v=3 b=71 rrf=0.02351
+  [前端网页开发工程师] vec+bm25 v=20 b=31 rrf=0.02349
+  [react前端开发工程师] vec+bm25 v=39 b=15 rrf=0.02343
+  [web前端] vec+bm25 v=6 b=67 rrf=0.02303
+  [前端开发工程师] vec+bm25 v=21 b=35 rrf=0.02287
+  [web前端工程师] vec+bm25 v=5 b=77 rrf=0.02268
+  [前端工程师] vec+bm25 v=24 b=33 rrf=0.02266
+  [vue前端开发] vec+bm25 v=16 b=49 rrf=0.02233
+  [前端开发工程师] vec+bm25 v=35 b=25 rrf=0.02229
+  [React前端开发工程师] vec+bm25 v=49 b=17 rrf=0.02216
+  [资深前端开发工程师] vec+bm25 v=95 b=4 rrf=0.02208
+  [react前端开发] vec+bm25 v=34 b=30 rrf=0.02175
+  [前端开发工程师] vec+bm25 v=32 b=38 rrf=0.02107
+  [前端开发工程师（北京）] vec+bm25 v=57 b=21 rrf=0.02089
+  [前端开发] vec+bm25 v=25 b=50 rrf=0.02086
+  [前端开发工程师] vec+bm25 v=65 b=18 rrf=0.02082
+  [前端开发工程师] vec+bm25 v=23 b=57 rrf=0.02060
+  [中级web前端] vec+bm25 v=26 b=52 rrf=0.02056
+  [前端开发(J21381)] vec+bm25 v=36 b=45 rrf=0.01994
+  [高级web前端工程师] vec+bm25 v=18 b=83 rrf=0.01981
+  [前端开发工程师] vec+bm25 v=43 b=39 rrf=0.01981
+  [资深前端开发工程师] vec+bm25 v=63 b=26 rrf=0.01976
+  [前端研发工程师] vec+bm25 v=42 b=42 rrf=0.01961
+  [前端工程师] vec+bm25 v=52 b=34 rrf=0.01957
+  [Web前端工程师] vec+bm25 v=22 b=79 rrf=0.01939
+  [前端开发lm] vec+bm25 v=75 b=24 rrf=0.01931
+  [前端开发] vec+bm25 v=27 b=68 rrf=0.01931
+  [高级前端工程师] vec+bm25 v=88 b=20 rrf=0.01926
+  [中级前端工程师] vec+bm25 v=83 b=23 rrf=0.01904
+  [web前端高级工程师] vec+bm25 v=37 b=55 rrf=0.01900
+  [前端开发工程师] vec+bm25 v=46 b=51 rrf=0.01844
+  [前端工程师] vec+bm25 v=51 b=48 rrf=0.01827
+  [中级前端开发工程师] vec+bm25 v=69 b=36 rrf=0.01817
+  [react前端开发] vec+bm25 v=61 b=41 rrf=0.01817
+  [前端开发工程师（京东）] vec+bm25 v=60 b=46 rrf=0.01777
+  [前端开发工程师] vec+bm25 v=44 b=65 rrf=0.01762
+  [高级前端工程师] vec+bm25 v=77 b=37 rrf=0.01761
+  [前端技术经理（北京驻场）] vec+bm25 v=73 b=40 rrf=0.01752
+  [前端开发] vec+bm25 v=41 b=75 rrf=0.01731
+  [前端开发工程师] vec+bm25 v=55 b=59 rrf=0.01710
+  [高级前端工程师] vec+bm25 v=78 b=43 rrf=0.01696
+  [前端开发工程师] vec+bm25 v=56 b=62 rrf=0.01682
+  [前端开发工程师] vec+bm25 v=66 b=53 rrf=0.01679
+  [前端开发工程师] vec+bm25 v=58 b=61 rrf=0.01674
+  [兼职前端开发工程师] vec+bm25 v=76 b=47 rrf=0.01670
+  [前端开发工程师] vec+bm25 v=53 b=70 rrf=0.01654
+  [高级前端开发] vec+bm25 v=67 b=56 rrf=0.01649
+  [web前端] vec+bm25 v=40 b=96 rrf=0.01641
+  [前端开发工程师] vec+bm25 v=48 b=80 rrf=0.01640
+  [前端高级开发工程师] vec+bm25 v=54 b=73 rrf=0.01629
+  [web前端开发] vec+bm25 v=47 b=84 rrf=0.01629
+  [前端] vec+bm25 v=81 b=54 rrf=0.01586
+  [前端开发工程师] vec+bm25 v=50 b=88 rrf=0.01585
+  [前端开发工程师（安全）] vec+bm25 v=74 b=60 rrf=0.01580
+  [前端开发工程师] vec+bm25 v=68 b=66 rrf=0.01575
+  [前端工程师] vec+bm25 v=59 b=78 rrf=0.01565
+  [前端开发工程师] vec+bm25 v=64 b=72 rrf=0.01564
+  [前端开发-ERP] vec+bm25 v=82 b=58 rrf=0.01552
+  [资深前端开发工程师] vec+bm25 v=71 b=69 rrf=0.01539
+  [前端开发工程师] vec+bm25 v=70 b=74 rrf=0.01515
+  [Vue3前端（外包万达）] vec+bm25 v=84 b=63 rrf=0.01507
+  [中级前端开发工程师] vec+bm25 v=87 b=64 rrf=0.01487
+  [前端技术经理] vec+bm25 v=62 b=92 rrf=0.01478
+  [前端技术合伙人] vec+bm25 v=79 b=85 rrf=0.01409
+  [中级前端开发] vec+bm25 v=90 b=76 rrf=0.01402
+  [前端开发工程师中级] vec+bm25 v=80 b=93 rrf=0.01368
+  [前端] vec+bm25 v=85 b=91 rrf=0.01352
+  [java研发] vec+bm25 v=101 b=81 rrf=0.01330
+  [初级前端开发工程师] vec+bm25 v=86 b=98 rrf=0.01318
+2026-04-04 13:47:48,030 | INFO | JobAgent.tools | search tool recalled strict=30 expanded=30 expanded_query=前端 北京 前端开发 web前端 前端工程师 vue react typescript javascript uniapp next.js
+2026-04-04 13:47:48,030 | INFO | JobAgent.tools | search tool merged 44 unique candidates after weighted fusion
+2026-04-04 13:47:48,031 | INFO | JobAgent.tools | search tool kept 44 candidates after title filter
+2026-04-04 13:47:56,119 | INFO | JobAgent.tools | search rerank complete: max=0.9705 min=0.6249
+2026-04-04 13:47:56,121 | INFO | JobAgent.tools | search cache set: key=search:result:v1:94e71e91718ff522a5b4830fb92d4a9dd4589bea6d5cc4a47959c6466214fed5 ttl=632s results=6
+2026-04-04 13:47:56,125 | INFO | JobAgent.chat_graph | search result summary: total=6 matched_role_count=5 mismatch_count=0 experience= experience_match_count=5 role_keywords=前端
+2026-04-04 13:47:56,125 | INFO | JobAgent.chat_graph | relevance filter rules: role_keywords=前端 required_experience=<none> role_rule=title must match at least one target role keyword; if mismatch roles > matched roles then drop experience_rule=skipped (no experience constraint)
+2026-04-04 13:47:56,125 | INFO | JobAgent.chat_graph | relevance filter dropped 0/6 candidates
+2026-04-04 13:47:56,125 | INFO | JobAgent.chat_graph | relevance filter kept 6/6 candidates: [1] web前端开发北京 @ 瑞友慧智 ; [2] 前端开发工程师 @ 拓保软件 ; [3] 前端研发工程师 @ 小全科技 ; [4] web前端 @ 北京柯睿思信息技术 ; [5] 前端 @ 紫航雾 ; [6] 资深前端开发工程师 @ 北京创界科技发展
+2026-04-04 13:47:56,129 | INFO | JobAgent.chat_graph | job alive check summary: total=6 active=6 unknown=0 closed=0 kept=6 dropped=0
+2026-04-04 13:50:27,236 | INFO | JobAgent.chat_router | chat stream: user=00004 session=chat:00004:deb4d003c020
+2026-04-04 13:50:34,176 | INFO | JobAgent.chat_graph | planner normalized search plan: {"resolved_query": "寻找北京地区的前端开发相关岗位", "keyword_query": "前端 北京", "city": "北京", "company": "", "experience": "", "salary_min": 0, "salary_unit": ""}
+2026-04-04 13:50:34,177 | INFO | JobAgent.chat_graph | search node running: query=前端 北京 city=北京 experience= salary_min=0 salary_unit=
+2026-04-04 13:50:34,178 | INFO | JobAgent.tools | search tool invoked: query=寻找北京地区的前端开发相关岗位 effective_query=前端 北京 city=北京->北京 company= experience=-> salary_min=0 salary_unit=
+2026-04-04 13:50:34,178 | INFO | JobAgent.tools | search role keywords=前端
+2026-04-04 13:50:34,181 | INFO | JobAgent.database | hybrid search: keywords=前端 北京 city=北京 company= experience= salary_min=0 salary_unit=
+2026-04-04 13:50:36,400 | INFO | JobAgent.database | recall count: vec=200 bm25=200
+2026-04-04 13:50:36,403 | INFO | JobAgent.database | 🔀 [RRF] vec=200 bm25=200 merged=299 return=90
+  [前端] vec+bm25 v=1 b=3 rrf=0.03227
+  [前端] vec+bm25 v=6 b=1 rrf=0.03154
+  [前端] vec+bm25 v=2 b=8 rrf=0.03083
+  [前端技术经理（北京驻场）] vec+bm25 v=13 b=2 rrf=0.02983
+  [前端工程师] vec+bm25 v=11 b=4 rrf=0.02971
+  [前端工程师] vec+bm25 v=3 b=13 rrf=0.02957
+  [前端开发工程师（北京）] vec+bm25 v=4 b=18 rrf=0.02845
+  [前端工程师] vec+bm25 v=8 b=22 rrf=0.02690
+  [web前端] vec+bm25 v=21 b=14 rrf=0.02586
+  [web前端] vec+bm25 v=5 b=36 rrf=0.02580
+  [web前端高级工程师] vec+bm25 v=38 b=5 rrf=0.02559
+  [前端] vec+bm25 v=7 b=34 rrf=0.02556
+  [前端研发工程师] vec+bm25 v=29 b=10 rrf=0.02552
+  [前端高级开发工程师] vec+bm25 v=17 b=20 rrf=0.02549
+  [前端工程师] vec+bm25 v=16 b=24 rrf=0.02506
+  [中级前端工程师] vec+bm25 v=41 b=6 rrf=0.02505
+  [web前端开发北京] vec+bm25 v=12 b=30 rrf=0.02500
+  [前端工程师] vec+bm25 v=20 b=21 rrf=0.02485
+  [react前端开发（北京）] vec+bm25 v=48 b=7 rrf=0.02418
+  [前端-web（证券 双休）] vec+bm25 v=9 b=47 rrf=0.02384
+  [中级web前端] vec+bm25 v=25 b=27 rrf=0.02326
+  [高级前端工程师] vec+bm25 v=39 b=16 rrf=0.02326
+  [资深前端开发工程师] vec+bm25 v=18 b=37 rrf=0.02313
+  [web前端工程师] vec+bm25 v=31 b=28 rrf=0.02235
+  [前端工程师（中级｜React）] vec+bm25 v=24 b=39 rrf=0.02201
+  [vue前端工程师-知网] vec+bm25 v=74 b=9 rrf=0.02196
+  [VUE前端工程师] vec+bm25 v=53 b=17 rrf=0.02184
+  [前端开发（Vue方向）] vec+bm25 v=14 b=62 rrf=0.02171
+  [前端网页开发工程师] vec+bm25 v=73 b=11 rrf=0.02160
+  [前端开发工程师] vec+bm25 v=51 b=23 rrf=0.02106
+  [高级前端工程师] vec+bm25 v=80 b=12 rrf=0.02103
+  [前端技术经理] vec+bm25 v=33 b=49 rrf=0.01993
+  [前端开发工程师] vec+bm25 v=37 b=45 rrf=0.01983
+  [前端开发工程师] vec+bm25 v=23 b=70 rrf=0.01974
+  [web前端/测试] vec+bm25 v=42 b=42 rrf=0.01961
+  [前端开发工程师] vec+bm25 v=45 b=41 rrf=0.01942
+  [vue前端工程师] vec+bm25 v=61 b=31 rrf=0.01925
+  [Vue3前端（外包万达）] vec+bm25 v=93 b=19 rrf=0.01919
+  [高级web前端工程师] vec+bm25 v=81 b=25 rrf=0.01886
+  [前端] vec+bm25 v=79 b=26 rrf=0.01882
+  [高级前端工程师] vec+bm25 v=66 b=33 rrf=0.01869
+  [前端技术合伙人] vec+bm25 v=47 b=48 rrf=0.01861
+  [react前端] vec+bm25 v=55 b=43 rrf=0.01840
+  [前端开发lm] vec+bm25 v=30 b=81 rrf=0.01820
+  [vue前端] vec+bm25 v=62 b=40 rrf=0.01820
+  [前端开发工程师] vec+bm25 v=28 b=89 rrf=0.01808
+  [前端开发工程师] vec+bm25 v=35 b=75 rrf=0.01793
+  [前端研发工程师] vec+bm25 v=44 b=61 rrf=0.01788
+  [前端开发工程师] vec+bm25 v=43 b=63 rrf=0.01784
+  [资深前端开发工程师] vec+bm25 v=96 b=29 rrf=0.01765
+  [前端开发工程师] vec+bm25 v=34 b=87 rrf=0.01744
+  [高级前端开发] vec+bm25 v=32 b=101 rrf=0.01708
+  [react前端开发工程师] vec+bm25 v=90 b=38 rrf=0.01687
+  [react前端开发工程师] vec+bm25 v=56 b=64 rrf=0.01669
+  [Web前端工程师] vec+bm25 v=71 b=54 rrf=0.01641
+  [前端开发] vec+bm25 v=52 b=74 rrf=0.01639
+  [前端开发工程师] vec+bm25 v=50 b=84 rrf=0.01604
+  [运维工程师（北京）] vec+bm25 v=140 b=32 rrf=0.01587
+  [react前端开发工程师] vec+bm25 v=97 b=46 rrf=0.01580
+  [前端] vec+bm25 v=94 b=50 rrf=0.01558
+  [uniapp前端开发] vec+bm25 v=69 b=72 rrf=0.01533
+  [React前端开发工程师] vec+bm25 v=84 b=66 rrf=0.01488
+  [复制粘贴 客服岗] vec+bm25 v=82 b=71 rrf=0.01468
+  [前端开发(J21381)] vec+bm25 v=68 b=90 rrf=0.01448
+  [react前端开发] vec+bm25 v=36 b=195 rrf=0.01434
+  [前端开发] vec v=10 b=- rrf=0.01429
+  [产品经理（军工方向北京）] vec+bm25 v=110 b=59 rrf=0.01429
+  [中级前端开发工程师] vec+bm25 v=70 b=94 rrf=0.01419
+  [无责6300+纯客服不含销售性质！！] vec+bm25 v=98 b=68 rrf=0.01414
+  [北京呼叫中心 全国客服岗 均薪8k] vec+bm25 v=139 b=55 rrf=0.01372
+  [后端java] vec+bm25 v=76 b=99 rrf=0.01364
+  [[北京]产品经理] vec+bm25 v=135 b=58 rrf=0.01360
+  [北京-外包java] vec+bm25 v=150 b=56 rrf=0.01338
+  [前端开发工程师] vec+bm25 v=46 b=196 rrf=0.01334
+  [前端开发（react）] vec v=15 b=- rrf=0.01333
+  [咨询教务老师（北京销售岗）] bm25 v=- b=15 rrf=0.01333
+  [会开车的来(北京社保+销售岗）] vec+bm25 v=171 b=52 rrf=0.01326
+  [前端开发-ERP] vec+bm25 v=87 b=95 rrf=0.01325
+  [前端开发工程师] vec v=19 b=- rrf=0.01266
+  [中级前端开发工程师] vec+bm25 v=58 b=199 rrf=0.01234
+  [前端开发] vec v=22 b=- rrf=0.01220
+  [高级java] vec+bm25 v=144 b=79 rrf=0.01210
+  [年前面试/年前入职的销售岗] vec+bm25 v=128 b=88 rrf=0.01208
+  [兼职前端开发工程师] vec+bm25 v=65 b=197 rrf=0.01189
+  [java研发] vec+bm25 v=200 b=65 rrf=0.01185
+  [急！全职教师_初高学段] vec+bm25 v=174 b=73 rrf=0.01179
+  [前端开发工程师] vec v=26 b=- rrf=0.01163
+  [前端开发工程师] vec v=27 b=- rrf=0.01149
+  [复制+粘贴 话术 无需动脑 客服岗] vec+bm25 v=116 b=117 rrf=0.01133
+  [售前客服] vec+bm25 v=118 b=123 rrf=0.01108
+2026-04-04 13:50:36,404 | INFO | JobAgent.database | hybrid search: keywords=前端 北京 前端开发 web前端 前端工程师 vue react typescript javascript uniapp next.js city=北京 company= experience= salary_min=0 salary_unit=
+2026-04-04 13:50:36,587 | INFO | JobAgent.database | recall count: vec=200 bm25=200
+2026-04-04 13:50:36,589 | INFO | JobAgent.database | 🔀 [RRF] vec=200 bm25=200 merged=286 return=90
+  [uniapp前端开发] vec+bm25 v=2 b=5 rrf=0.03151
+  [前端开发（react）] vec+bm25 v=4 b=3 rrf=0.03150
+  [vue前端工程师-知网] vec+bm25 v=12 b=10 rrf=0.02817
+  [VUE前端工程师] vec+bm25 v=11 b=11 rrf=0.02817
+  [vue前端工程师] vec+bm25 v=17 b=6 rrf=0.02814
+  [前端] vec+bm25 v=1 b=27 rrf=0.02789
+  [react前端] vec+bm25 v=14 b=12 rrf=0.02740
+  [前端] vec+bm25 v=13 b=13 rrf=0.02740
+  [react前端开发（北京）] vec+bm25 v=31 b=2 rrf=0.02712
+  [web前端开发北京] vec+bm25 v=9 b=22 rrf=0.02669
+  [前端工程师（中级｜React）] vec+bm25 v=28 b=7 rrf=0.02629
+  [vue前端] vec+bm25 v=7 b=29 rrf=0.02616
+  [前端开发（Vue方向）] vec+bm25 v=15 b=19 rrf=0.02599
+  [前端开发工程师] vec+bm25 v=45 b=1 rrf=0.02592
+  [react前端开发工程师] vec+bm25 v=30 b=8 rrf=0.02582
+  [react前端开发工程师] vec+bm25 v=33 b=9 rrf=0.02525
+  [web前端/测试] vec+bm25 v=10 b=32 rrf=0.02516
+  [前端开发工程师] vec+bm25 v=29 b=16 rrf=0.02439
+  [前端工程师] vec+bm25 v=8 b=44 rrf=0.02432
+  [前端开发（vue）] vec+bm25 v=19 b=28 rrf=0.02402
+  [前端] vec+bm25 v=38 b=14 rrf=0.02372
+  [前端-web（证券 双休）] vec+bm25 v=3 b=71 rrf=0.02351
+  [前端网页开发工程师] vec+bm25 v=20 b=31 rrf=0.02349
+  [react前端开发工程师] vec+bm25 v=39 b=15 rrf=0.02343
+  [web前端] vec+bm25 v=6 b=67 rrf=0.02303
+  [前端开发工程师] vec+bm25 v=21 b=35 rrf=0.02287
+  [web前端工程师] vec+bm25 v=5 b=77 rrf=0.02268
+  [前端工程师] vec+bm25 v=24 b=33 rrf=0.02266
+  [vue前端开发] vec+bm25 v=16 b=49 rrf=0.02233
+  [前端开发工程师] vec+bm25 v=35 b=25 rrf=0.02229
+  [React前端开发工程师] vec+bm25 v=49 b=17 rrf=0.02216
+  [资深前端开发工程师] vec+bm25 v=95 b=4 rrf=0.02208
+  [react前端开发] vec+bm25 v=34 b=30 rrf=0.02175
+  [前端开发工程师] vec+bm25 v=32 b=38 rrf=0.02107
+  [前端开发工程师（北京）] vec+bm25 v=57 b=21 rrf=0.02089
+  [前端开发] vec+bm25 v=25 b=50 rrf=0.02086
+  [前端开发工程师] vec+bm25 v=65 b=18 rrf=0.02082
+  [前端开发工程师] vec+bm25 v=23 b=57 rrf=0.02060
+  [中级web前端] vec+bm25 v=26 b=52 rrf=0.02056
+  [前端开发(J21381)] vec+bm25 v=36 b=45 rrf=0.01994
+  [高级web前端工程师] vec+bm25 v=18 b=83 rrf=0.01981
+  [前端开发工程师] vec+bm25 v=43 b=39 rrf=0.01981
+  [资深前端开发工程师] vec+bm25 v=63 b=26 rrf=0.01976
+  [前端研发工程师] vec+bm25 v=42 b=42 rrf=0.01961
+  [前端工程师] vec+bm25 v=52 b=34 rrf=0.01957
+  [Web前端工程师] vec+bm25 v=22 b=79 rrf=0.01939
+  [前端开发lm] vec+bm25 v=75 b=24 rrf=0.01931
+  [前端开发] vec+bm25 v=27 b=68 rrf=0.01931
+  [高级前端工程师] vec+bm25 v=88 b=20 rrf=0.01926
+  [中级前端工程师] vec+bm25 v=83 b=23 rrf=0.01904
+  [web前端高级工程师] vec+bm25 v=37 b=55 rrf=0.01900
+  [前端开发工程师] vec+bm25 v=46 b=51 rrf=0.01844
+  [前端工程师] vec+bm25 v=51 b=48 rrf=0.01827
+  [中级前端开发工程师] vec+bm25 v=69 b=36 rrf=0.01817
+  [react前端开发] vec+bm25 v=61 b=41 rrf=0.01817
+  [前端开发工程师（京东）] vec+bm25 v=60 b=46 rrf=0.01777
+  [前端开发工程师] vec+bm25 v=44 b=65 rrf=0.01762
+  [高级前端工程师] vec+bm25 v=77 b=37 rrf=0.01761
+  [前端技术经理（北京驻场）] vec+bm25 v=73 b=40 rrf=0.01752
+  [前端开发] vec+bm25 v=41 b=75 rrf=0.01731
+  [前端开发工程师] vec+bm25 v=55 b=59 rrf=0.01710
+  [高级前端工程师] vec+bm25 v=78 b=43 rrf=0.01696
+  [前端开发工程师] vec+bm25 v=56 b=62 rrf=0.01682
+  [前端开发工程师] vec+bm25 v=66 b=53 rrf=0.01679
+  [前端开发工程师] vec+bm25 v=58 b=61 rrf=0.01674
+  [兼职前端开发工程师] vec+bm25 v=76 b=47 rrf=0.01670
+  [前端开发工程师] vec+bm25 v=53 b=70 rrf=0.01654
+  [高级前端开发] vec+bm25 v=67 b=56 rrf=0.01649
+  [web前端] vec+bm25 v=40 b=96 rrf=0.01641
+  [前端开发工程师] vec+bm25 v=48 b=80 rrf=0.01640
+  [前端高级开发工程师] vec+bm25 v=54 b=73 rrf=0.01629
+  [web前端开发] vec+bm25 v=47 b=84 rrf=0.01629
+  [前端] vec+bm25 v=81 b=54 rrf=0.01586
+  [前端开发工程师] vec+bm25 v=50 b=88 rrf=0.01585
+  [前端开发工程师（安全）] vec+bm25 v=74 b=60 rrf=0.01580
+  [前端开发工程师] vec+bm25 v=68 b=66 rrf=0.01575
+  [前端工程师] vec+bm25 v=59 b=78 rrf=0.01565
+  [前端开发工程师] vec+bm25 v=64 b=72 rrf=0.01564
+  [前端开发-ERP] vec+bm25 v=82 b=58 rrf=0.01552
+  [资深前端开发工程师] vec+bm25 v=71 b=69 rrf=0.01539
+  [前端开发工程师] vec+bm25 v=70 b=74 rrf=0.01515
+  [Vue3前端（外包万达）] vec+bm25 v=84 b=63 rrf=0.01507
+  [中级前端开发工程师] vec+bm25 v=87 b=64 rrf=0.01487
+  [前端技术经理] vec+bm25 v=62 b=92 rrf=0.01478
+  [前端技术合伙人] vec+bm25 v=79 b=85 rrf=0.01409
+  [中级前端开发] vec+bm25 v=90 b=76 rrf=0.01402
+  [前端开发工程师中级] vec+bm25 v=80 b=93 rrf=0.01368
+  [前端] vec+bm25 v=85 b=91 rrf=0.01352
+  [java研发] vec+bm25 v=101 b=81 rrf=0.01330
+  [初级前端开发工程师] vec+bm25 v=86 b=98 rrf=0.01318
+2026-04-04 13:50:36,591 | INFO | JobAgent.tools | search tool recalled strict=30 expanded=30 expanded_query=前端 北京 前端开发 web前端 前端工程师 vue react typescript javascript uniapp next.js
+2026-04-04 13:50:36,591 | INFO | JobAgent.tools | search tool merged 44 unique candidates after weighted fusion
+2026-04-04 13:50:36,591 | INFO | JobAgent.tools | search tool kept 44 candidates after title filter
+2026-04-04 13:50:43,899 | INFO | JobAgent.tools | search rerank complete: max=0.9748 min=0.6566
+2026-04-04 13:50:43,901 | INFO | JobAgent.tools | search cache set: key=search:result:v1:23c94d7e4865d50de0382fcfbc974f3eef80c1b532df7761e38ec47f89c725a9 ttl=617s results=6
+2026-04-04 13:50:43,905 | INFO | JobAgent.chat_graph | search result summary: total=6 matched_role_count=5 mismatch_count=0 experience= experience_match_count=5 role_keywords=前端
+2026-04-04 13:50:43,906 | INFO | JobAgent.chat_graph | relevance filter rules: role_keywords=前端 required_experience=<none> role_rule=title must match at least one target role keyword; if mismatch roles > matched roles then drop experience_rule=skipped (no experience constraint)
+2026-04-04 13:50:43,906 | INFO | JobAgent.chat_graph | relevance filter dropped 0/6 candidates
+2026-04-04 13:50:43,906 | INFO | JobAgent.chat_graph | relevance filter kept 6/6 candidates: [1] web前端开发北京 @ 瑞友慧智 ; [2] 前端开发工程师 @ 拓保软件 ; [3] 前端研发工程师 @ 小全科技 ; [4] web前端 @ 北京柯睿思信息技术 ; [5] 资深前端开发工程师 @ 北京创界科技发展 ; [6] 前端 @ 紫航雾
+2026-04-04 13:50:43,910 | INFO | JobAgent.chat_graph | job alive check summary: total=6 active=6 unknown=0 closed=0 kept=6 dropped=0
+2026-04-04 13:54:01,614 | INFO | JobAgent.resume_task_queue | resume task worker stopped
+2026-04-04 13:54:01,614 | INFO | JobAgent.main | application shutting down

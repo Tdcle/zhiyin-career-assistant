@@ -1,0 +1,3 @@
+2026-04-03 16:26:19,748 | INFO | JobAgent.job_alive_probe | job alive probe start: total_urls=1 timeout=20 poll_interval=0.5
+2026-04-03 16:26:20,462 | INFO | JobAgent.job_alive_probe | checking 1/1: https://www.zhipin.com/job_detail/6b3f898231ea0cb10nV529W1EVZT.html
+2026-04-03 16:26:41,676 | INFO | JobAgent.job_alive_probe | unknown detected, tab kept open for manual inspection: title=「大模型实习生招聘」_医赋科技招聘-BOSS直聘 final_url=https://www.zhipin.com/job_detail/6b3f898231ea0cb10nV529W1EVZT.html reason=timeout_risk_or_login_page

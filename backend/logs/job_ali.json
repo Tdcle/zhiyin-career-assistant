@@ -1,0 +1,23 @@
+{
+  "summary": {
+    "total": 1,
+    "active": 1,
+    "closed": 0,
+    "unknown": 0
+  },
+  "results": [
+    {
+      "input_url": "https://www.zhipin.com/job_detail/f430b1c3c11b9e9803J-2926GVZR.html",
+      "final_url": "https://www.zhipin.com/job_detail/f430b1c3c11b9e9803J-2926GVZR.html",
+      "status": "active",
+      "reason": "active_keyword_hit",
+      "matched_keyword": "立即沟通",
+      "title": "「web前端开发北京招聘」_瑞友慧智招聘-BOSS直聘",
+      "checked_at": "2026-04-03T16:44:39",
+      "text_length": 3693,
+      "text_preview": "BOSS直聘 首页 职位 公司 校园 海归 APP 有了 海外 无障碍专区 搜索 我要招聘我要找工作 我要招聘 人才匹配度高 我要找工作 各大行业职位任选 登录/注册 登录注册后可以： 找工作，直接谈，找得快 招人，匹配更精准，招得准 海归专属，高薪职位 去看看 最新 web前端开发北京 元 北京3-5年本科 感兴趣 立即沟通 web前端开发北京 感兴趣 立即沟通 瑞友慧智 查看所有职位 点击登录，立即与BOSS沟通 各大行业职位任你选",
+      "elapsed_seconds": 1.56,
+      "poll_checks": 3
+    }
+  ]
+}

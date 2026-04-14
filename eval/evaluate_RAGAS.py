@@ -17,7 +17,7 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if project_root not in sys.path:
     sys.path.append(project_root)
 
-from utils.logger import add_file_handler, get_logger
+from backend.utils.logger import add_file_handler, get_logger
 
 # ================= 1. 自动归档与全局日志配置 =================
 EVAL_DIR = os.path.dirname(__file__)
@@ -53,8 +53,8 @@ sys.stderr = sys.stdout  # 捕获错误信息
 logger = get_logger("eval.evaluate_ragas")
 add_file_handler(log_file_path)
 
-from utils.database import DatabaseManager
-from config.config import config
+from backend.db import DatabaseManager
+from backend.config.config import config
 from langchain_ollama import OllamaEmbeddings
 from langchain_core.messages import HumanMessage
 from ragas import evaluate

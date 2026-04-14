@@ -1,0 +1,5 @@
+2026-04-03 16:44:36,526 | INFO | JobAgent.job_alive_probe | job alive probe start: total_urls=1 timeout=20 poll_interval=0.5
+2026-04-03 16:44:37,235 | INFO | JobAgent.job_alive_probe | checking 1/1: https://www.zhipin.com/job_detail/f430b1c3c11b9e9803J-2926GVZR.html
+2026-04-03 16:44:39,703 | INFO | JobAgent.job_alive_probe | result 1/1: status=active reason=active_keyword_hit matched=立即沟通
+2026-04-03 16:44:41,947 | INFO | JobAgent.job_alive_probe | result written to logs\job_ali.json
+2026-04-03 16:44:41,949 | INFO | JobAgent.job_alive_probe | job alive probe done: {'total': 1, 'active': 1, 'closed': 0, 'unknown': 0}

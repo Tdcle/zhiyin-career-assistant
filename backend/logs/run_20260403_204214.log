@@ -1,0 +1,16 @@
+2026-04-03 20:42:14,920 | INFO | JobAgent.database | ✅ 数据库连接池创建成功: boss_zhipin
+2026-04-03 20:42:14,920 | INFO | JobAgent.database | loading embedding model: nomic-embed-text-v2-moe
+2026-04-03 20:42:15,640 | INFO | JobAgent.database | embedding model loaded: nomic-embed-text-v2-moe
+2026-04-03 20:42:15,703 | INFO | JobAgent.database | database schema and indexes ready
+2026-04-03 20:42:20,138 | INFO | JobAgent.tools | loading reranker model from ./models/bge-reranker-v2-m3
+2026-04-03 20:42:22,042 | INFO | JobAgent.tools | reranker model loaded
+2026-04-03 20:42:24,297 | INFO | JobAgent.main | application starting
+2026-04-03 20:43:59,238 | INFO | JobAgent.redis_client | redis connected: redis://localhost:6379/0
+2026-04-03 20:44:04,352 | INFO | JobAgent.chat_router | chat session deleted: user=00004 session=chat:00004:12391fa25d7c
+2026-04-03 20:44:06,018 | INFO | JobAgent.chat_router | chat session deleted: user=00004 session=chat:00004:e093827a1cd5
+2026-04-03 20:44:07,530 | INFO | JobAgent.chat_router | chat session deleted: user=00004 session=chat:00004:03af8d300540
+2026-04-03 20:44:09,292 | INFO | JobAgent.chat_router | chat session deleted: user=00004 session=chat:00004:41e914bc6655
+2026-04-03 20:44:14,948 | INFO | JobAgent.user_router | resume task created: task_id=8d870fe1315f4017a3322a3e03c94e14 user=00004 file=王来晨-大模型应用开发.pdf
+2026-04-03 20:45:23,856 | WARNING | JobAgent.file_parser | resume stage1 llm parse failed, fallback to heuristic parser: Expecting ',' delimiter: line 8 column 2 (char 2657)
+2026-04-03 20:45:50,491 | INFO | JobAgent.user_router | resume task completed: task_id=8d870fe1315f4017a3322a3e03c94e14 user=00004
+2026-04-03 20:47:13,205 | INFO | JobAgent.main | application shutting down

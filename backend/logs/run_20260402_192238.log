@@ -1,0 +1,6 @@
+2026-04-02 19:22:39,385 | INFO | JobAgent.database | ✅ 数据库连接池创建成功: boss_zhipin
+2026-04-02 19:22:39,385 | INFO | JobAgent.database | loading embedding model: nomic-embed-text-v2-moe
+2026-04-02 19:22:40,301 | INFO | JobAgent.database | embedding model loaded: nomic-embed-text-v2-moe
+2026-04-02 19:22:40,326 | INFO | JobAgent.database | database schema and indexes ready
+2026-04-02 19:22:45,421 | INFO | JobAgent.tools | loading reranker model from ./models/bge-reranker-v2-m3
+2026-04-02 19:22:45,423 | WARNING | JobAgent.tools | reranker unavailable, fallback to plain retrieval: Repo id must be in the form 'repo_name' or 'namespace/repo_name': './models/bge-reranker-v2-m3'. Use `repo_type` argument if needed.

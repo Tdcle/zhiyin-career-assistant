@@ -1,0 +1,1889 @@
+[
+  {
+    "case_id": "ingest_role_city_experience_daily_salary_001",
+    "category": "ingest",
+    "description": "\u4ece\u81ea\u7136\u8bed\u8a00\u4e2d\u62bd\u53d6\u76ee\u6807\u5c97\u4f4d\u3001\u57ce\u5e02\u3001\u5b9e\u4e60\u7ecf\u9a8c\u548c\u65e5\u85aa\u3002",
+    "setup_facts": [],
+    "user_text": "\u6211\u60f3\u627e\u4e0a\u6d77\u7684\u524d\u7aef\u5b9e\u4e60\uff0c\u85aa\u8d44\u6700\u597d 200 \u5143\u4e00\u5929\u4ee5\u4e0a\u3002",
+    "expected_profile": {
+      "desired_roles_contains": [
+        "\u524d\u7aef"
+      ],
+      "desired_cities_contains": [
+        "\u4e0a\u6d77"
+      ],
+      "desired_experience": "\u5b9e\u4e60",
+      "desired_salary_min": 200,
+      "desired_salary_unit": "yuan_day"
+    },
+    "expected_facts": [
+      {
+        "fact_key": "desired_role",
+        "fact_value": "\u524d\u7aef"
+      },
+      {
+        "fact_key": "desired_city",
+        "fact_value": "\u4e0a\u6d77"
+      },
+      {
+        "fact_key": "desired_experience",
+        "fact_value": "\u5b9e\u4e60"
+      },
+      {
+        "fact_key": "desired_salary",
+        "fact_value_contains": "200"
+      }
+    ]
+  },
+  {
+    "case_id": "ingest_backend_beijing_monthly_salary_002",
+    "category": "ingest",
+    "description": "\u62bd\u53d6\u540e\u7aef\u3001\u5317\u4eac\u548c\u6708\u85aa K\u3002",
+    "setup_facts": [],
+    "user_text": "\u6211\u4e3b\u8981\u60f3\u770b\u5317\u4eac\u7684\u540e\u7aef\u5c97\u4f4d\uff0c\u6708\u85aa 20k \u4ee5\u4e0a\u66f4\u597d\u3002",
+    "expected_profile": {
+      "desired_roles_contains": [
+        "\u540e\u7aef"
+      ],
+      "desired_cities_contains": [
+        "\u5317\u4eac"
+      ],
+      "desired_salary_min": 20,
+      "desired_salary_unit": "k_month"
+    },
+    "expected_facts": [
+      {
+        "fact_key": "desired_role",
+        "fact_value": "\u540e\u7aef"
+      },
+      {
+        "fact_key": "desired_city",
+        "fact_value": "\u5317\u4eac"
+      },
+      {
+        "fact_key": "desired_salary",
+        "fact_value_contains": "20"
+      }
+    ]
+  },
+  {
+    "case_id": "ingest_ai_shenzhen_skills_003",
+    "category": "ingest",
+    "description": "\u62bd\u53d6 AI \u65b9\u5411\u3001\u6df1\u5733\u548c\u6838\u5fc3\u6280\u80fd\u3002",
+    "setup_facts": [],
+    "user_text": "\u6211\u60f3\u5728\u6df1\u5733\u627e AI \u5e94\u7528\u5f00\u53d1\uff0c\u719f\u6089 Python\u3001FastAPI \u548c Redis\u3002",
+    "expected_profile": {
+      "desired_roles_contains": [
+        "AI"
+      ],
+      "desired_cities_contains": [
+        "\u6df1\u5733"
+      ],
+      "core_skills_contains": [
+        "python",
+        "fastapi",
+        "redis"
+      ]
+    },
+    "expected_facts": [
+      {
+        "fact_key": "desired_role",
+        "fact_value": "AI"
+      },
+      {
+        "fact_key": "desired_city",
+        "fact_value": "\u6df1\u5733"
+      },
+      {
+        "fact_key": "core_skill",
+        "fact_value": "python"
+      },
+      {
+        "fact_key": "core_skill",
+        "fact_value": "fastapi"
+      }
+    ]
+  },
+  {
+    "case_id": "ingest_city_unlimited_004",
+    "category": "ingest",
+    "description": "\u7528\u6237\u660e\u786e\u57ce\u5e02\u4e0d\u9650\u65f6\uff0c\u5e94\u6e05\u7a7a\u65e7\u57ce\u5e02\u504f\u597d\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_city",
+        "fact_value": "\u4e0a\u6d77",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "user_text": "\u57ce\u5e02\u4e0d\u9650\uff0c\u5168\u56fd\u548c\u8fdc\u7a0b\u90fd\u53ef\u4ee5\u3002",
+    "expected_profile": {
+      "desired_cities": []
+    },
+    "expected_facts": []
+  },
+  {
+    "case_id": "ingest_experience_non_internship_005",
+    "category": "ingest",
+    "description": "\u7528\u6237\u660e\u786e\u4e0d\u8981\u5b9e\u4e60\uff0c\u5e94\u8bb0\u5f55\u975e\u5b9e\u4e60\u504f\u597d\u3002",
+    "setup_facts": [],
+    "user_text": "\u6211\u73b0\u5728\u4e0d\u8003\u8651\u5b9e\u4e60\uff0c\u53ea\u770b\u6b63\u5f0f\u5168\u804c\u5c97\u4f4d\u3002",
+    "expected_profile": {
+      "desired_experience": "\u975e\u5b9e\u4e60"
+    },
+    "expected_resolution": {
+      "experience_include": "\u975e\u5b9e\u4e60",
+      "experience_exclude_contains": [
+        "\u5b9e\u4e60"
+      ]
+    }
+  },
+  {
+    "case_id": "ingest_exclude_frontend_006",
+    "category": "ingest",
+    "description": "\u7528\u6237\u5426\u5b9a\u67d0\u4e2a\u5c97\u4f4d\u65b9\u5411\uff0c\u5e94\u4f5c\u4e3a exclude \u8bb0\u5fc6\u3002",
+    "setup_facts": [],
+    "user_text": "\u4e0d\u60f3\u770b\u524d\u7aef\u5c97\u4f4d\u4e86\uff0c\u540e\u9762\u4e3b\u8981\u770b\u540e\u7aef\u3002",
+    "expected_resolution": {
+      "roles_include_contains": [
+        "\u540e\u7aef"
+      ],
+      "roles_exclude_contains": [
+        "\u524d\u7aef"
+      ]
+    }
+  },
+  {
+    "case_id": "ingest_preference_note_007",
+    "category": "ingest",
+    "description": "\u8f6f\u504f\u597d\u5199\u5165 preference_note\uff0c\u5e76\u53ef\u88ab\u4e0a\u4e0b\u6587\u53ec\u56de\u3002",
+    "setup_facts": [],
+    "user_text": "\u6211\u6bd4\u8f83\u5728\u610f\u53cc\u4f11\u3001\u8fdc\u7a0b\u529e\u516c\u548c\u4e94\u9669\u4e00\u91d1\u3002",
+    "expected_facts": [
+      {
+        "fact_key": "preference_note",
+        "fact_value_contains": "\u53cc\u4f11"
+      },
+      {
+        "fact_key": "preference_note",
+        "fact_value_contains": "\u8fdc\u7a0b"
+      }
+    ]
+  },
+  {
+    "case_id": "profile_merge_multiple_roles_008",
+    "category": "profile",
+    "description": "\u591a\u4e2a\u5c97\u4f4d fact \u80fd\u805a\u5408\u5230 profile\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_role",
+        "fact_value": "\u524d\u7aef",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      },
+      {
+        "fact_key": "desired_role",
+        "fact_value": "\u5168\u6808",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "expected_profile": {
+      "desired_roles_contains": [
+        "\u524d\u7aef",
+        "\u5168\u6808"
+      ]
+    }
+  },
+  {
+    "case_id": "profile_exclude_beats_include_same_city_009",
+    "category": "profile",
+    "description": "\u540c\u4e00\u57ce\u5e02\u540c\u65f6\u6709 include \u548c exclude \u65f6\uff0cexclude \u4e0d\u5e94\u8fdb\u5165 profile\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_city",
+        "fact_value": "\u4e0a\u6d77",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      },
+      {
+        "fact_key": "desired_city",
+        "fact_value": "\u4e0a\u6d77",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "exclude"
+        }
+      },
+      {
+        "fact_key": "desired_city",
+        "fact_value": "\u5317\u4eac",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "expected_profile": {
+      "desired_cities_contains": [
+        "\u5317\u4eac"
+      ],
+      "desired_cities_not_contains": [
+        "\u4e0a\u6d77"
+      ]
+    }
+  },
+  {
+    "case_id": "profile_single_value_experience_latest_010",
+    "category": "profile",
+    "description": "\u7ecf\u9a8c\u662f\u5355\u503c\u504f\u597d\uff0cprofile \u53ea\u5e94\u4fdd\u7559\u6709\u6548\u5355\u503c\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_experience",
+        "fact_value": "\u5b9e\u4e60",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      },
+      {
+        "fact_key": "desired_experience",
+        "fact_value": "\u975e\u5b9e\u4e60",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "expected_profile": {
+      "desired_experience": "\u975e\u5b9e\u4e60"
+    }
+  },
+  {
+    "case_id": "profile_core_skills_011",
+    "category": "profile",
+    "description": "\u6280\u80fd\u4e8b\u5b9e\u805a\u5408\u4e3a core_skills\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "core_skill",
+        "fact_value": "python",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      },
+      {
+        "fact_key": "core_skill",
+        "fact_value": "redis",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      },
+      {
+        "fact_key": "core_skill",
+        "fact_value": "fastapi",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "expected_profile": {
+      "core_skills_contains": [
+        "python",
+        "redis",
+        "fastapi"
+      ]
+    }
+  },
+  {
+    "case_id": "resolve_memory_applies_role_city_012",
+    "category": "resolve_plan",
+    "description": "\u672c\u8f6e\u6ca1\u6709\u660e\u786e\u5c97\u4f4d/\u57ce\u5e02\u65f6\uff0c\u8bb0\u5fc6\u8865\u5168\u641c\u7d22\u8ba1\u5212\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_role",
+        "fact_value": "\u524d\u7aef",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      },
+      {
+        "fact_key": "desired_city",
+        "fact_value": "\u4e0a\u6d77",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "user_text": "\u518d\u627e\u51e0\u4e2a\u770b\u770b",
+    "base_plan": {
+      "resolved_query": "\u518d\u627e\u51e0\u4e2a\u770b\u770b",
+      "keyword_query": "",
+      "city": "",
+      "company": "",
+      "experience": "",
+      "salary_min": 0,
+      "salary_unit": ""
+    },
+    "expected_plan": {
+      "keyword_query_contains": [
+        "\u524d\u7aef"
+      ],
+      "city": "\u4e0a\u6d77"
+    }
+  },
+  {
+    "case_id": "resolve_current_city_overrides_memory_013",
+    "category": "resolve_plan",
+    "description": "\u672c\u8f6e\u57ce\u5e02\u5e94\u8986\u76d6\u65e7\u57ce\u5e02\u8bb0\u5fc6\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_role",
+        "fact_value": "\u524d\u7aef",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      },
+      {
+        "fact_key": "desired_city",
+        "fact_value": "\u4e0a\u6d77",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "user_text": "\u6362\u5317\u4eac\u770b\u770b",
+    "base_plan": {
+      "resolved_query": "\u6362\u5317\u4eac\u770b\u770b",
+      "keyword_query": "",
+      "city": "\u5317\u4eac",
+      "company": "",
+      "experience": "",
+      "salary_min": 0,
+      "salary_unit": ""
+    },
+    "expected_plan": {
+      "keyword_query_contains": [
+        "\u524d\u7aef"
+      ],
+      "city": "\u5317\u4eac"
+    }
+  },
+  {
+    "case_id": "resolve_current_role_overrides_memory_014",
+    "category": "resolve_plan",
+    "description": "\u672c\u8f6e\u5c97\u4f4d\u5e94\u8986\u76d6\u65e7\u5c97\u4f4d\u8bb0\u5fc6\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_role",
+        "fact_value": "\u524d\u7aef",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      },
+      {
+        "fact_key": "desired_city",
+        "fact_value": "\u4e0a\u6d77",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "user_text": "\u6211\u60f3\u6539\u770b\u540e\u7aef\u5c97\u4f4d",
+    "base_plan": {
+      "resolved_query": "\u6211\u60f3\u6539\u770b\u540e\u7aef\u5c97\u4f4d",
+      "keyword_query": "\u540e\u7aef",
+      "city": "",
+      "company": "",
+      "experience": "",
+      "salary_min": 0,
+      "salary_unit": ""
+    },
+    "expected_plan": {
+      "keyword_query_contains": [
+        "\u540e\u7aef"
+      ],
+      "keyword_query_not_contains": [
+        "\u524d\u7aef"
+      ],
+      "city": "\u4e0a\u6d77"
+    }
+  },
+  {
+    "case_id": "resolve_city_clear_015",
+    "category": "resolve_plan",
+    "description": "\u7528\u6237\u8bf4\u57ce\u5e02\u4e0d\u9650\u65f6\uff0c\u4e0d\u5e94\u4f7f\u7528\u65e7\u57ce\u5e02\u8bb0\u5fc6\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_city",
+        "fact_value": "\u676d\u5dde",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      },
+      {
+        "fact_key": "desired_role",
+        "fact_value": "\u540e\u7aef",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "user_text": "\u57ce\u5e02\u4e0d\u9650\uff0c\u7ee7\u7eed\u627e\u540e\u7aef",
+    "base_plan": {
+      "resolved_query": "\u57ce\u5e02\u4e0d\u9650\uff0c\u7ee7\u7eed\u627e\u540e\u7aef",
+      "keyword_query": "\u540e\u7aef",
+      "city": "",
+      "company": "",
+      "experience": "",
+      "salary_min": 0,
+      "salary_unit": ""
+    },
+    "expected_plan": {
+      "city": "",
+      "keyword_query_contains": [
+        "\u540e\u7aef"
+      ]
+    }
+  },
+  {
+    "case_id": "resolve_memory_salary_applies_016",
+    "category": "resolve_plan",
+    "description": "\u672c\u8f6e\u6ca1\u8bf4\u85aa\u8d44\u65f6\uff0c\u8bb0\u5fc6\u91cc\u7684\u85aa\u8d44\u4e0b\u9650\u53c2\u4e0e\u8ba1\u5212\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_role",
+        "fact_value": "\u540e\u7aef",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      },
+      {
+        "fact_key": "desired_salary",
+        "fact_value": "25 k_month",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "user_text": "\u7ee7\u7eed\u627e\u540e\u7aef",
+    "base_plan": {
+      "resolved_query": "\u7ee7\u7eed\u627e\u540e\u7aef",
+      "keyword_query": "\u540e\u7aef",
+      "city": "",
+      "company": "",
+      "experience": "",
+      "salary_min": 0,
+      "salary_unit": ""
+    },
+    "expected_plan": {
+      "salary_min": 25,
+      "salary_unit": "k_month"
+    }
+  },
+  {
+    "case_id": "resolve_current_salary_overrides_memory_017",
+    "category": "resolve_plan",
+    "description": "\u672c\u8f6e\u85aa\u8d44\u660e\u786e\u65f6\uff0c\u4e0d\u5e94\u7528\u65e7\u85aa\u8d44\u8bb0\u5fc6\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_salary",
+        "fact_value": "25 k_month",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "user_text": "\u8fd9\u6b21 18k \u4ee5\u4e0a\u5c31\u884c",
+    "base_plan": {
+      "resolved_query": "\u8fd9\u6b21 18k \u4ee5\u4e0a\u5c31\u884c",
+      "keyword_query": "",
+      "city": "",
+      "company": "",
+      "experience": "",
+      "salary_min": 18,
+      "salary_unit": "k_month"
+    },
+    "expected_plan": {
+      "salary_min": 18,
+      "salary_unit": "k_month"
+    }
+  },
+  {
+    "case_id": "resolve_exclude_internship_018",
+    "category": "resolve_plan",
+    "description": "\u8bb0\u5fc6\u91cc\u6392\u9664\u5b9e\u4e60\uff0c\u672c\u8f6e\u672a\u660e\u786e\u7ecf\u9a8c\u65f6\u5e94\u8f6c\u6210\u975e\u5b9e\u4e60\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_experience",
+        "fact_value": "\u5b9e\u4e60",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "exclude"
+        }
+      },
+      {
+        "fact_key": "desired_role",
+        "fact_value": "Java",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "user_text": "\u7ee7\u7eed\u627e Java",
+    "base_plan": {
+      "resolved_query": "\u7ee7\u7eed\u627e Java",
+      "keyword_query": "Java",
+      "city": "",
+      "company": "",
+      "experience": "",
+      "salary_min": 0,
+      "salary_unit": ""
+    },
+    "expected_plan": {
+      "experience": "\u975e\u5b9e\u4e60",
+      "keyword_query_contains": [
+        "Java"
+      ]
+    }
+  },
+  {
+    "case_id": "resolve_excluded_role_not_applied_019",
+    "category": "resolve_plan",
+    "description": "\u88ab\u6392\u9664\u7684\u5c97\u4f4d\u4e0d\u5e94\u4ece\u8bb0\u5fc6\u8865\u5165\u641c\u7d22\u8ba1\u5212\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_role",
+        "fact_value": "\u524d\u7aef",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "exclude"
+        }
+      },
+      {
+        "fact_key": "desired_role",
+        "fact_value": "\u540e\u7aef",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "user_text": "\u518d\u627e\u51e0\u4e2a",
+    "base_plan": {
+      "resolved_query": "\u518d\u627e\u51e0\u4e2a",
+      "keyword_query": "",
+      "city": "",
+      "company": "",
+      "experience": "",
+      "salary_min": 0,
+      "salary_unit": ""
+    },
+    "expected_plan": {
+      "keyword_query_contains": [
+        "\u540e\u7aef"
+      ],
+      "keyword_query_not_contains": [
+        "\u524d\u7aef"
+      ]
+    }
+  },
+  {
+    "case_id": "resolve_preference_note_to_city_020",
+    "category": "resolve_plan",
+    "description": "preference_note \u4e2d\u7684\u57ce\u5e02\u4e5f\u5e94\u80fd\u89e3\u6790\u6210\u57ce\u5e02\u69fd\u4f4d\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "preference_note",
+        "fact_value": "\u6211\u66f4\u60f3\u5728\u6210\u90fd\u53d1\u5c55",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      },
+      {
+        "fact_key": "desired_role",
+        "fact_value": "\u6d4b\u8bd5",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "user_text": "\u7ee7\u7eed\u627e\u6d4b\u8bd5\u5c97\u4f4d",
+    "base_plan": {
+      "resolved_query": "\u7ee7\u7eed\u627e\u6d4b\u8bd5\u5c97\u4f4d",
+      "keyword_query": "\u6d4b\u8bd5",
+      "city": "",
+      "company": "",
+      "experience": "",
+      "salary_min": 0,
+      "salary_unit": ""
+    },
+    "expected_plan": {
+      "city": "\u6210\u90fd",
+      "keyword_query_contains": [
+        "\u6d4b\u8bd5"
+      ]
+    }
+  },
+  {
+    "case_id": "resolve_preference_note_to_salary_021",
+    "category": "resolve_plan",
+    "description": "preference_note \u4e2d\u7684\u85aa\u8d44\u5e94\u80fd\u89e3\u6790\u6210\u85aa\u8d44\u69fd\u4f4d\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "preference_note",
+        "fact_value": "\u85aa\u8d44\u5e0c\u671b 30k \u4ee5\u4e0a",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      },
+      {
+        "fact_key": "desired_role",
+        "fact_value": "\u7b97\u6cd5",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "user_text": "\u7ee7\u7eed\u627e\u7b97\u6cd5",
+    "base_plan": {
+      "resolved_query": "\u7ee7\u7eed\u627e\u7b97\u6cd5",
+      "keyword_query": "\u7b97\u6cd5",
+      "city": "",
+      "company": "",
+      "experience": "",
+      "salary_min": 0,
+      "salary_unit": ""
+    },
+    "expected_plan": {
+      "salary_min": 30,
+      "salary_unit": "k_month"
+    }
+  },
+  {
+    "case_id": "update_memory_value_022",
+    "category": "mutation",
+    "description": "\u7528\u6237\u628a\u76ee\u6807\u57ce\u5e02\u4ece\u4e0a\u6d77\u4fee\u6539\u6210\u5317\u4eac\u540e\uff0cprofile \u5e94\u53cd\u6620\u65b0\u503c\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_city",
+        "fact_value": "\u4e0a\u6d77",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "operation": {
+      "type": "update",
+      "match": {
+        "fact_key": "desired_city",
+        "fact_value": "\u4e0a\u6d77"
+      },
+      "payload": {
+        "fact_key": "desired_city",
+        "fact_value": "\u5317\u4eac",
+        "confidence": 0.95,
+        "importance": 4
+      }
+    },
+    "expected_profile": {
+      "desired_cities_contains": [
+        "\u5317\u4eac"
+      ],
+      "desired_cities_not_contains": [
+        "\u4e0a\u6d77"
+      ]
+    }
+  },
+  {
+    "case_id": "update_memory_key_023",
+    "category": "mutation",
+    "description": "\u7528\u6237\u628a\u666e\u901a\u504f\u597d\u6539\u6210\u7ed3\u6784\u5316\u76ee\u6807\u5c97\u4f4d\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "preference_note",
+        "fact_value": "\u60f3\u505a\u540e\u7aef",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "operation": {
+      "type": "update",
+      "match": {
+        "fact_key": "preference_note",
+        "fact_value": "\u60f3\u505a\u540e\u7aef"
+      },
+      "payload": {
+        "fact_key": "desired_role",
+        "fact_value": "\u540e\u7aef",
+        "confidence": 0.95,
+        "importance": 4
+      }
+    },
+    "expected_profile": {
+      "desired_roles_contains": [
+        "\u540e\u7aef"
+      ]
+    }
+  },
+  {
+    "case_id": "delete_memory_city_024",
+    "category": "mutation",
+    "description": "\u5220\u9664\u57ce\u5e02\u8bb0\u5fc6\u540e\uff0cprofile \u4e0d\u5e94\u518d\u5305\u542b\u8be5\u57ce\u5e02\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_city",
+        "fact_value": "\u4e0a\u6d77",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "operation": {
+      "type": "delete",
+      "match": {
+        "fact_key": "desired_city",
+        "fact_value": "\u4e0a\u6d77"
+      }
+    },
+    "expected_profile": {
+      "desired_cities": []
+    }
+  },
+  {
+    "case_id": "delete_memory_role_no_plan_apply_025",
+    "category": "mutation",
+    "description": "\u5220\u9664\u5c97\u4f4d\u8bb0\u5fc6\u540e\uff0c\u4e0d\u5e94\u518d\u8865\u5165\u641c\u7d22\u8ba1\u5212\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_role",
+        "fact_value": "\u524d\u7aef",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "operation": {
+      "type": "delete",
+      "match": {
+        "fact_key": "desired_role",
+        "fact_value": "\u524d\u7aef"
+      }
+    },
+    "user_text": "\u518d\u627e\u51e0\u4e2a",
+    "base_plan": {
+      "resolved_query": "\u518d\u627e\u51e0\u4e2a",
+      "keyword_query": "",
+      "city": "",
+      "company": "",
+      "experience": "",
+      "salary_min": 0,
+      "salary_unit": ""
+    },
+    "expected_plan": {
+      "keyword_query_not_contains": [
+        "\u524d\u7aef"
+      ]
+    }
+  },
+  {
+    "case_id": "delete_single_value_salary_026",
+    "category": "mutation",
+    "description": "\u5220\u9664\u85aa\u8d44\u8bb0\u5fc6\u540e\uff0cprofile \u85aa\u8d44\u5e94\u6e05\u7a7a\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_salary",
+        "fact_value": "22 k_month",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "operation": {
+      "type": "delete",
+      "match": {
+        "fact_key": "desired_salary",
+        "fact_value": "22 k_month"
+      }
+    },
+    "expected_profile": {
+      "desired_salary_min": 0,
+      "desired_salary_unit": ""
+    }
+  },
+  {
+    "case_id": "context_renders_resume_fallback_027",
+    "category": "context",
+    "description": "\u6ca1\u6709\u663e\u5f0f\u5c97\u4f4d\u8bb0\u5fc6\u65f6\uff0cbuild_memory_context \u53ef\u4ece\u7b80\u5386\u610f\u5411\u515c\u5e95\uff1b\u8be5\u7528\u4f8b\u9700\u8981\u8bc4\u6d4b\u811a\u672c\u53ef\u9009 mock \u7b80\u5386\u3002",
+    "setup_facts": [],
+    "setup_resume_structured": {
+      "job_intention": {
+        "target_roles": [
+          "\u540e\u7aef\u5f00\u53d1"
+        ],
+        "target_cities": [
+          "\u676d\u5dde"
+        ]
+      },
+      "skills": [
+        "Java",
+        "Spring Boot",
+        "MySQL"
+      ]
+    },
+    "expected_context_contains": [
+      "\u540e\u7aef\u5f00\u53d1",
+      "\u676d\u5dde",
+      "Java"
+    ]
+  },
+  {
+    "case_id": "context_query_related_fact_ranks_high_028",
+    "category": "context",
+    "description": "query \u76f8\u5173\u4e8b\u5b9e\u5e94\u51fa\u73b0\u5728\u8bb0\u5fc6\u4e0a\u4e0b\u6587\u4e2d\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "skill_note",
+        "fact_value": "\u719f\u6089 React \u548c TypeScript",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      },
+      {
+        "fact_key": "preference_note",
+        "fact_value": "\u66f4\u559c\u6b22\u53cc\u4f11",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      },
+      {
+        "fact_key": "experience_note",
+        "fact_value": "\u505a\u8fc7 React \u4e2d\u540e\u53f0\u9879\u76ee",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "user_text": "\u627e React \u5c97\u4f4d",
+    "expected_context_contains": [
+      "React"
+    ]
+  },
+  {
+    "case_id": "inactive_fact_ignored_029",
+    "category": "profile",
+    "description": "\u975e active \u4e8b\u5b9e\u4e0d\u5e94\u53c2\u4e0e profile \u548c resolution\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_city",
+        "fact_value": "\u4e0a\u6d77",
+        "source": "test_setup",
+        "is_active": false,
+        "meta": {
+          "polarity": "include"
+        }
+      },
+      {
+        "fact_key": "desired_city",
+        "fact_value": "\u5317\u4eac",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "expected_profile": {
+      "desired_cities_contains": [
+        "\u5317\u4eac"
+      ],
+      "desired_cities_not_contains": [
+        "\u4e0a\u6d77"
+      ]
+    }
+  },
+  {
+    "case_id": "expired_fact_ignored_030",
+    "category": "profile",
+    "description": "\u5df2\u8fc7\u671f\u4e8b\u5b9e\u4e0d\u5e94\u53c2\u4e0e profile \u548c resolution\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_role",
+        "fact_value": "\u524d\u7aef",
+        "source": "test_setup",
+        "expires_at": "2000-01-01T00:00:00",
+        "meta": {
+          "polarity": "include"
+        }
+      },
+      {
+        "fact_key": "desired_role",
+        "fact_value": "\u540e\u7aef",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "expected_profile": {
+      "desired_roles_contains": [
+        "\u540e\u7aef"
+      ],
+      "desired_roles_not_contains": [
+        "\u524d\u7aef"
+      ]
+    }
+  },
+  {
+    "case_id": "ingest_fullstack_hangzhou_salary_skills_031",
+    "category": "ingest",
+    "description": "\u62bd\u53d6\u5168\u6808\u3001\u676d\u5dde\u3001\u6708\u85aa\u548c\u524d\u540e\u7aef\u6280\u80fd\u3002",
+    "setup_facts": [],
+    "user_text": "\u6211\u60f3\u627e\u676d\u5dde\u5168\u6808\u5f00\u53d1\uff0c\u6708\u85aa 30k \u4ee5\u4e0a\uff0c\u4f1a React \u548c Node\u3002",
+    "expected_profile": {
+      "desired_roles_contains": [
+        "\u5168\u6808"
+      ],
+      "desired_cities_contains": [
+        "\u676d\u5dde"
+      ],
+      "desired_salary_min": 30,
+      "desired_salary_unit": "k_month",
+      "core_skills_contains": [
+        "react",
+        "node"
+      ]
+    },
+    "expected_facts": [
+      {
+        "fact_key": "desired_role",
+        "fact_value": "\u5168\u6808"
+      },
+      {
+        "fact_key": "desired_city",
+        "fact_value": "\u676d\u5dde"
+      },
+      {
+        "fact_key": "desired_salary",
+        "fact_value_contains": "30"
+      },
+      {
+        "fact_key": "core_skill",
+        "fact_value": "react"
+      }
+    ]
+  },
+  {
+    "case_id": "ingest_frontend_shenzhen_daily_salary_032",
+    "category": "ingest",
+    "description": "\u62bd\u53d6\u524d\u7aef\u3001\u6df1\u5733\u3001\u5b9e\u4e60\u548c\u5143/\u5929\u65e5\u85aa\u3002",
+    "setup_facts": [],
+    "user_text": "\u6df1\u5733\u524d\u7aef\u5b9e\u4e60\u53ef\u4ee5\uff0c\u65e5\u85aa 180 \u5143/\u5929\u4ee5\u4e0a\u3002",
+    "expected_profile": {
+      "desired_roles_contains": [
+        "\u524d\u7aef"
+      ],
+      "desired_cities_contains": [
+        "\u6df1\u5733"
+      ],
+      "desired_experience": "\u5b9e\u4e60",
+      "desired_salary_min": 180,
+      "desired_salary_unit": "yuan_day"
+    },
+    "expected_facts": [
+      {
+        "fact_key": "desired_role",
+        "fact_value": "\u524d\u7aef"
+      },
+      {
+        "fact_key": "desired_city",
+        "fact_value": "\u6df1\u5733"
+      },
+      {
+        "fact_key": "desired_experience",
+        "fact_value": "\u5b9e\u4e60"
+      },
+      {
+        "fact_key": "desired_salary",
+        "fact_value_contains": "180"
+      }
+    ]
+  },
+  {
+    "case_id": "ingest_exclude_test_include_backend_033",
+    "category": "ingest",
+    "description": "\u540c\u4e00\u53e5\u91cc\u6392\u9664\u6d4b\u8bd5\u5e76\u4fdd\u7559\u540e\u7aef\u504f\u597d\u3002",
+    "setup_facts": [],
+    "user_text": "\u4e0d\u8003\u8651\u6d4b\u8bd5\u5c97\u4f4d\uff0c\u60f3\u505a\u540e\u7aef Java\u3002",
+    "expected_profile": {
+      "desired_roles_contains": [
+        "\u540e\u7aef"
+      ],
+      "desired_roles_not_contains": [
+        "\u6d4b\u8bd5"
+      ],
+      "core_skills_contains": [
+        "java"
+      ]
+    },
+    "expected_resolution": {
+      "roles_include_contains": [
+        "\u540e\u7aef"
+      ],
+      "roles_exclude_contains": [
+        "\u6d4b\u8bd5"
+      ]
+    }
+  },
+  {
+    "case_id": "ingest_location_unlimited_clears_existing_city_034",
+    "category": "ingest",
+    "description": "\u57ce\u5e02\u4e0d\u9650\u5e94\u6e05\u7a7a\u5df2\u6709\u57ce\u5e02\uff0c\u4f46\u4fdd\u7559\u5c97\u4f4d\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_city",
+        "fact_value": "\u4e0a\u6d77",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "user_text": "\u540e\u7aef\u5c97\u4f4d\u53ef\u4ee5\uff0c\u57ce\u5e02\u4e0d\u9650\uff0c\u5168\u56fd\u90fd\u53ef\u4ee5\u3002",
+    "expected_profile": {
+      "desired_roles_contains": [
+        "\u540e\u7aef"
+      ],
+      "desired_cities": []
+    }
+  },
+  {
+    "case_id": "ingest_soft_preference_no_overtime_035",
+    "category": "ingest",
+    "description": "\u8f6f\u504f\u597d\u5e94\u8fdb\u5165 preference_note\u3002",
+    "setup_facts": [],
+    "user_text": "\u5e0c\u671b\u516c\u53f8\u53cc\u4f11\uff0c\u6700\u597d\u4e0d\u52a0\u73ed\u3002",
+    "expected_facts": [
+      {
+        "fact_key": "preference_note",
+        "fact_value_contains": "\u53cc\u4f11"
+      },
+      {
+        "fact_key": "preference_note",
+        "fact_value_contains": "\u4e0d\u52a0\u73ed"
+      }
+    ]
+  },
+  {
+    "case_id": "ingest_salary_negotiable_clears_salary_036",
+    "category": "ingest",
+    "description": "\u85aa\u8d44\u9762\u8bae\u5e94\u6e05\u7a7a\u5df2\u6709\u85aa\u8d44\u7ea6\u675f\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_salary",
+        "fact_value": "25 k_month",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "user_text": "\u85aa\u8d44\u9762\u8bae\u5c31\u884c\u3002",
+    "expected_profile": {
+      "desired_salary_min": 0,
+      "desired_salary_unit": ""
+    }
+  },
+  {
+    "case_id": "ingest_exclude_city_include_city_037",
+    "category": "ingest",
+    "description": "\u540c\u4e00\u53e5\u91cc\u6392\u9664\u4e00\u4e2a\u57ce\u5e02\u5e76\u4fdd\u7559\u53e6\u4e00\u4e2a\u57ce\u5e02\u3002",
+    "setup_facts": [],
+    "user_text": "\u4e0d\u8003\u8651\u5317\u4eac\uff0c\u4f18\u5148\u4e0a\u6d77\u540e\u7aef\u3002",
+    "expected_profile": {
+      "desired_roles_contains": [
+        "\u540e\u7aef"
+      ],
+      "desired_cities_contains": [
+        "\u4e0a\u6d77"
+      ],
+      "desired_cities_not_contains": [
+        "\u5317\u4eac"
+      ]
+    },
+    "expected_resolution": {
+      "cities_include_contains": [
+        "\u4e0a\u6d77"
+      ],
+      "cities_exclude_contains": [
+        "\u5317\u4eac"
+      ]
+    }
+  },
+  {
+    "case_id": "ingest_exclude_backend_include_frontend_038",
+    "category": "ingest",
+    "description": "\u6392\u9664\u540e\u7aef\u5e76\u4fdd\u7559\u524d\u7aef\u5c97\u4f4d\u3002",
+    "setup_facts": [],
+    "user_text": "\u4e0d\u60f3\u505a\u540e\u7aef\uff0c\u60f3\u770b\u524d\u7aef\u3002",
+    "expected_profile": {
+      "desired_roles_contains": [
+        "\u524d\u7aef"
+      ],
+      "desired_roles_not_contains": [
+        "\u540e\u7aef"
+      ]
+    },
+    "expected_resolution": {
+      "roles_include_contains": [
+        "\u524d\u7aef"
+      ],
+      "roles_exclude_contains": [
+        "\u540e\u7aef"
+      ]
+    }
+  },
+  {
+    "case_id": "ingest_ai_shanghai_python_pytorch_039",
+    "category": "ingest",
+    "description": "\u62bd\u53d6 AI \u65b9\u5411\u3001\u4e0a\u6d77\u548c\u673a\u5668\u5b66\u4e60\u6280\u80fd\u3002",
+    "setup_facts": [],
+    "user_text": "\u4e0a\u6d77 AI \u5e94\u7528\u5f00\u53d1\uff0cPython \u548c PyTorch \u90fd\u719f\u3002",
+    "expected_profile": {
+      "desired_roles_contains": [
+        "AI"
+      ],
+      "desired_cities_contains": [
+        "\u4e0a\u6d77"
+      ],
+      "core_skills_contains": [
+        "python",
+        "pytorch"
+      ]
+    }
+  },
+  {
+    "case_id": "ingest_avoid_internship_social_hire_040",
+    "category": "ingest",
+    "description": "\u6b63\u5f0f\u5de5\u4f5c\u5e94\u6620\u5c04\u4e3a\u975e\u5b9e\u4e60\uff0c\u5e76\u6392\u9664\u5b9e\u4e60\u3002",
+    "setup_facts": [],
+    "user_text": "\u6211\u60f3\u627e\u540e\u7aef\u6b63\u5f0f\u5de5\u4f5c\uff0c\u4e0d\u8981\u5b9e\u4e60\u3002",
+    "expected_profile": {
+      "desired_roles_contains": [
+        "\u540e\u7aef"
+      ],
+      "desired_experience": "\u975e\u5b9e\u4e60"
+    },
+    "expected_resolution": {
+      "experience_include": "\u975e\u5b9e\u4e60",
+      "experience_exclude_contains": [
+        "\u5b9e\u4e60"
+      ]
+    }
+  },
+  {
+    "case_id": "profile_latest_salary_overrides_old_041",
+    "category": "profile",
+    "description": "\u540c\u7c7b\u85aa\u8d44\u8bb0\u5fc6\u5e94\u4ee5\u6700\u65b0\u503c\u4e3a\u51c6\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_salary",
+        "fact_value": "20 k_month",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      },
+      {
+        "fact_key": "desired_salary",
+        "fact_value": "30 k_month",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "expected_profile": {
+      "desired_salary_min": 30,
+      "desired_salary_unit": "k_month"
+    }
+  },
+  {
+    "case_id": "profile_excluded_role_removed_042",
+    "category": "profile",
+    "description": "\u540c\u4e00\u5c97\u4f4d\u7684 exclude \u5e94\u4ece profile \u91cc\u79fb\u9664\u8be5\u5c97\u4f4d\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_role",
+        "fact_value": "\u6d4b\u8bd5",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      },
+      {
+        "fact_key": "desired_role",
+        "fact_value": "\u6d4b\u8bd5",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "exclude"
+        }
+      },
+      {
+        "fact_key": "desired_role",
+        "fact_value": "\u540e\u7aef",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "expected_profile": {
+      "desired_roles_contains": [
+        "\u540e\u7aef"
+      ],
+      "desired_roles_not_contains": [
+        "\u6d4b\u8bd5"
+      ]
+    }
+  },
+  {
+    "case_id": "profile_daily_salary_fact_043",
+    "category": "profile",
+    "description": "\u65e5\u85aa fact \u5e94\u6b63\u786e\u540c\u6b65\u5230 profile\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_salary",
+        "fact_value": "250 yuan_day",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "expected_profile": {
+      "desired_salary_min": 250,
+      "desired_salary_unit": "yuan_day"
+    }
+  },
+  {
+    "case_id": "profile_unknown_salary_ignored_044",
+    "category": "profile",
+    "description": "unknown \u85aa\u8d44\u4e0d\u5e94\u5f62\u6210\u6709\u6548\u85aa\u8d44\u7ea6\u675f\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_salary",
+        "fact_value": "unknown",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "expected_profile": {
+      "desired_salary_min": 0,
+      "desired_salary_unit": ""
+    }
+  },
+  {
+    "case_id": "profile_core_skill_canonical_lowercase_045",
+    "category": "profile",
+    "description": "\u6280\u80fd fact \u5e94\u89c4\u8303\u6210\u5c0f\u5199\u53bb\u91cd\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "core_skill",
+        "fact_value": "Python",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      },
+      {
+        "fact_key": "core_skill",
+        "fact_value": "Redis",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "expected_profile": {
+      "core_skills_contains": [
+        "python",
+        "redis"
+      ]
+    }
+  },
+  {
+    "case_id": "profile_excluded_skill_removed_046",
+    "category": "profile",
+    "description": "\u6280\u80fd exclude \u5e94\u4ece core_skills \u4e2d\u79fb\u9664\u8be5\u6280\u80fd\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "core_skill",
+        "fact_value": "react",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      },
+      {
+        "fact_key": "core_skill",
+        "fact_value": "react",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "exclude"
+        }
+      },
+      {
+        "fact_key": "core_skill",
+        "fact_value": "java",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "expected_profile": {
+      "core_skills_contains": [
+        "java"
+      ],
+      "core_skills_not_contains": [
+        "react"
+      ]
+    }
+  },
+  {
+    "case_id": "resolve_excluded_city_not_applied_047",
+    "category": "resolve_plan",
+    "description": "\u57ce\u5e02 include/exclude \u51b2\u7a81\u65f6\u4e0d\u5e94\u7528\u88ab\u6392\u9664\u57ce\u5e02\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_city",
+        "fact_value": "\u5317\u4eac",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "exclude"
+        }
+      },
+      {
+        "fact_key": "desired_city",
+        "fact_value": "\u4e0a\u6d77",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      },
+      {
+        "fact_key": "desired_role",
+        "fact_value": "\u540e\u7aef",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "user_text": "\u518d\u627e\u51e0\u4e2a",
+    "base_plan": {
+      "resolved_query": "\u518d\u627e\u51e0\u4e2a",
+      "keyword_query": "",
+      "city": "",
+      "company": "",
+      "experience": "",
+      "salary_min": 0,
+      "salary_unit": ""
+    },
+    "expected_plan": {
+      "city": "\u4e0a\u6d77",
+      "keyword_query_contains": [
+        "\u540e\u7aef"
+      ]
+    }
+  },
+  {
+    "case_id": "resolve_city_clear_blocks_memory_city_048",
+    "category": "resolve_plan",
+    "description": "\u5f53\u524d\u8f6e\u57ce\u5e02\u4e0d\u9650\u65f6\u4e0d\u5e94\u56de\u586b\u5386\u53f2\u57ce\u5e02\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_city",
+        "fact_value": "\u4e0a\u6d77",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      },
+      {
+        "fact_key": "desired_role",
+        "fact_value": "\u540e\u7aef",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "user_text": "\u5168\u56fd\u90fd\u53ef\u4ee5",
+    "base_plan": {
+      "resolved_query": "\u5168\u56fd\u90fd\u53ef\u4ee5",
+      "keyword_query": "\u540e\u7aef",
+      "city": "",
+      "company": "",
+      "experience": "",
+      "salary_min": 0,
+      "salary_unit": ""
+    },
+    "expected_plan": {
+      "city": "",
+      "keyword_query_contains": [
+        "\u540e\u7aef"
+      ]
+    }
+  },
+  {
+    "case_id": "resolve_explicit_experience_overrides_memory_049",
+    "category": "resolve_plan",
+    "description": "\u5f53\u524d\u8f6e\u663e\u5f0f\u7ecf\u9a8c\u5e94\u8986\u76d6\u5386\u53f2\u7ecf\u9a8c\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_experience",
+        "fact_value": "\u5b9e\u4e60",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "user_text": "\u53ea\u770b\u975e\u5b9e\u4e60",
+    "base_plan": {
+      "resolved_query": "\u53ea\u770b\u975e\u5b9e\u4e60",
+      "keyword_query": "",
+      "city": "",
+      "company": "",
+      "experience": "\u975e\u5b9e\u4e60",
+      "salary_min": 0,
+      "salary_unit": ""
+    },
+    "expected_plan": {
+      "experience": "\u975e\u5b9e\u4e60"
+    }
+  },
+  {
+    "case_id": "resolve_excluded_role_only_not_applied_050",
+    "category": "resolve_plan",
+    "description": "\u53ea\u6709 exclude \u5c97\u4f4d\u65f6\u4e0d\u5e94\u8865\u5165\u8be5\u5c97\u4f4d\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_role",
+        "fact_value": "\u6d4b\u8bd5",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "exclude"
+        }
+      }
+    ],
+    "user_text": "\u518d\u627e\u4e00\u4e9b\u5c97\u4f4d",
+    "base_plan": {
+      "resolved_query": "\u518d\u627e\u4e00\u4e9b\u5c97\u4f4d",
+      "keyword_query": "",
+      "city": "",
+      "company": "",
+      "experience": "",
+      "salary_min": 0,
+      "salary_unit": ""
+    },
+    "expected_plan": {
+      "keyword_query_not_contains": [
+        "\u6d4b\u8bd5"
+      ]
+    }
+  },
+  {
+    "case_id": "resolve_preference_note_city_include_exclude_051",
+    "category": "resolve_plan",
+    "description": "\u4ece preference_note \u89e3\u6790\u57ce\u5e02 include/exclude\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "preference_note",
+        "fact_value": "\u4f18\u5148\u4e0a\u6d77\uff0c\u4e0d\u8003\u8651\u5317\u4eac",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      },
+      {
+        "fact_key": "desired_role",
+        "fact_value": "\u540e\u7aef",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "user_text": "\u518d\u627e",
+    "base_plan": {
+      "resolved_query": "\u518d\u627e",
+      "keyword_query": "",
+      "city": "",
+      "company": "",
+      "experience": "",
+      "salary_min": 0,
+      "salary_unit": ""
+    },
+    "expected_resolution": {
+      "cities_include_contains": [
+        "\u4e0a\u6d77"
+      ],
+      "cities_exclude_contains": [
+        "\u5317\u4eac"
+      ]
+    },
+    "expected_plan": {
+      "city": "\u4e0a\u6d77"
+    }
+  },
+  {
+    "case_id": "resolve_preference_note_role_include_exclude_052",
+    "category": "resolve_plan",
+    "description": "\u4ece preference_note \u89e3\u6790\u5c97\u4f4d include/exclude\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "preference_note",
+        "fact_value": "\u60f3\u505a\u524d\u7aef\uff0c\u4e0d\u8003\u8651\u540e\u7aef",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "user_text": "\u518d\u627e",
+    "base_plan": {
+      "resolved_query": "\u518d\u627e",
+      "keyword_query": "",
+      "city": "",
+      "company": "",
+      "experience": "",
+      "salary_min": 0,
+      "salary_unit": ""
+    },
+    "expected_resolution": {
+      "roles_include_contains": [
+        "\u524d\u7aef"
+      ],
+      "roles_exclude_contains": [
+        "\u540e\u7aef"
+      ]
+    },
+    "expected_plan": {
+      "keyword_query_contains": [
+        "\u524d\u7aef"
+      ],
+      "keyword_query_not_contains": [
+        "\u540e\u7aef"
+      ]
+    }
+  },
+  {
+    "case_id": "resolve_salary_note_applies_053",
+    "category": "resolve_plan",
+    "description": "salary_note \u5e94\u8865\u5165\u85aa\u8d44\u7ea6\u675f\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "salary_note",
+        "fact_value": "\u671f\u671b\u6708\u85aa 35k \u4ee5\u4e0a",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      },
+      {
+        "fact_key": "desired_role",
+        "fact_value": "\u540e\u7aef",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "user_text": "\u518d\u627e\u51e0\u4e2a",
+    "base_plan": {
+      "resolved_query": "\u518d\u627e\u51e0\u4e2a",
+      "keyword_query": "\u540e\u7aef",
+      "city": "",
+      "company": "",
+      "experience": "",
+      "salary_min": 0,
+      "salary_unit": ""
+    },
+    "expected_plan": {
+      "salary_min": 35,
+      "salary_unit": "k_month"
+    }
+  },
+  {
+    "case_id": "resolve_current_salary_blocks_salary_note_054",
+    "category": "resolve_plan",
+    "description": "\u5f53\u524d\u8f6e\u663e\u5f0f\u85aa\u8d44\u5e94\u8986\u76d6 salary_note\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "salary_note",
+        "fact_value": "\u671f\u671b\u6708\u85aa 35k \u4ee5\u4e0a",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "user_text": "18k \u4ee5\u4e0a\u7684\u540e\u7aef",
+    "base_plan": {
+      "resolved_query": "18k \u4ee5\u4e0a\u7684\u540e\u7aef",
+      "keyword_query": "",
+      "city": "",
+      "company": "",
+      "experience": "",
+      "salary_min": 18,
+      "salary_unit": "k_month"
+    },
+    "expected_plan": {
+      "salary_min": 18,
+      "salary_unit": "k_month"
+    }
+  },
+  {
+    "case_id": "update_role_to_exclude_055",
+    "category": "mutation",
+    "description": "\u628a\u5c97\u4f4d\u504f\u597d\u6539\u6210\u6392\u9664\u540e\uff0cprofile \u4e0d\u5e94\u7ee7\u7eed\u5305\u542b\u8be5\u5c97\u4f4d\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_role",
+        "fact_value": "\u540e\u7aef",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "operation": {
+      "type": "update",
+      "match": {
+        "fact_key": "desired_role",
+        "fact_value": "\u540e\u7aef"
+      },
+      "payload": {
+        "fact_key": "desired_role",
+        "fact_value": "\u540e\u7aef",
+        "confidence": 0.95,
+        "importance": 4,
+        "meta": {
+          "polarity": "exclude"
+        }
+      }
+    },
+    "expected_profile": {
+      "desired_roles": []
+    },
+    "expected_resolution": {
+      "roles_exclude_contains": [
+        "\u540e\u7aef"
+      ]
+    }
+  },
+  {
+    "case_id": "update_salary_month_to_daily_056",
+    "category": "mutation",
+    "description": "\u4fee\u6539\u85aa\u8d44\u5355\u4f4d\u540e profile \u5e94\u8ddf\u968f\u66f4\u65b0\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_salary",
+        "fact_value": "20 k_month",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "operation": {
+      "type": "update",
+      "match": {
+        "fact_key": "desired_salary",
+        "fact_value": "20 k_month"
+      },
+      "payload": {
+        "fact_key": "desired_salary",
+        "fact_value": "220 yuan_day",
+        "confidence": 0.95,
+        "importance": 4
+      }
+    },
+    "expected_profile": {
+      "desired_salary_min": 220,
+      "desired_salary_unit": "yuan_day"
+    }
+  },
+  {
+    "case_id": "update_core_skill_value_057",
+    "category": "mutation",
+    "description": "\u4fee\u6539\u6280\u80fd\u8bb0\u5fc6\u540e profile \u5e94\u540c\u6b65\u65b0\u6280\u80fd\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "core_skill",
+        "fact_value": "react",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "operation": {
+      "type": "update",
+      "match": {
+        "fact_key": "core_skill",
+        "fact_value": "react"
+      },
+      "payload": {
+        "fact_key": "core_skill",
+        "fact_value": "vue",
+        "confidence": 0.95,
+        "importance": 3
+      }
+    },
+    "expected_profile": {
+      "core_skills_contains": [
+        "vue"
+      ],
+      "core_skills_not_contains": [
+        "react"
+      ]
+    }
+  },
+  {
+    "case_id": "delete_city_keeps_role_058",
+    "category": "mutation",
+    "description": "\u5220\u9664\u57ce\u5e02\u8bb0\u5fc6\u4e0d\u5e94\u5f71\u54cd\u5c97\u4f4d\u8bb0\u5fc6\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_city",
+        "fact_value": "\u4e0a\u6d77",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      },
+      {
+        "fact_key": "desired_role",
+        "fact_value": "\u540e\u7aef",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "operation": {
+      "type": "delete",
+      "match": {
+        "fact_key": "desired_city",
+        "fact_value": "\u4e0a\u6d77"
+      }
+    },
+    "expected_profile": {
+      "desired_roles_contains": [
+        "\u540e\u7aef"
+      ],
+      "desired_cities": []
+    }
+  },
+  {
+    "case_id": "context_includes_salary_and_preference_059",
+    "category": "context",
+    "description": "\u4e0a\u4e0b\u6587\u5e94\u5305\u542b\u85aa\u8d44\u548c\u8f6f\u504f\u597d\u8bb0\u5fc6\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_salary",
+        "fact_value": "25 k_month",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      },
+      {
+        "fact_key": "preference_note",
+        "fact_value": "\u5e0c\u671b\u56e2\u961f\u7a33\u5b9a\uff0c\u53cc\u4f11",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "user_text": "\u518d\u627e",
+    "expected_context_contains": [
+      "25",
+      "k_month",
+      "\u53cc\u4f11",
+      "\u56e2\u961f"
+    ]
+  },
+  {
+    "case_id": "context_memory_over_resume_role_060",
+    "category": "context",
+    "description": "\u5b58\u5728\u663e\u5f0f\u8bb0\u5fc6\u65f6\uff0c\u4e0a\u4e0b\u6587\u5e94\u5305\u542b\u8bb0\u5fc6\u91cc\u7684\u5c97\u4f4d\u504f\u597d\u3002",
+    "setup_facts": [
+      {
+        "fact_key": "desired_role",
+        "fact_value": "\u540e\u7aef",
+        "source": "test_setup",
+        "meta": {
+          "polarity": "include"
+        }
+      }
+    ],
+    "setup_resume_structured": {
+      "job_intention": {
+        "target_roles": [
+          "\u4ea7\u54c1\u7ecf\u7406"
+        ],
+        "target_cities": [
+          "\u676d\u5dde"
+        ]
+      },
+      "skills": [
+        "Java",
+        "Spring Boot"
+      ]
+    },
+    "expected_context_contains": [
+      "\u540e\u7aef"
+    ]
+  }
+]

@@ -1,0 +1,200 @@
+2026-04-12 22:46:47,466 | INFO | JobAgent.database | ✅ 数据库连接池创建成功: boss_zhipin
+2026-04-12 22:46:47,466 | INFO | JobAgent.database | loading embedding model: nomic-embed-text-v2-moe
+2026-04-12 22:46:48,201 | INFO | JobAgent.database | embedding model loaded: nomic-embed-text-v2-moe
+2026-04-12 22:46:49,127 | INFO | JobAgent.database | memory extractor model loaded: qwen-max-2025-01-25
+2026-04-12 22:46:49,213 | INFO | JobAgent.database | database schema and indexes ready
+2026-04-12 22:46:52,940 | INFO | JobAgent.tools | loading reranker model from ./models/bge-reranker-v2-m3
+2026-04-12 22:46:54,949 | INFO | JobAgent.tools | reranker model loaded
+2026-04-12 22:46:58,043 | INFO | JobAgent.main | application starting
+2026-04-12 22:46:58,044 | INFO | JobAgent.resume_task_queue | resume task worker started: consumer=resume_worker:60076:956a3691
+2026-04-12 22:46:58,066 | INFO | JobAgent.redis_client | redis connected: redis://localhost:6379/0
+2026-04-12 22:47:13,038 | INFO | JobAgent.chat_router | chat session created: user=00004 session=chat:00004:296983feafe8
+2026-04-12 22:48:35,453 | INFO | JobAgent.chat_router | chat stream: user=00004 session=chat:00004:296983feafe8
+2026-04-12 22:48:49,595 | INFO | JobAgent.chat_graph | memory ingest updated: user=00004 profile_updated=False facts_added=5
+2026-04-12 22:48:49,607 | INFO | JobAgent.chat_graph | memory experience guard applied: user=00004 desired_experience=实习
+2026-04-12 22:48:55,874 | INFO | JobAgent.chat_graph | intent router: intent=search confidence=0.95 should_search=True threshold=0.60 reason=用户明确表达了寻找上海地区的后端实习岗位，且指定了Python方向，符合触发岗位搜索的条件。
+2026-04-12 22:48:55,875 | INFO | JobAgent.chat_graph | planner explicit constraint guard: experience_mentioned=True experience=实习 salary_mentioned=False salary_min=0 salary_unit=
+2026-04-12 22:48:55,876 | INFO | JobAgent.chat_graph | planner normalized search plan: {"resolved_query": "上海后端实习 Python方向", "keyword_query": "后端 Python", "city": "上海", "company": "", "experience": "实习", "salary_min": 0, "salary_unit": ""}
+2026-04-12 22:48:55,878 | INFO | JobAgent.chat_graph | search node running: query=后端 Python city=上海 experience=实习 salary_min=0 salary_unit=
+2026-04-12 22:48:55,880 | INFO | JobAgent.tools | search tool invoked: query=上海后端实习 Python方向 effective_query=后端 Python 实习 在校 city=上海->上海 company= experience=实习->实习 exclude_internship=False salary_min=0 salary_unit=
+2026-04-12 22:48:55,880 | INFO | JobAgent.tools | search role keywords=后端,Python
+2026-04-12 22:48:55,883 | INFO | JobAgent.tools | search cache lookup: key=search:result:v1:27b182ccd66d448ee97681362822dbfce3b4b5965ce9c8e0b2c99551eab49545 version=15 effective_query=后端 Python 实习 在校 city=上海 company=<none> experience=实习 exclude_internship=False salary_min=0 salary_unit=<none> expanded=yes role_keywords=后端,Python
+2026-04-12 22:48:55,883 | INFO | JobAgent.tools | search cache miss: key=search:result:v1:27b182ccd66d448ee97681362822dbfce3b4b5965ce9c8e0b2c99551eab49545 data_version=15
+2026-04-12 22:48:55,885 | INFO | JobAgent.database | hybrid search: keywords=后端 Python 实习 在校 city=上海 company= experience=实习 salary_min=0 salary_unit=
+2026-04-12 22:48:58,223 | INFO | JobAgent.database | recall count: vec=129 bm25=78
+2026-04-12 22:48:58,226 | INFO | JobAgent.database | 🔀 [RRF] vec=129 bm25=78 merged=129 return=90
+  [大模型&AI&算法&后端&客户端&Web-实习岗位] vec+bm25 v=7 b=1 rrf=0.03132
+  [大模型应用开发实习工程师] vec+bm25 v=12 b=2 rrf=0.03002
+  [AI大模型算法实习生] vec+bm25 v=3 b=16 rrf=0.02903
+  [大模型算法实习生] vec+bm25 v=10 b=12 rrf=0.02817
+  [大模型实习（文生图、图生图、图生视频）] vec+bm25 v=18 b=6 rrf=0.02797
+  [大模型算法实习生] vec+bm25 v=2 b=25 rrf=0.02789
+  [AI大模型实习生] vec+bm25 v=1 b=27 rrf=0.02789
+  [大模型应用预研实习生] vec+bm25 v=15 b=19 rrf=0.02599
+  [大模型 Agent 研究员（实习）] vec+bm25 v=45 b=3 rrf=0.02540
+  [【实习】 AI智能辅助工程师（大模型方向）] vec+bm25 v=43 b=4 rrf=0.02533
+  [AI大模型实习岗位(硕博)] vec+bm25 v=29 b=11 rrf=0.02532
+  [大模型算法实习生] vec+bm25 v=6 b=42 rrf=0.02496
+  [碳中和领域垂直大模型+AI Agent项目实习生] vec+bm25 v=23 b=18 rrf=0.02487
+  [大模型平台研发实习生] vec+bm25 v=14 b=29 rrf=0.02475
+  [AI大模型开发实习生] vec+bm25 v=21 b=22 rrf=0.02454
+  ... truncated 75 more rows
+2026-04-12 22:48:58,227 | INFO | JobAgent.database | hybrid search: keywords=后端 Python 实习 在校 后端开发 服务端 后端工程师 java golang go node php spring city=上海 company= experience=实习 salary_min=0 salary_unit=
+2026-04-12 22:48:58,447 | INFO | JobAgent.database | recall count: vec=129 bm25=79
+2026-04-12 22:48:58,448 | INFO | JobAgent.database | 🔀 [RRF] vec=129 bm25=79 merged=129 return=90
+  [大模型&AI&算法&后端&客户端&Web-实习岗位] vec+bm25 v=1 b=1 rrf=0.03279
+  [多模态大模型算法] vec+bm25 v=3 b=7 rrf=0.03080
+  [淘天自营AI研发工程师-暑期实习可转正] vec+bm25 v=16 b=4 rrf=0.02878
+  [大模型应用开发实习工程师] vec+bm25 v=24 b=2 rrf=0.02803
+  [大模型算法实习生] vec+bm25 v=6 b=18 rrf=0.02797
+  [大模型算法实习生] vec+bm25 v=5 b=20 rrf=0.02788
+  [AI大模型实习生] vec+bm25 v=2 b=35 rrf=0.02666
+  [大模型 Agent 研究员（实习）] vec+bm25 v=34 b=3 rrf=0.02651
+  [大模型应用工程师] vec+bm25 v=31 b=5 rrf=0.02637
+  [碳中和领域垂直大模型+AI Agent项目实习生] vec+bm25 v=7 b=29 rrf=0.02616
+  [Ai agent算法实习生] vec+bm25 v=12 b=22 rrf=0.02608
+  [大模型实习（文生图、图生图、图生视频）] vec+bm25 v=29 b=10 rrf=0.02552
+  [大模型算法] vec+bm25 v=13 b=28 rrf=0.02506
+  [大模型安全实习生] vec+bm25 v=4 b=47 rrf=0.02497
+  [·上海算法实习·多模态大模型和静态元素感知] vec+bm25 v=40 b=9 rrf=0.02449
+  ... truncated 75 more rows
+2026-04-12 22:48:58,448 | INFO | JobAgent.tools | search tool recalled strict=30 expanded=30 expanded_query=后端 Python 实习 在校 后端开发 服务端 后端工程师 java golang go node php spring
+2026-04-12 22:48:58,449 | INFO | JobAgent.tools | search tool merged 36 unique candidates after weighted fusion
+2026-04-12 22:48:58,450 | INFO | JobAgent.tools | title filter backfilled 11 candidates due to low role-match count=1
+2026-04-12 22:48:58,450 | INFO | JobAgent.tools | search tool kept 12 candidates after title filter
+2026-04-12 22:49:04,596 | INFO | JobAgent.tools | search rerank complete: max=0.8333 min=0.0452
+2026-04-12 22:49:04,603 | INFO | JobAgent.tools | search cache set: key=search:result:v1:27b182ccd66d448ee97681362822dbfce3b4b5965ce9c8e0b2c99551eab49545 ttl=1177s results=6
+2026-04-12 22:49:04,609 | INFO | JobAgent.chat_graph | search result summary: total=6 matched_role_count=1 mismatch_count=5 experience=实习 experience_match_count=5 role_keywords=后端,Python
+2026-04-12 22:49:04,610 | INFO | JobAgent.chat_graph | relevance filter rules: role_keywords=后端,Python required_experience=实习 role_rule=title must match at least one target role keyword; if mismatch roles > matched roles then drop experience_rule=title/tags/experience text must match required experience '实习'
+2026-04-12 22:49:04,610 | INFO | JobAgent.chat_graph | relevance filter dropped 6/6 candidates:
+  [1] 大模型应用开发实习工程师 @ 非凸科技 | experience=4天/周 | tags=上海 | 4天/周 | reasons=role_mismatch:no_target_role_keyword | experience_matched=True | title_roles=AI | target_roles=C#,C++,Golang,Java,PHP,Python,后端 | matched_roles= | mismatch_roles=AI
+  [2] AI大模型算法实习生 @ 上海首序智能科技 | experience=4天/周 | tags=上海 | 4天/周 | reasons=role_mismatch:no_target_role_keyword | experience_matched=True | title_roles=算法,AI | target_roles=C#,C++,Golang,Java,PHP,Python,后端 | matched_roles= | mismatch_roles=算法,AI
+  [3] 大模型&AI&算法&后端&客户端&Web-实习岗位 @ 拼多多集团-PDD | experience=5天/周 | tags=上海 | 5天/周 | reasons=role_mismatch:mismatch_dominates(matched=1,mismatch=3) | experience_matched=True | title_roles=后端,算法,客户端,AI | target_roles=C#,C++,Golang,Java,PHP,Python,后端 | matched_roles=后端 | mismatch_roles=算法,客户端,AI
+  [4] 大模型算法实习生 @ 洞察时空 | experience=经验不限 | tags=上海 | 经验不限 | reasons=role_mismatch:no_target_role_keyword | experience_matched=True | title_roles=算法,AI | target_roles=C#,C++,Golang,Java,PHP,Python,后端 | matched_roles= | mismatch_roles=算法,AI
+  [5] 碳中和领域垂直大模型+AI Agent项目实习生 @ 中碳普惠云科技 | experience=5天/周 | tags=上海 | 5天/周 | reasons=role_mismatch:no_target_role_keyword | experience_matched=True | title_roles=AI | target_roles=C#,C++,Golang,Java,PHP,Python,后端 | matched_roles= | mismatch_roles=AI
+  [6] 大模型实习（文生图、图生图、图生视频） @ 上海玉贲智能 | experience=4天/周 | tags=上海 | 4天/周 | reasons=role_mismatch:no_target_role_keyword | experience_matched=True | title_roles=AI | target_roles=C#,C++,Golang,Java,PHP,Python,后端 | matched_roles= | mismatch_roles=AI
+2026-04-12 22:49:07,190 | INFO | JobAgent.chat_graph | relevance judge action=filter reason=当前结果中混入了不相关的岗位，但有部分匹配后端和实习要求的岗位，应过滤后返回
+2026-04-12 22:49:07,195 | INFO | JobAgent.chat_graph | job alive check summary: total=6 active=6 unknown=0 closed=0 kept=6 dropped=0
+2026-04-12 22:49:18,314 | INFO | JobAgent.chat_router | chat stream: user=00004 session=chat:00004:296983feafe8
+2026-04-12 22:49:29,425 | INFO | JobAgent.chat_graph | memory ingest updated: user=00004 profile_updated=False facts_added=2
+2026-04-12 22:49:29,437 | INFO | JobAgent.chat_graph | memory experience guard applied: user=00004 desired_experience=非实习
+2026-04-12 22:49:34,266 | INFO | JobAgent.chat_graph | planner inherited role constraints from previous plan: role_keywords=后端,Python keyword_query=后端 Python
+2026-04-12 22:49:34,266 | INFO | JobAgent.chat_graph | intent router: intent=search confidence=0.95 should_search=True threshold=0.60 reason=用户明确要求查看杭州地区的正式工作岗位，属于改搜索条件的意图。
+2026-04-12 22:49:34,266 | INFO | JobAgent.chat_graph | planner explicit constraint guard: experience_mentioned=True experience=非实习 salary_mentioned=False salary_min=0 salary_unit=
+2026-04-12 22:49:34,266 | INFO | JobAgent.chat_graph | planner normalized search plan: {"resolved_query": "上海后端实习 Python方向 看看杭州的吧 不看实习看正式工作", "keyword_query": "后端 Python", "city": "杭州", "company": "", "experience": "非实习", "salary_min": 0, "salary_unit": ""}
+2026-04-12 22:49:34,267 | INFO | JobAgent.chat_graph | search node running: query=后端 Python city=杭州 experience=非实习 salary_min=0 salary_unit=
+2026-04-12 22:49:34,269 | INFO | JobAgent.tools | search tool invoked: query=上海后端实习 Python方向 看看杭州的吧 不看实习看正式工作 effective_query=后端 Python 全职 社招 正式 city=杭州->上海 company= experience=非实习->非实习 exclude_internship=True salary_min=0 salary_unit=
+2026-04-12 22:49:34,269 | INFO | JobAgent.tools | search role keywords=后端,Python
+2026-04-12 22:49:34,271 | INFO | JobAgent.tools | search cache lookup: key=search:result:v1:f543c3ed33402c3008ec263b71792de406f94b1e66aff45265a0b0a8e34c53c6 version=15 effective_query=后端 Python 全职 社招 正式 city=上海 company=<none> experience=非实习 exclude_internship=True salary_min=0 salary_unit=<none> expanded=yes role_keywords=后端,Python
+2026-04-12 22:49:34,272 | INFO | JobAgent.tools | search cache miss: key=search:result:v1:f543c3ed33402c3008ec263b71792de406f94b1e66aff45265a0b0a8e34c53c6 data_version=15
+2026-04-12 22:49:34,273 | INFO | JobAgent.database | hybrid search: keywords=后端 Python 全职 社招 正式 city=上海 company= experience=非实习 salary_min=0 salary_unit=
+2026-04-12 22:49:36,581 | INFO | JobAgent.database | recall count: vec=129 bm25=70
+2026-04-12 22:49:36,583 | INFO | JobAgent.database | 🔀 [RRF] vec=129 bm25=70 merged=129 return=90
+  [多模态大模型算法] vec+bm25 v=2 b=2 rrf=0.03226
+  [大模型&AI&算法&后端&客户端&Web-实习岗位] vec+bm25 v=5 b=1 rrf=0.03178
+  [高级大模型应用开发] vec+bm25 v=6 b=9 rrf=0.02964
+  [大模型工程师] vec+bm25 v=7 b=8 rrf=0.02963
+  [智驾端到端大模型] vec+bm25 v=1 b=16 rrf=0.02955
+  [AI大模型实习生] vec+bm25 v=9 b=7 rrf=0.02942
+  [大模型平台研发实习生] vec+bm25 v=22 b=4 rrf=0.02782
+  [大模型风控算法工程师] vec+bm25 v=8 b=17 rrf=0.02769
+  [大模型应用工程师] vec+bm25 v=31 b=6 rrf=0.02614
+  [AI大模型开发] vec+bm25 v=11 b=23 rrf=0.02613
+  [多模态大模型算法工程师] vec+bm25 v=12 b=22 rrf=0.02608
+  [碳中和领域垂直大模型+AI Agent项目实习生] vec+bm25 v=24 b=11 rrf=0.02599
+  [大模型算法工程师] vec+bm25 v=21 b=14 rrf=0.02586
+  [大模型算法开发工程师] vec+bm25 v=13 b=26 rrf=0.02533
+  [大模型智能体研发工程师] vec+bm25 v=50 b=3 rrf=0.02496
+  ... truncated 75 more rows
+2026-04-12 22:49:36,583 | INFO | JobAgent.database | hybrid search: keywords=后端 Python 全职 社招 正式 后端开发 服务端 后端工程师 java golang go node php spring city=上海 company= experience=非实习 salary_min=0 salary_unit=
+2026-04-12 22:49:36,764 | INFO | JobAgent.database | recall count: vec=129 bm25=71
+2026-04-12 22:49:36,765 | INFO | JobAgent.database | 🔀 [RRF] vec=129 bm25=71 merged=129 return=90
+  [多模态大模型算法] vec+bm25 v=1 b=3 rrf=0.03227
+  [大模型&AI&算法&后端&客户端&Web-实习岗位] vec+bm25 v=3 b=1 rrf=0.03227
+  [AI大模型开发] vec+bm25 v=5 b=6 rrf=0.03054
+  [大模型应用工程师] vec+bm25 v=10 b=2 rrf=0.03041
+  [AI大模型] vec+bm25 v=11 b=5 rrf=0.02947
+  [高级大模型应用开发] vec+bm25 v=8 b=8 rrf=0.02941
+  [大模型研发工程师] vec+bm25 v=21 b=4 rrf=0.02797
+  [大模型应用工程师] vec+bm25 v=19 b=9 rrf=0.02715
+  [AI大模型实习生] vec+bm25 v=17 b=14 rrf=0.02650
+  [淘天自营AI研发工程师-暑期实习可转正] vec+bm25 v=20 b=13 rrf=0.02620
+  [智驾端到端大模型] vec+bm25 v=2 b=41 rrf=0.02603
+  [大模型算法工程师（银行岗位-双休）] vec+bm25 v=30 b=11 rrf=0.02520
+  [算法工程师（图像、OCR、多模态、大模型）] vec+bm25 v=15 b=25 rrf=0.02510
+  [大模型工程师] vec+bm25 v=25 b=17 rrf=0.02475
+  [大模型风控算法工程师] vec+bm25 v=7 b=42 rrf=0.02473
+  ... truncated 75 more rows
+2026-04-12 22:49:36,765 | INFO | JobAgent.tools | search tool recalled strict=30 expanded=30 expanded_query=后端 Python 全职 社招 正式 后端开发 服务端 后端工程师 java golang go node php spring
+2026-04-12 22:49:36,765 | INFO | JobAgent.tools | search tool merged 39 unique candidates after weighted fusion
+2026-04-12 22:49:36,766 | INFO | JobAgent.tools | title filter backfilled 11 candidates due to low role-match count=1
+2026-04-12 22:49:36,766 | INFO | JobAgent.tools | search tool kept 12 candidates after title filter
+2026-04-12 22:49:36,766 | INFO | JobAgent.tools | search tool internship exclusion kept 10/12 candidates
+2026-04-12 22:49:40,709 | INFO | JobAgent.tools | search rerank complete: max=0.6991 min=0.1615
+2026-04-12 22:49:40,756 | INFO | JobAgent.tools | search cache set: key=search:result:v1:f543c3ed33402c3008ec263b71792de406f94b1e66aff45265a0b0a8e34c53c6 ttl=1213s results=6
+2026-04-12 22:49:40,759 | INFO | JobAgent.chat_graph | search result summary: total=6 matched_role_count=0 mismatch_count=5 experience=非实习 experience_match_count=5 role_keywords=后端,Python
+2026-04-12 22:49:40,760 | INFO | JobAgent.chat_graph | relevance filter rules: role_keywords=后端,Python required_experience=非实习 role_rule=title must match at least one target role keyword; if mismatch roles > matched roles then drop experience_rule=title/tags/experience text must match required experience '非实习'
+2026-04-12 22:49:40,760 | INFO | JobAgent.chat_graph | relevance filter dropped 6/6 candidates:
+  [1] 多模态大模型算法 @ 上海某小型人工智能领域公司 | experience=3-5年 | tags=上海 | 3-5年 | reasons=role_mismatch:no_target_role_keyword | experience_matched=True | title_roles=算法,AI | target_roles=C#,C++,Golang,Java,PHP,Python,后端 | matched_roles= | mismatch_roles=算法,AI
+  [2] 智驾端到端大模型 @ 上海某中型互联网公司 | experience=经验不限 | tags=上海 | 经验不限 | reasons=role_mismatch:no_target_role_keyword | experience_matched=True | title_roles=AI | target_roles=C#,C++,Golang,Java,PHP,Python,后端 | matched_roles= | mismatch_roles=AI
+  [3] 大模型工程师 @ 上海字蒙信息科技 | experience=3-5年 | tags=上海 | 3-5年 | reasons=role_mismatch:no_target_role_keyword | experience_matched=True | title_roles=AI | target_roles=C#,C++,Golang,Java,PHP,Python,后端 | matched_roles= | mismatch_roles=AI
+  [4] 高级大模型应用开发 @ 天壤智能 | experience=3-5年 | tags=上海 | 3-5年 | reasons=role_mismatch:no_target_role_keyword | experience_matched=True | title_roles=AI | target_roles=C#,C++,Golang,Java,PHP,Python,后端 | matched_roles= | mismatch_roles=AI
+  [5] 多模态大模型算法工程师 @ 某大型智能硬件上市公司 | experience=经验不限 | tags=上海 | 经验不限 | reasons=role_mismatch:no_target_role_keyword | experience_matched=True | title_roles=算法,AI | target_roles=C#,C++,Golang,Java,PHP,Python,后端 | matched_roles= | mismatch_roles=算法,AI
+  [6] AI大模型开发 @ 某大型互联网公司 | experience=5-10年 | tags=上海 | 5-10年 | reasons=role_mismatch:no_target_role_keyword | experience_matched=True | title_roles=AI | target_roles=C#,C++,Golang,Java,PHP,Python,后端 | matched_roles= | mismatch_roles=AI
+2026-04-12 22:49:43,554 | INFO | JobAgent.chat_graph | relevance judge action=rewrite reason=当前结果方向不对，未匹配到目标岗位关键词后端和Python
+2026-04-12 22:49:48,222 | INFO | JobAgent.chat_graph | rewrite explicit constraint guard: experience_mentioned=True experience=非实习 salary_mentioned=False salary_min=0 salary_unit=
+2026-04-12 22:49:48,222 | INFO | JobAgent.chat_graph | rewrite normalized search plan: {"resolved_query": "杭州及周边后端开发 Python相关 正式工作", "keyword_query": "后端 Python 开发 全职", "city": "杭州", "company": "", "experience": "非实习", "salary_min": 0, "salary_unit": ""}
+2026-04-12 22:49:48,223 | INFO | JobAgent.chat_graph | search node running: query=后端 Python 开发 全职 city=杭州 experience=非实习 salary_min=0 salary_unit=
+2026-04-12 22:49:48,224 | INFO | JobAgent.tools | search tool invoked: query=杭州及周边后端开发 Python相关 正式工作 effective_query=后端 Python 开发 全职 社招 正式 city=杭州->杭州 company= experience=非实习->非实习 exclude_internship=True salary_min=0 salary_unit=
+2026-04-12 22:49:48,224 | INFO | JobAgent.tools | search role keywords=后端,Python
+2026-04-12 22:49:48,226 | INFO | JobAgent.tools | search cache lookup: key=search:result:v1:bd7fd5b8b4bae153c5a027a65a319d52d406a6355fc02a91ea45cfa8964fa160 version=15 effective_query=后端 Python 开发 全职 社招 正式 city=杭州 company=<none> experience=非实习 exclude_internship=True salary_min=0 salary_unit=<none> expanded=yes role_keywords=后端,Python
+2026-04-12 22:49:48,226 | INFO | JobAgent.tools | search cache miss: key=search:result:v1:bd7fd5b8b4bae153c5a027a65a319d52d406a6355fc02a91ea45cfa8964fa160 data_version=15
+2026-04-12 22:49:48,227 | INFO | JobAgent.database | hybrid search: keywords=后端 Python 开发 全职 社招 正式 city=杭州 company= experience=非实习 salary_min=0 salary_unit=
+2026-04-12 22:49:50,460 | INFO | JobAgent.database | recall count: vec=48 bm25=42
+2026-04-12 22:49:50,460 | INFO | JobAgent.database | 🔀 [RRF] vec=48 bm25=42 merged=48 return=48
+  [AI大模型开发实习生] vec+bm25 v=6 b=2 rrf=0.03128
+  [大模型算法开发（线上实习）] vec+bm25 v=3 b=5 rrf=0.03126
+  [软件产品-应用软件开发工程师-大模型-杭州] vec+bm25 v=8 b=1 rrf=0.03110
+  [大模型算法] vec+bm25 v=1 b=12 rrf=0.03028
+  [AI大模型研发实习生] vec+bm25 v=4 b=13 rrf=0.02932
+  [大模型应用开发实习生(A120508)] vec+bm25 v=15 b=3 rrf=0.02921
+  [大模型应用研发实习生] vec+bm25 v=5 b=14 rrf=0.02890
+  [AI大模型训推系统实习生] vec+bm25 v=12 b=7 rrf=0.02881
+  [ai算法实习生（优先大三/研一/研二）] vec+bm25 v=11 b=9 rrf=0.02858
+  [后端开发实习生-飞书低代码平台大模型应用] vec+bm25 v=2 b=25 rrf=0.02789
+  [AI应用工程师] vec+bm25 v=26 b=4 rrf=0.02725
+  [AI算法工程师] vec+bm25 v=25 b=6 rrf=0.02692
+  [AI 算法实习生] vec+bm25 v=19 b=11 rrf=0.02674
+  [AI 应用研发工程师] vec+bm25 v=9 b=22 rrf=0.02669
+  [大模型算法] vec+bm25 v=13 b=18 rrf=0.02652
+  ... truncated 33 more rows
+2026-04-12 22:49:50,460 | INFO | JobAgent.database | hybrid search: keywords=后端 Python 开发 全职 社招 正式 后端开发 服务端 后端工程师 java golang go node php spring city=杭州 company= experience=非实习 salary_min=0 salary_unit=
+2026-04-12 22:49:50,649 | INFO | JobAgent.database | recall count: vec=48 bm25=42
+2026-04-12 22:49:50,649 | INFO | JobAgent.database | 🔀 [RRF] vec=48 bm25=42 merged=48 return=48
+  [后端开发实习生-飞书低代码平台大模型应用] vec+bm25 v=1 b=1 rrf=0.03279
+  [大模型应用开发实习生(A120508)] vec+bm25 v=6 b=2 rrf=0.03128
+  [AI算法工程师] vec+bm25 v=4 b=7 rrf=0.03055
+  [软件产品-应用软件开发工程师-大模型-杭州] vec+bm25 v=9 b=3 rrf=0.03037
+  [AI应用工程师] vec+bm25 v=8 b=6 rrf=0.02986
+  [大模型算法] vec+bm25 v=2 b=14 rrf=0.02964
+  [AI 算法实习生] vec+bm25 v=5 b=12 rrf=0.02927
+  [AI工程师-应用方向] vec+bm25 v=7 b=10 rrf=0.02921
+  [大模型算法开发（线上实习）] vec+bm25 v=11 b=8 rrf=0.02879
+  [AI大模型训推系统实习生] vec+bm25 v=12 b=9 rrf=0.02838
+  [AI Agent工程师] vec+bm25 v=3 b=23 rrf=0.02792
+  [大模型应用Java实习生] vec+bm25 v=25 b=5 rrf=0.02715
+  [AI大模型开发实习生] vec+bm25 v=28 b=4 rrf=0.02699
+  [大模型应用研发实习生] vec+bm25 v=16 b=16 rrf=0.02632
+  [大模型应用开发实习生（杭州）] vec+bm25 v=22 b=11 rrf=0.02628
+  ... truncated 33 more rows
+2026-04-12 22:49:50,649 | INFO | JobAgent.tools | search tool recalled strict=30 expanded=30 expanded_query=后端 Python 开发 全职 社招 正式 后端开发 服务端 后端工程师 java golang go node php spring
+2026-04-12 22:49:50,650 | INFO | JobAgent.tools | search tool merged 33 unique candidates after weighted fusion
+2026-04-12 22:49:50,650 | INFO | JobAgent.tools | title filter backfilled 10 candidates due to low role-match count=2
+2026-04-12 22:49:50,650 | INFO | JobAgent.tools | search tool kept 12 candidates after title filter
+2026-04-12 22:49:50,650 | INFO | JobAgent.tools | search tool internship exclusion kept 0/12 candidates
+2026-04-12 22:49:50,651 | INFO | JobAgent.tools | search cache set: key=search:result:v1:bd7fd5b8b4bae153c5a027a65a319d52d406a6355fc02a91ea45cfa8964fa160 ttl=51s results=0
+2026-04-12 22:49:50,652 | INFO | JobAgent.chat_graph | search result summary: total=0 matched_role_count=0 mismatch_count=0 experience=非实习 experience_match_count=0 role_keywords=后端,Python
+2026-04-12 22:49:50,654 | INFO | JobAgent.chat_graph | relevance filter rules: role_keywords=后端,Python required_experience=非实习 role_rule=title must match at least one target role keyword; if mismatch roles > matched roles then drop experience_rule=title/tags/experience text must match required experience '非实习'
+2026-04-12 22:49:50,654 | INFO | JobAgent.chat_graph | relevance filter dropped 0/0 candidates
+2026-04-12 23:04:36,190 | INFO | JobAgent.resume_task_queue | resume task worker stopped
+2026-04-12 23:04:36,193 | INFO | JobAgent.main | application shutting down

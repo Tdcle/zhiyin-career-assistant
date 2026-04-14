@@ -1,0 +1,88 @@
+2026-04-03 15:33:51,334 | INFO | JobAgent.database | ✅ 数据库连接池创建成功: boss_zhipin
+2026-04-03 15:33:51,335 | INFO | JobAgent.database | loading embedding model: nomic-embed-text-v2-moe
+2026-04-03 15:33:52,105 | INFO | JobAgent.database | embedding model loaded: nomic-embed-text-v2-moe
+2026-04-03 15:33:52,129 | INFO | JobAgent.database | database schema and indexes ready
+2026-04-03 15:33:56,526 | INFO | JobAgent.tools | loading reranker model from ./models/bge-reranker-v2-m3
+2026-04-03 15:33:58,252 | INFO | JobAgent.tools | reranker model loaded
+2026-04-03 15:34:00,665 | INFO | JobAgent.main | application starting
+2026-04-03 15:34:36,624 | INFO | JobAgent.redis_client | redis connected: redis://localhost:6379/0
+2026-04-03 15:34:36,645 | INFO | JobAgent.chat_router | chat session deleted: user=00004 session=chat:00004:4d1e3a94be20
+2026-04-03 15:34:37,751 | INFO | JobAgent.chat_router | chat session created: user=00004 session=chat:00004:7164a056032e
+2026-04-03 15:34:45,458 | INFO | JobAgent.chat_router | chat stream: user=00004 session=chat:00004:7164a056032e
+2026-04-03 15:34:49,847 | INFO | JobAgent.chat_graph | planner normalized search plan: {"resolved_query": "寻找北京地区的后端开发相关岗位", "keyword_query": "后端 北京", "city": "北京", "company": "", "experience": "", "salary_min": 0, "salary_unit": ""}
+2026-04-03 15:34:49,849 | INFO | JobAgent.chat_graph | search node running: query=后端 北京 city=北京 experience= salary_min=0 salary_unit=
+2026-04-03 15:34:49,849 | INFO | JobAgent.tools | search tool invoked: query=寻找北京地区的后端开发相关岗位 effective_query=后端 北京 city=北京->北京 company= experience=-> salary_min=0 salary_unit=
+2026-04-03 15:34:49,850 | INFO | JobAgent.tools | search role keywords=后端
+2026-04-03 15:34:49,850 | INFO | JobAgent.database | hybrid search: keywords=后端 北京 city=北京 company= experience= salary_min=0 salary_unit=
+2026-04-03 15:34:55,154 | INFO | JobAgent.database | recall count: vec=200 bm25=200
+2026-04-03 15:34:55,155 | INFO | JobAgent.database | 🔀 [RRF] vec=200 bm25=200 merged=345 return=60
+  [后端java] vec+bm25 v=1 b=3 rrf=0.03227
+  [前端开发工程师（北京）] vec+bm25 v=9 b=2 rrf=0.03062
+  [前端技术经理（北京驻场）] vec+bm25 v=7 b=8 rrf=0.02963
+  [web前端开发北京] vec+bm25 v=11 b=18 rrf=0.02691
+  [前端开发（Vue方向）] vec+bm25 v=3 b=33 rrf=0.02663
+  [react前端开发（北京）] vec+bm25 v=36 b=5 rrf=0.02580
+  [前端] vec+bm25 v=6 b=38 rrf=0.02536
+  [前端开发-短期-北京] vec+bm25 v=43 b=14 rrf=0.02322
+  [前端] vec+bm25 v=2 b=126 rrf=0.02151
+  [Java] vec+bm25 v=54 b=20 rrf=0.02127
+  [react前端开发] vec+bm25 v=25 b=48 rrf=0.02102
+  [中级前端工程师] vec+bm25 v=29 b=44 rrf=0.02085
+  [运维工程师（北京）] vec+bm25 v=163 b=4 rrf=0.02011
+  [VUE前端工程师] vec+bm25 v=14 b=98 rrf=0.01984
+  [vue前端工程师-知网] vec+bm25 v=60 b=30 rrf=0.01944
+  [前端开发工程师] vec+bm25 v=51 b=36 rrf=0.01943
+  [前端工程师] vec+bm25 v=12 b=143 rrf=0.01881
+  [Java] vec+bm25 v=87 b=25 rrf=0.01857
+  [产品经理（军工方向北京）] vec+bm25 v=198 b=9 rrf=0.01837
+  [应用实施运维岗-（北京电网外包）] vec+bm25 v=171 b=13 rrf=0.01803
+  [北京-外包java] vec+bm25 v=128 b=19 rrf=0.01798
+  [应用运维-北京] vec+bm25 v=153 b=16 rrf=0.01785
+  [前端工程师] vec+bm25 v=19 b=145 rrf=0.01754
+  [前端开发工程师] vec+bm25 v=93 b=32 rrf=0.01741
+  [前端开发工程师] vec+bm25 v=67 b=47 rrf=0.01722
+  [复制粘贴 客服岗] vec+bm25 v=57 b=57 rrf=0.01709
+  [java开发] vec+bm25 v=157 b=21 rrf=0.01695
+  [咨询教务老师（北京销售岗）] bm25 v=- b=1 rrf=0.01639
+  [高级java] vec+bm25 v=126 b=35 rrf=0.01590
+  [前端-web（证券 双休）] vec v=4 b=- rrf=0.01562
+  [前端] vec v=5 b=- rrf=0.01538
+  [JAVA 开发工程师 薪资高 待遇好] vec+bm25 v=113 b=46 rrf=0.01521
+  [奔驰宝马高端4S店 销售 北京各大区就近分配] bm25 v=- b=6 rrf=0.01515
+  [web前端] vec+bm25 v=41 b=137 rrf=0.01498
+  [北京市政办公室客服岗] bm25 v=- b=7 rrf=0.01493
+  [前端开发] vec v=8 b=- rrf=0.01471
+  [web前端高级工程师] vec+bm25 v=44 b=138 rrf=0.01467
+  [资深前端开发工程师] vec+bm25 v=42 b=148 rrf=0.01461
+  [前端开发工程师] vec+bm25 v=49 b=130 rrf=0.01444
+  [设计类岗位] vec+bm25 v=123 b=52 rrf=0.01439
+  [java 后端开发] vec v=10 b=- rrf=0.01429
+  [会开车的来(北京社保+销售岗）] bm25 v=- b=10 rrf=0.01429
+  [react前端开发工程师] vec+bm25 v=53 b=127 rrf=0.01420
+  [北京APM MONACO Sales Manager] bm25 v=- b=11 rrf=0.01408
+  [私域客服] vec+bm25 v=112 b=62 rrf=0.01401
+  [初级java] vec+bm25 v=129 b=55 rrf=0.01399
+  [[北京]产品经理] bm25 v=- b=12 rrf=0.01389
+  [前端] vec+bm25 v=56 b=132 rrf=0.01383
+  [前端开发（react）] vec v=13 b=- rrf=0.01370
+  [uniapp前端开发] vec+bm25 v=62 b=124 rrf=0.01363
+  [前端开发（Vue方向）] vec v=15 b=- rrf=0.01333
+  [测试 -北京] bm25 v=- b=15 rrf=0.01333
+  [web前端] vec v=16 b=- rrf=0.01316
+  [前端开发] vec v=17 b=- rrf=0.01299
+  [北京呼叫中心 全国客服岗 均薪8k] bm25 v=- b=17 rrf=0.01299
+  [前端工程师] vec v=18 b=- rrf=0.01282
+  [兼职前端开发工程师] vec+bm25 v=75 b=125 rrf=0.01281
+  [前端] vec v=20 b=- rrf=0.01250
+  [中级web前端] vec v=21 b=- rrf=0.01235
+  [前端开发] vec v=22 b=- rrf=0.01220
+2026-04-03 15:34:55,157 | INFO | JobAgent.tools | search tool recalled 20 candidates
+2026-04-03 15:34:55,157 | INFO | JobAgent.tools | search tool kept 1 candidates after title filter
+2026-04-03 15:34:55,158 | INFO | JobAgent.chat_graph | search result summary: total=1 matched_role_count=1 mismatch_count=1 experience= experience_match_count=1 role_keywords=后端
+2026-04-03 15:34:55,158 | INFO | JobAgent.chat_graph | relevance filter rules: role_keywords=后端 required_experience=<none> role_rule=title must match at least one target role keyword; if mismatch roles > matched roles then drop experience_rule=skipped (no experience constraint)
+2026-04-03 15:34:55,159 | INFO | JobAgent.chat_graph | relevance filter dropped 0/1 candidates
+2026-04-03 15:34:55,159 | INFO | JobAgent.chat_graph | relevance filter kept 1/1 candidates: [1] 后端java @ 北京伏羲太昊文化...
+2026-04-03 15:34:55,161 | INFO | JobAgent.chat_graph | filter results kept 1/1
+2026-04-03 15:34:55,166 | INFO | JobAgent.chat_graph | job alive check refresh: total=1 stale=1 fresh=0 threshold_hours=12
+2026-04-03 15:35:10,631 | INFO | JobAgent.chat_graph | job alive check summary: total=1 active=0 unknown=1 closed=0 kept=1 dropped=0
+2026-04-03 15:45:33,997 | INFO | JobAgent.main | application shutting down

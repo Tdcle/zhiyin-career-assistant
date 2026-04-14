@@ -1,0 +1,56 @@
+2026-04-12 22:44:44,145 | INFO | JobAgent.database | ✅ 数据库连接池创建成功: boss_zhipin
+2026-04-12 22:44:44,146 | INFO | JobAgent.database | loading embedding model: nomic-embed-text-v2-moe
+2026-04-12 22:44:45,394 | INFO | JobAgent.database | embedding model loaded: nomic-embed-text-v2-moe
+2026-04-12 22:44:45,491 | INFO | JobAgent.database | memory extractor model loaded: qwen-max-2025-01-25
+2026-04-12 22:44:45,571 | INFO | JobAgent.database | database schema and indexes ready
+2026-04-12 22:44:46,759 | INFO | JobAgent.tools | loading reranker model from ./models/bge-reranker-v2-m3
+2026-04-12 22:44:49,279 | INFO | JobAgent.tools | reranker model loaded
+2026-04-12 22:44:49,291 | INFO | JobAgent.tools | search tool invoked: query=后端 Python 看看杭州的吧 不看实习看正式工作 effective_query=后端 Python 全职 社招 正式 city=杭州->杭州 company= experience=非实习->非实习 exclude_internship=True salary_min=0 salary_unit=
+2026-04-12 22:44:49,291 | INFO | JobAgent.tools | search role keywords=后端,Python
+2026-04-12 22:44:49,302 | INFO | JobAgent.redis_client | redis connected: redis://localhost:6379/0
+2026-04-12 22:44:49,303 | INFO | JobAgent.tools | search cache lookup: key=search:result:v1:74889f63fac43eccdd330bd7041ee274c9e6871887f87bc61afb1ae48366ef4f version=15 effective_query=后端 Python 全职 社招 正式 city=杭州 company=<none> experience=非实习 exclude_internship=True salary_min=0 salary_unit=<none> expanded=yes role_keywords=后端,Python
+2026-04-12 22:44:49,303 | INFO | JobAgent.tools | search cache miss: key=search:result:v1:74889f63fac43eccdd330bd7041ee274c9e6871887f87bc61afb1ae48366ef4f data_version=15
+2026-04-12 22:44:49,305 | INFO | JobAgent.database | hybrid search: keywords=后端 Python 全职 社招 正式 city=杭州 company= experience=非实习 salary_min=0 salary_unit=
+2026-04-12 22:44:54,356 | INFO | JobAgent.database | recall count: vec=48 bm25=35
+2026-04-12 22:44:54,357 | INFO | JobAgent.database | 🔀 [RRF] vec=48 bm25=35 merged=48 return=48
+  [AI大模型研发实习生] vec+bm25 v=2 b=5 rrf=0.03151
+  [大模型算法] vec+bm25 v=1 b=8 rrf=0.03110
+  [大模型应用研发实习生] vec+bm25 v=8 b=1 rrf=0.03110
+  [AI大模型开发实习生] vec+bm25 v=14 b=2 rrf=0.02964
+  [大模型算法开发（线上实习）] vec+bm25 v=3 b=14 rrf=0.02939
+  [AI Agent工程师] vec+bm25 v=18 b=3 rrf=0.02869
+  [ai算法实习生（优先大三/研一/研二）] vec+bm25 v=11 b=10 rrf=0.02837
+  [软件产品-应用软件开发工程师-大模型-杭州] vec+bm25 v=20 b=4 rrf=0.02813
+  [三一多模态大模型实习生] vec+bm25 v=7 b=18 rrf=0.02775
+  [AI大模型训推系统实习生] vec+bm25 v=9 b=16 rrf=0.02765
+  [通义实验室实习生-大模型语音交互系统] vec+bm25 v=5 b=22 rrf=0.02758
+  [算法实习生（大模型与无人机智能调度方向）] vec+bm25 v=17 b=9 rrf=0.02748
+  [大模型实习生] vec+bm25 v=21 b=7 rrf=0.02727
+  [AI算法工程师] vec+bm25 v=26 b=6 rrf=0.02678
+  [后端开发实习生-飞书低代码平台大模型应用] vec+bm25 v=4 b=30 rrf=0.02674
+  ... truncated 33 more rows
+2026-04-12 22:44:54,358 | INFO | JobAgent.database | hybrid search: keywords=后端 Python 全职 社招 正式 后端开发 服务端 后端工程师 java golang go node php spring city=杭州 company= experience=非实习 salary_min=0 salary_unit=
+2026-04-12 22:44:54,578 | INFO | JobAgent.database | recall count: vec=48 bm25=35
+2026-04-12 22:44:54,579 | INFO | JobAgent.database | 🔀 [RRF] vec=48 bm25=35 merged=48 return=48
+  [后端开发实习生-飞书低代码平台大模型应用] vec+bm25 v=1 b=1 rrf=0.03279
+  [大模型应用开发实习生(A120508)] vec+bm25 v=6 b=3 rrf=0.03102
+  [AI算法工程师] vec+bm25 v=5 b=4 rrf=0.03101
+  [大模型算法] vec+bm25 v=2 b=8 rrf=0.03083
+  [AI Agent工程师] vec+bm25 v=3 b=12 rrf=0.02976
+  [AI应用工程师] vec+bm25 v=10 b=5 rrf=0.02967
+  [AI大模型训推系统实习生] vec+bm25 v=8 b=9 rrf=0.02920
+  [AI工程师-应用方向] vec+bm25 v=7 b=13 rrf=0.02862
+  [软件产品-应用软件开发工程师-大模型-杭州] vec+bm25 v=11 b=10 rrf=0.02837
+  [大模型应用研发实习生] vec+bm25 v=16 b=7 rrf=0.02808
+  [大模型应用Java实习生] vec+bm25 v=25 b=2 rrf=0.02789
+  [大模型应用工程师] vec+bm25 v=13 b=11 rrf=0.02778
+  [大模型算法开发（线上实习）] vec+bm25 v=12 b=14 rrf=0.02740
+  [AI大模型开发实习生] vec+bm25 v=30 b=6 rrf=0.02626
+  [AI大模型研发实习生] vec+bm25 v=20 b=15 rrf=0.02583
+  ... truncated 33 more rows
+2026-04-12 22:44:54,579 | INFO | JobAgent.tools | search tool recalled strict=30 expanded=30 expanded_query=后端 Python 全职 社招 正式 后端开发 服务端 后端工程师 java golang go node php spring
+2026-04-12 22:44:54,579 | INFO | JobAgent.tools | search tool merged 32 unique candidates after weighted fusion
+2026-04-12 22:44:54,581 | INFO | JobAgent.tools | title filter backfilled 10 candidates due to low role-match count=2
+2026-04-12 22:44:54,581 | INFO | JobAgent.tools | search tool kept 12 candidates after title filter
+2026-04-12 22:44:54,581 | INFO | JobAgent.tools | search tool internship exclusion kept 0/12 candidates
+2026-04-12 22:44:54,583 | INFO | JobAgent.tools | search cache set: key=search:result:v1:74889f63fac43eccdd330bd7041ee274c9e6871887f87bc61afb1ae48366ef4f ttl=42s results=0

@@ -1,0 +1,11 @@
+2026-04-03 19:51:25,178 | INFO | JobAgent.database | ✅ 数据库连接池创建成功: boss_zhipin
+2026-04-03 19:51:25,178 | INFO | JobAgent.database | loading embedding model: nomic-embed-text-v2-moe
+2026-04-03 19:51:25,895 | INFO | JobAgent.database | embedding model loaded: nomic-embed-text-v2-moe
+2026-04-03 19:51:25,929 | INFO | JobAgent.database | database schema and indexes ready
+2026-04-03 19:51:29,704 | INFO | JobAgent.tools | loading reranker model from ./models/bge-reranker-v2-m3
+2026-04-03 19:51:31,307 | INFO | JobAgent.tools | reranker model loaded
+2026-04-03 19:51:33,387 | INFO | JobAgent.main | application starting
+2026-04-03 19:52:36,640 | INFO | JobAgent.auth_router | user login success: user_id=00004 username=小帅
+2026-04-03 19:52:36,699 | INFO | JobAgent.redis_client | redis connected: redis://localhost:6379/0
+2026-04-03 19:52:40,732 | INFO | JobAgent.user_router | resume task created: task_id=ed9bef2f626a48e1a798661ff7911c85 user=00004 file=王来晨-大模型应用开发.pdf
+2026-04-03 19:52:45,385 | INFO | JobAgent.user_router | resume task completed: task_id=ed9bef2f626a48e1a798661ff7911c85 user=00004

@@ -1,0 +1,1 @@
+2026-04-02 19:50:14,019 | INFO | JobAgent.redis_client | redis connected: redis://localhost:6379/0

@@ -1,0 +1,5 @@
+2026-04-03 14:50:15,258 | INFO | JobAgent.job_alive_probe | job alive probe start: total_urls=1 timeout=12
+2026-04-03 14:50:15,970 | INFO | JobAgent.job_alive_probe | checking 1/1: https://www.zhipin.com/job_detail/fd9f3c6481c2461a0nV53d-_E1FR.html
+2026-04-03 14:50:17,023 | INFO | JobAgent.job_alive_probe | result 1/1: status=unknown reason=no_signal matched=
+2026-04-03 14:50:19,265 | INFO | JobAgent.job_alive_probe | result written to logs\job_ali
+2026-04-03 14:50:19,266 | INFO | JobAgent.job_alive_probe | job alive probe done: {'total': 1, 'active': 0, 'closed': 0, 'unknown': 1}

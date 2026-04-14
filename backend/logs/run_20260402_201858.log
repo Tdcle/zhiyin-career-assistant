@@ -1,0 +1,216 @@
+2026-04-02 20:18:58,530 | INFO | JobAgent.database | ✅ 数据库连接池创建成功: boss_zhipin
+2026-04-02 20:18:58,530 | INFO | JobAgent.database | loading embedding model: nomic-embed-text-v2-moe
+2026-04-02 20:18:59,448 | INFO | JobAgent.database | embedding model loaded: nomic-embed-text-v2-moe
+2026-04-02 20:18:59,474 | INFO | JobAgent.database | database schema and indexes ready
+2026-04-02 20:19:02,450 | INFO | JobAgent.tools | loading reranker model from ./models/bge-reranker-v2-m3
+2026-04-02 20:19:02,452 | WARNING | JobAgent.tools | reranker unavailable, fallback to plain retrieval: Repo id must be in the form 'repo_name' or 'namespace/repo_name': './models/bge-reranker-v2-m3'. Use `repo_type` argument if needed.
+2026-04-02 20:19:05,090 | INFO | JobAgent.main | application starting
+2026-04-02 20:19:31,612 | INFO | JobAgent.redis_client | redis connected: redis://localhost:6379/0
+2026-04-02 20:19:31,667 | INFO | JobAgent.chat_router | chat session created: user=00004 session=chat:00004:2425e814ec29
+2026-04-02 20:23:07,866 | INFO | JobAgent.chat_router | chat session created: user=00004 session=chat:00004:bef0fe1ab54b
+2026-04-02 20:23:23,529 | INFO | JobAgent.chat_router | chat session deleted: user=00004 session=chat:00004:2425e814ec29
+2026-04-02 20:23:32,128 | INFO | JobAgent.chat_router | chat stream: user=00004 session=chat:00004:bef0fe1ab54b
+2026-04-02 20:23:37,667 | INFO | JobAgent.chat_graph | planner normalized search plan: {"resolved_query": "在北京寻找前端相关岗位", "keyword_query": "前端", "city": "北京", "company": "", "experience": "", "salary_min": 0, "salary_unit": ""}
+2026-04-02 20:23:37,668 | INFO | JobAgent.chat_graph | search node running: query=前端 city=北京 experience= salary_min=0 salary_unit=
+2026-04-02 20:23:37,669 | INFO | JobAgent.tools | search tool invoked: query=在北京寻找前端相关岗位 effective_query=前端 city=北京->北京 company= experience=-> salary_min=0 salary_unit=
+2026-04-02 20:23:37,669 | INFO | JobAgent.tools | search role keywords=前端
+2026-04-02 20:23:37,669 | INFO | JobAgent.database | hybrid search: keywords=前端 city=北京 company= experience= salary_min=0 salary_unit=
+2026-04-02 20:23:42,698 | INFO | JobAgent.database | recall count: vec=200 bm25=122
+2026-04-02 20:23:42,699 | INFO | JobAgent.database | 🔀 [RRF] vec=200 bm25=122 merged=217 return=60
+  [前端] vec+bm25 v=1 b=2 rrf=0.03252
+  [前端] vec+bm25 v=3 b=4 rrf=0.03150
+  [前端] vec+bm25 v=8 b=1 rrf=0.03110
+  [前端] vec+bm25 v=4 b=6 rrf=0.03078
+  [前端工程师] vec+bm25 v=6 b=19 rrf=0.02781
+  [前端工程师] vec+bm25 v=14 b=10 rrf=0.02780
+  [前端研发工程师] vec+bm25 v=21 b=5 rrf=0.02773
+  [前端] vec+bm25 v=2 b=27 rrf=0.02762
+  [前端工程师] vec+bm25 v=13 b=14 rrf=0.02721
+  [web前端] vec+bm25 v=5 b=28 rrf=0.02675
+  [前端网页开发工程师] vec+bm25 v=35 b=3 rrf=0.02640
+  [前端工程师] vec+bm25 v=10 b=25 rrf=0.02605
+  [前端工程师] vec+bm25 v=16 b=18 rrf=0.02598
+  [高级web前端工程师] vec+bm25 v=23 b=17 rrf=0.02504
+  [前端-web（证券 双休）] vec+bm25 v=9 b=36 rrf=0.02491
+  [web前端高级工程师] vec+bm25 v=32 b=12 rrf=0.02476
+  [web前端工程师] vec+bm25 v=20 b=23 rrf=0.02455
+  [高级前端工程师] vec+bm25 v=42 b=8 rrf=0.02451
+  [中级web前端] vec+bm25 v=22 b=22 rrf=0.02439
+  [前端开发工程师] vec+bm25 v=15 b=34 rrf=0.02397
+  [高级前端工程师] vec+bm25 v=51 b=7 rrf=0.02393
+  [前端技术经理] vec+bm25 v=12 b=41 rrf=0.02379
+  [前端开发工程师] vec+bm25 v=50 b=13 rrf=0.02279
+  [中级前端工程师] vec+bm25 v=58 b=11 rrf=0.02256
+  [前端开发] vec+bm25 v=7 b=72 rrf=0.02250
+  [前端高级开发工程师] vec+bm25 v=56 b=16 rrf=0.02178
+  [前端开发] vec+bm25 v=11 b=70 rrf=0.02178
+  [前端技术经理（北京驻场）] vec+bm25 v=43 b=24 rrf=0.02161
+  [VUE前端工程师] vec+bm25 v=81 b=9 rrf=0.02158
+  [高级前端工程师] vec+bm25 v=37 b=29 rrf=0.02155
+  [前端工程师（中级｜React）] vec+bm25 v=34 b=32 rrf=0.02151
+  [web前端] vec+bm25 v=38 b=30 rrf=0.02132
+  [前端开发工程师] vec+bm25 v=26 b=44 rrf=0.02124
+  [前端开发（Vue方向）] vec+bm25 v=24 b=50 rrf=0.02100
+  [Vue3前端（外包万达）] vec+bm25 v=79 b=15 rrf=0.02053
+  [react前端] vec+bm25 v=41 b=38 rrf=0.02011
+  [前端开发工程师] vec+bm25 v=30 b=52 rrf=0.02004
+  [前端研发工程师] vec+bm25 v=40 b=40 rrf=0.02000
+  [前端开发lm] vec+bm25 v=27 b=59 rrf=0.01990
+  [前端开发工程师] vec+bm25 v=19 b=83 rrf=0.01965
+  [前端开发工程师] vec+bm25 v=33 b=53 rrf=0.01960
+  [前端技术合伙人] vec+bm25 v=46 b=39 rrf=0.01953
+  [前端开发工程师] vec+bm25 v=29 b=61 rrf=0.01950
+  [前端开发工程师] vec+bm25 v=31 b=60 rrf=0.01932
+  [web前端/测试] vec+bm25 v=61 b=31 rrf=0.01925
+  [前端开发工程师（安全）] vec+bm25 v=18 b=96 rrf=0.01923
+  [前端开发工程师] vec+bm25 v=36 b=54 rrf=0.01919
+  [vue前端工程师-知网] vec+bm25 v=95 b=20 rrf=0.01895
+  [前端开发] vec+bm25 v=25 b=82 rrf=0.01881
+  [资深前端开发工程师] vec+bm25 v=98 b=21 rrf=0.01867
+  [vue前端工程师] vec+bm25 v=82 b=26 rrf=0.01867
+  [前端开发（Vue方向）] vec+bm25 v=45 b=51 rrf=0.01853
+  [前端开发] vec+bm25 v=47 b=55 rrf=0.01804
+  [资深前端开发工程师] vec+bm25 v=54 b=48 rrf=0.01803
+  [Web前端工程师] vec+bm25 v=64 b=43 rrf=0.01777
+  [前端开发（react）] vec+bm25 v=28 b=102 rrf=0.01754
+  [vue前端] vec+bm25 v=84 b=35 rrf=0.01747
+  [前端开发工程师] vec+bm25 v=39 b=77 rrf=0.01740
+  [前端] vec+bm25 v=99 b=33 rrf=0.01704
+  [前端开发工程师] vec+bm25 v=70 b=47 rrf=0.01704
+2026-04-02 20:23:42,700 | INFO | JobAgent.tools | search tool recalled 20 candidates
+2026-04-02 20:23:42,700 | INFO | JobAgent.tools | search tool kept 20 candidates after title filter
+2026-04-02 20:23:42,701 | INFO | JobAgent.chat_graph | search result summary: total=6 matched_role_count=5 mismatch_count=0 experience= experience_match_count=5 role_keywords=前端
+2026-04-02 20:25:08,150 | INFO | JobAgent.chat_router | chat session created: user=00004 session=chat:00004:e2c5e481c7dc
+2026-04-02 20:25:19,732 | INFO | JobAgent.chat_router | chat stream: user=00004 session=chat:00004:bef0fe1ab54b
+2026-04-02 20:25:26,228 | INFO | JobAgent.chat_graph | planner normalized search plan: {"resolved_query": "在上海寻找大模型相关实习岗位", "keyword_query": "大模型 实习", "city": "上海", "company": "", "experience": "实习", "salary_min": 0, "salary_unit": ""}
+2026-04-02 20:25:26,230 | INFO | JobAgent.chat_graph | search node running: query=大模型 实习 city=上海 experience=实习 salary_min=0 salary_unit=
+2026-04-02 20:25:26,230 | INFO | JobAgent.tools | search tool invoked: query=在上海寻找大模型相关实习岗位 effective_query=大模型 实习 在校 city=上海->上海 company= experience=实习->实习 salary_min=0 salary_unit=
+2026-04-02 20:25:26,231 | INFO | JobAgent.tools | search role keywords=AI
+2026-04-02 20:25:26,231 | INFO | JobAgent.database | hybrid search: keywords=大模型 实习 在校 city=上海 company= experience=实习 salary_min=0 salary_unit=
+2026-04-02 20:25:28,507 | INFO | JobAgent.database | recall count: vec=132 bm25=132
+2026-04-02 20:25:28,509 | INFO | JobAgent.database | 🔀 [RRF] vec=132 bm25=132 merged=132 return=60
+  [大模型应用算法实习生] vec+bm25 v=5 b=7 rrf=0.03031
+  [大模型实习（文生图、图生图、图生视频）] vec+bm25 v=6 b=6 rrf=0.03030
+  [大模型应用预研实习生] vec+bm25 v=8 b=14 rrf=0.02822
+  [大模型 Agent 研究员（实习）] vec+bm25 v=21 b=3 rrf=0.02822
+  [AI大模型实习岗位(硕博)] vec+bm25 v=16 b=9 rrf=0.02765
+  [大模型研发实习生] vec+bm25 v=1 b=29 rrf=0.02763
+  [大模型算法实习生] vec+bm25 v=12 b=15 rrf=0.02722
+  [大模型算法研究实习生] vec+bm25 v=18 b=11 rrf=0.02691
+  [大模型应用开发实习工程师] vec+bm25 v=23 b=8 rrf=0.02675
+  [急招-大模型算法研究实习生] vec+bm25 v=22 b=10 rrf=0.02648
+  [大模型算法实习生] vec+bm25 v=15 b=20 rrf=0.02583
+  [大模型&AI&算法&后端&客户端&Web-实习岗位] vec+bm25 v=39 b=4 rrf=0.02573
+  [大模型智能体研发工程师实习] vec+bm25 v=50 b=1 rrf=0.02548
+  [AI大模型实习生] vec+bm25 v=7 b=35 rrf=0.02545
+  [大模型算法实习生] vec+bm25 v=14 b=24 rrf=0.02542
+  [大模型应用实习生] vec+bm25 v=2 b=48 rrf=0.02539
+  [多模态大模型算法实习生] vec+bm25 v=19 b=19 rrf=0.02532
+  [大模型多模态评测实习生] vec+bm25 v=4 b=45 rrf=0.02515
+  [大模型应用算法实习生] vec+bm25 v=11 b=32 rrf=0.02495
+  [大模型算法实习生] vec+bm25 v=24 b=22 rrf=0.02410
+  [大模型算法实习] vec+bm25 v=33 b=21 rrf=0.02310
+  [大模型算法工程师/大模型研发专家] vec+bm25 v=84 b=2 rrf=0.02307
+  [·上海算法实习·多模态大模型和静态元素感知] vec+bm25 v=57 b=13 rrf=0.02225
+  [【实习】端侧大模型压缩算法工程师] vec+bm25 v=88 b=5 rrf=0.02214
+  [多模态大模型实习生] vec+bm25 v=3 b=102 rrf=0.02205
+  [大模型算法] vec+bm25 v=41 b=23 rrf=0.02195
+  [大模型算法工程师] vec+bm25 v=59 b=16 rrf=0.02156
+  [AI大模型工程师] vec+bm25 v=71 b=12 rrf=0.02152
+  [大模型算法] vec+bm25 v=44 b=26 rrf=0.02124
+  [大模型强化学习算法研究型实习生] vec+bm25 v=35 b=34 rrf=0.02116
+  [大模型算法实习生] vec+bm25 v=9 b=90 rrf=0.02116
+  [大模型平台研发实习生] vec+bm25 v=10 b=89 rrf=0.02100
+  [机器人大模型] vec+bm25 v=43 b=30 rrf=0.02082
+  [大模型安全实习生] vec+bm25 v=13 b=84 rrf=0.02064
+  [大模型应用算法实习生J97464] vec+bm25 v=17 b=76 rrf=0.02034
+  [碳中和领域垂直大模型+AI Agent项目实习生] vec+bm25 v=52 b=28 rrf=0.02029
+  [大模型算法实习生-生态平台] vec+bm25 v=26 b=57 rrf=0.02017
+  [大模型算法实习生] vec+bm25 v=27 b=59 rrf=0.01990
+  [【实习】 AI智能辅助工程师（大模型方向）] vec+bm25 v=82 b=18 rrf=0.01986
+  [AI大模型开发实习生] vec+bm25 v=28 b=58 rrf=0.01984
+  [物理AI大模型算法工程师(J11094)] vec+bm25 v=90 b=17 rrf=0.01965
+  [AI/大模型] vec+bm25 v=67 b=25 rrf=0.01964
+  [大模型算法实习生] vec+bm25 v=25 b=68 rrf=0.01958
+  [医疗大模型方向AI实习生]] vec+bm25 v=46 b=42 rrf=0.01924
+  [AI大模型算法实习生] vec+bm25 v=36 b=55 rrf=0.01911
+  [多模态大模型算法实习生] vec+bm25 v=20 b=93 rrf=0.01904
+  [AI大模型工程师] vec+bm25 v=54 b=40 rrf=0.01877
+  [多模态大模型算法实习生(J11440)] vec+bm25 v=45 b=53 rrf=0.01837
+  [大模型算法] vec+bm25 v=56 b=43 rrf=0.01833
+  [大模型（北上广深杭州）] vec+bm25 v=37 b=66 rrf=0.01825
+  [大模型算法实习生] vec+bm25 v=29 b=86 rrf=0.01809
+  [多模态大模型工程师] vec+bm25 v=55 b=47 rrf=0.01804
+  [灵巧手-多模态大模型(VLM/VLA)(宁波-上海)] vec+bm25 v=106 b=27 rrf=0.01752
+  [大模型算法] vec+bm25 v=95 b=31 rrf=0.01744
+  [大模型高P] vec+bm25 v=30 b=98 rrf=0.01744
+  [大模型算法专家] vec+bm25 v=78 b=39 rrf=0.01735
+  [自动驾驶大模型/端到端自动驾驶算法实习生] vec+bm25 v=48 b=64 rrf=0.01732
+  [大模型AI Agent产品实习生 (海外运营增长)] vec+bm25 v=40 b=78 rrf=0.01725
+  [大模型算法实习生] vec+bm25 v=34 b=94 rrf=0.01713
+  [大模型算法] vec+bm25 v=53 b=63 rrf=0.01698
+2026-04-02 20:25:28,511 | INFO | JobAgent.tools | search tool recalled 20 candidates
+2026-04-02 20:25:28,511 | INFO | JobAgent.tools | search tool kept 20 candidates after title filter
+2026-04-02 20:25:28,512 | INFO | JobAgent.chat_graph | search result summary: total=6 matched_role_count=5 mismatch_count=1 experience=实习 experience_match_count=5 role_keywords=AI
+2026-04-02 20:26:08,210 | INFO | JobAgent.chat_router | chat stream: user=00004 session=chat:00004:e2c5e481c7dc
+2026-04-02 20:26:15,744 | INFO | JobAgent.chat_graph | planner normalized search plan: {"resolved_query": "用户想找杭州地区与大模型相关的资源或信息 但未明确表达为岗位搜索。", "keyword_query": "大模型 杭州", "city": "杭州", "company": "", "experience": "", "salary_min": 0, "salary_unit": ""}
+2026-04-02 20:26:17,241 | INFO | JobAgent.tools | search tool invoked: query=找杭州的大模型相关岗位 effective_query=大模型 city=杭州->杭州 company= experience=-> salary_min=0 salary_unit=
+2026-04-02 20:26:17,241 | INFO | JobAgent.tools | search role keywords=AI
+2026-04-02 20:26:17,241 | INFO | JobAgent.database | hybrid search: keywords=大模型 city=杭州 company= experience= salary_min=0 salary_unit=
+2026-04-02 20:26:19,518 | INFO | JobAgent.database | recall count: vec=50 bm25=50
+2026-04-02 20:26:19,518 | INFO | JobAgent.database | 🔀 [RRF] vec=50 bm25=50 merged=50 return=50
+  [人工智能大模型] vec+bm25 v=2 b=6 rrf=0.03128
+  [AI大模型开发实习生] vec+bm25 v=9 b=2 rrf=0.03062
+  [大模型算法工程师] vec+bm25 v=14 b=1 rrf=0.02991
+  [大模型算法开发（线上实习）] vec+bm25 v=10 b=7 rrf=0.02921
+  [大模型量化应用（实习）] vec+bm25 v=16 b=3 rrf=0.02903
+  [大模型算法实习生] vec+bm25 v=7 b=12 rrf=0.02881
+  [大模型实习生] vec+bm25 v=1 b=21 rrf=0.02874
+  [大模型算法工程师] vec+bm25 v=17 b=4 rrf=0.02861
+  [大模型实习生] vec+bm25 v=4 b=20 rrf=0.02813
+  [AI大模型研发实习生] vec+bm25 v=12 b=11 rrf=0.02797
+  [多模态大模型实习生] vec+bm25 v=5 b=23 rrf=0.02743
+  [工业大模型算法实习生] vec+bm25 v=15 b=13 rrf=0.02703
+  [大模型应用Java实习生] vec+bm25 v=27 b=5 rrf=0.02688
+  [大模型应用研发实习生] vec+bm25 v=18 b=14 rrf=0.02633
+  [大模型应用工程师] vec+bm25 v=3 b=37 rrf=0.02618
+  [大模型算法] vec+bm25 v=6 b=31 rrf=0.02614
+  [大模型算法实习生] vec+bm25 v=11 b=24 rrf=0.02599
+  [大模型质量工程师-抖音] vec+bm25 v=29 b=8 rrf=0.02594
+  [大模型应用 Java 开发实习生（26年应届）] vec+bm25 v=28 b=10 rrf=0.02565
+  [大模型算法实习生（杭州）] vec+bm25 v=19 b=17 rrf=0.02565
+  [AI大模型训推系统实习生] vec+bm25 v=33 b=9 rrf=0.02525
+  [大模型算法] vec+bm25 v=8 b=36 rrf=0.02512
+  [大模型应用开发实习生（杭州）] vec+bm25 v=22 b=18 rrf=0.02502
+  [大模型算法] vec+bm25 v=24 b=19 rrf=0.02456
+  [AI大模型应用技术实习生3-5K双休] vec+bm25 v=31 b=15 rrf=0.02432
+  [千问/夸克-大模型数据工程实习生(多模态)] vec+bm25 v=32 b=16 rrf=0.02403
+  [AI大模型实习生] vec+bm25 v=13 b=42 rrf=0.02350
+  [NLP/多模态/大模型 实习生] vec+bm25 v=23 b=28 rrf=0.02341
+  [三一多模态大模型实习生] vec+bm25 v=20 b=34 rrf=0.02314
+  [软件产品-应用软件开发工程师-大模型-杭州] vec+bm25 v=26 b=29 rrf=0.02286
+  [通义实验室实习生-大模型语音交互系统] vec+bm25 v=34 b=22 rrf=0.02283
+  [大模型算法] vec+bm25 v=21 b=40 rrf=0.02235
+  [大模型标注实习生] vec+bm25 v=30 b=32 rrf=0.02198
+  [算法实习生（大模型与无人机智能调度方向）] vec+bm25 v=39 b=27 rrf=0.02160
+  [后端开发实习生-飞书低代码平台大模型应用] vec+bm25 v=42 b=25 rrf=0.02157
+  [AI产品经理实习生（大模型应用方向）] vec+bm25 v=36 b=30 rrf=0.02153
+  [AI模型实习生（远程）] vec+bm25 v=25 b=43 rrf=0.02147
+  [AI应用工程师] vec+bm25 v=45 b=26 rrf=0.02115
+  [视频大模型编辑标注] vec+bm25 v=37 b=33 rrf=0.02106
+  [AI产品开发实习生（医疗大模型）应届可转正] vec+bm25 v=40 b=35 rrf=0.02053
+  [大模型应用开发实习生(A120508)] vec+bm25 v=35 b=41 rrf=0.02043
+  [AIGC图像大模型算法实习生] vec+bm25 v=38 b=38 rrf=0.02041
+  [AI 产品体验实习生-通用大模型/智能体方向] vec+bm25 v=41 b=39 rrf=0.02000
+  [AI 算法实习生] vec+bm25 v=44 b=44 rrf=0.01923
+  [AI Agent工程师] vec+bm25 v=46 b=46 rrf=0.01887
+  [ai算法实习生（优先大三/研一/研二）] vec+bm25 v=43 b=50 rrf=0.01880
+  [ai研发工程师] vec+bm25 v=50 b=45 rrf=0.01861
+  [AI算法工程师] vec+bm25 v=48 b=47 rrf=0.01861
+  [AI工程师-应用方向] vec+bm25 v=47 b=49 rrf=0.01852
+  [AI 应用研发工程师] vec+bm25 v=49 b=48 rrf=0.01843
+2026-04-02 20:26:19,519 | INFO | JobAgent.tools | search tool recalled 20 candidates
+2026-04-02 20:26:19,519 | INFO | JobAgent.tools | search tool kept 20 candidates after title filter
+2026-04-02 20:26:19,522 | INFO | JobAgent.chat_graph | search result summary: total=6 matched_role_count=5 mismatch_count=2 experience= experience_match_count=5 role_keywords=AI
+2026-04-02 20:26:19,523 | INFO | JobAgent.chat_graph | filter results kept 3/6
+2026-04-02 20:26:19,638 | INFO | JobAgent.main | application shutting down

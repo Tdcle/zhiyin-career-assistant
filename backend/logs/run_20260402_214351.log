@@ -1,0 +1,41 @@
+2026-04-02 21:43:51,814 | INFO | JobAgent.database | ✅ 数据库连接池创建成功: boss_zhipin
+2026-04-02 21:43:51,815 | INFO | JobAgent.database | loading embedding model: nomic-embed-text-v2-moe
+2026-04-02 21:43:52,569 | INFO | JobAgent.database | embedding model loaded: nomic-embed-text-v2-moe
+2026-04-02 21:43:52,589 | INFO | JobAgent.database | database schema and indexes ready
+2026-04-02 21:43:56,463 | INFO | JobAgent.tools | loading reranker model from ./models/bge-reranker-v2-m3
+2026-04-02 21:43:58,076 | INFO | JobAgent.tools | reranker model loaded
+2026-04-02 21:44:00,226 | INFO | JobAgent.main | application starting
+2026-04-02 21:55:16,978 | INFO | JobAgent.redis_client | redis connected: redis://localhost:6379/0
+2026-04-02 22:30:37,227 | INFO | JobAgent.user_router | resume task created: task_id=56310587829f470e975811eba0f7e8aa user=00004 file=王来晨-大模型应用开发.pdf
+2026-04-02 22:30:37,264 | INFO | JobAgent.file_parser | 📂 开始读取文件: D:\PythonProject\find_a_good_job\backend\static\resumes\00004_56310587829f470e975811eba0f7e8aa_王来晨-大模型应用开发.pdf
+2026-04-02 22:30:37,295 | INFO | JobAgent.file_parser | 📄 正在解析 PDF 第 1 页...
+2026-04-02 22:30:37,320 | INFO | JobAgent.file_parser | 📄 正在解析 PDF 第 2 页...
+2026-04-02 22:30:42,363 | INFO | JobAgent.user_router | resume task completed: task_id=56310587829f470e975811eba0f7e8aa user=00004
+2026-04-02 22:31:05,608 | INFO | JobAgent.user_router | resume task created: task_id=641ced4b8dd540a9a47817e3e473e6bf user=00004 file=王来晨-大模型应用开发.pdf
+2026-04-02 22:31:05,611 | INFO | JobAgent.file_parser | 📂 开始读取文件: D:\PythonProject\find_a_good_job\backend\static\resumes\00004_641ced4b8dd540a9a47817e3e473e6bf_王来晨-大模型应用开发.pdf
+2026-04-02 22:31:05,613 | INFO | JobAgent.file_parser | 📄 正在解析 PDF 第 1 页...
+2026-04-02 22:31:05,620 | INFO | JobAgent.file_parser | 📄 正在解析 PDF 第 2 页...
+2026-04-02 22:31:07,948 | INFO | JobAgent.user_router | resume task completed: task_id=641ced4b8dd540a9a47817e3e473e6bf user=00004
+2026-04-02 22:31:14,343 | INFO | JobAgent.interview_router | interview start: user=00004 job_id=d0ef27cc9f8239bc03x829W9FFVY
+2026-04-02 22:31:14,378 | ERROR | JobAgent.tools | match analysis llm failed
+Traceback (most recent call last):
+  File "D:\PythonProject\find_a_good_job\backend\utils\tools.py", line 448, in analyze_job_match_tool
+    response = (prompt | llm).invoke({"resume": resume_text, "jd": job_description})
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\langchain_core\runnables\base.py", line 3151, in invoke
+    input_ = context.run(step.invoke, input_, config, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\langchain_core\prompts\base.py", line 223, in invoke
+    return self._call_with_config(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\langchain_core\runnables\base.py", line 2060, in _call_with_config
+    context.run(
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\langchain_core\runnables\config.py", line 452, in call_func_with_variable_args
+    return func(input, **kwargs)  # type: ignore[call-arg]
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\langchain_core\prompts\base.py", line 196, in _format_prompt_with_error_handling
+    inner_input_ = self._validate_input(inner_input)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Anaconda3\envs\find_a_good_job\Lib\site-packages\langchain_core\prompts\base.py", line 190, in _validate_input
+    raise KeyError(
+KeyError: 'Input to ChatPromptTemplate is missing variables {\'\\n  "scores"\'}.  Expected: [\'\\n  "scores"\', \'jd\', \'resume\'] Received: [\'resume\', \'jd\']\nNote: if you intended {\n  "scores"} to be part of the string and not a variable, please escape it with double curly braces like: \'{{\n  "scores"}}\'.\nFor troubleshooting, visit: https://docs.langchain.com/oss/python/langchain/errors/INVALID_PROMPT_INPUT '

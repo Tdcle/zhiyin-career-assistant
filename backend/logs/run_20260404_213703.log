@@ -1,0 +1,9 @@
+2026-04-04 21:37:04,394 | INFO | JobAgent.database | ✅ 数据库连接池创建成功: boss_zhipin
+2026-04-04 21:37:04,394 | INFO | JobAgent.database | loading embedding model: nomic-embed-text-v2-moe
+2026-04-04 21:37:05,319 | INFO | JobAgent.database | embedding model loaded: nomic-embed-text-v2-moe
+2026-04-04 21:37:05,341 | INFO | JobAgent.database | database schema and indexes ready
+2026-04-04 21:37:05,343 | INFO | JobAgent.schema_cleanup | schema cleanup start (dry_run=True)
+2026-04-04 21:37:05,345 | INFO | JobAgent.schema_cleanup | legacy table resume_structured_profiles not found, skip migration
+2026-04-04 21:37:05,348 | INFO | JobAgent.schema_cleanup | legacy memory migration finished: {'profile_rows': 0, 'memory_rows': 0}
+2026-04-04 21:37:05,351 | INFO | JobAgent.schema_cleanup | legacy tables dropped: []
+2026-04-04 21:37:05,351 | INFO | JobAgent.schema_cleanup | schema cleanup done: resume_rows=0 memory_profile_rows=0 memory_rows=0 dropped=[]
