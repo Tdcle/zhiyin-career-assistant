@@ -1,4 +1,5 @@
 /logs/
+/models/
 /backend/models/bge-reranker-v2-m3/
 models/bge-reranker-v2-m3/
 __pycache__/
@@ -7,5 +8,4 @@ __pycache__/
 /eval/logs/
 /eval/results/
 /docs
-/doc
 frontend/node_modules/
